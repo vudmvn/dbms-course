@@ -478,7 +478,7 @@ S003      | Le Van C      | Information Systems
 ---
 
 <p align="center">
-  <img src="images/flat-model.png" alt="Flat Model Schema" width="650">
+  <img src="images/flat_model.webp" alt="Flat model schema" width="650">
 </p>
 
 <p align="center">
@@ -523,7 +523,7 @@ Company
 ---
 
 <p align="center">
-  <img src="images/hierarchical-model.png" alt="Hierarchical Model Schema" width="650">
+  <img src="images/hierarchical.png" alt="Hierarchical model schema" width="650">
 </p>
 
 <p align="center">
@@ -561,7 +561,7 @@ Student B ── Course 3
 ---
 
 <p align="center">
-  <img src="images/network-model.png" alt="Network Model Schema" width="650">
+  <img src="images/network.png" alt="Network model schema" width="650">
 </p>
 
 <p align="center">
@@ -606,7 +606,7 @@ Quan hệ giữa hai bảng được biểu diễn bằng khóa ngoại `major_i
 ---
 
 <p align="center">
-  <img src="images/relational-model.png" alt="Relational Model Schema" width="650">
+  <img src="images/relational.jpg" alt="Relational model schema" width="650">
 </p>
 
 <p align="center">
@@ -664,7 +664,7 @@ Dim_Time --- Fact_Sales --- Dim_Customer
 ---
 
 <p align="center">
-  <img src="images/star-schema.png" alt="Star Schema" width="650">
+  <img src="images/star_schema.jpg" alt="Star schema" width="650">
 </p>
 
 <p align="center">
@@ -704,7 +704,7 @@ Dim_Supplier
 ---
 
 <p align="center">
-  <img src="images/snowflake-schema.png" alt="Snowflake Schema" width="650">
+  <img src="images/snowflake_schema.jpg" alt="Snowflake schema" width="650">
 </p>
 
 <p align="center">
