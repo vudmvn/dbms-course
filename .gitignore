@@ -1,0 +1,9 @@
+node_modules/
+*.log
+.vscode/
+__pycache__/
+*.aux
+*.toc
+*.out
+*.gz
+.DS_Store
