@@ -9,16 +9,18 @@ title: "Giới thiệu về DBMS"
 
 ---
 
-DBMS (*Database Management System* - Hệ quản trị cơ sở dữ liệu) là một hệ thống phần mềm dùng để quản lý, lưu trữ và truy xuất dữ liệu một cách hiệu quả theo định dạng có cấu trúc. DBMS đóng vai trò như một cầu nối giữa cơ sở dữ liệu trung tâm và nhiều phía sử dụng khác nhau, bao gồm ứng dụng và người dùng.
+DBMS (*Database Management System* - Hệ quản trị cơ sở dữ liệu) là phần mềm trung gian chịu trách nhiệm lưu trữ, quản lý, truy vấn và bảo vệ dữ liệu cho nhiều ứng dụng và người dùng. DBMS giúp tổ chức dữ liệu theo cấu trúc, giảm dư thừa, đảm bảo tính toàn vẹn và cho phép truy cập đồng thời một cách an toàn và có kiểm soát. Trong các hệ thống hiện đại, DBMS là thành phần cốt lõi giúp ứng dụng xử lý dữ liệu một cách hiệu quả và đáng tin cậy.
 
-Một hệ quản trị cơ sở dữ liệu có thể:
+## 1. Mục tiêu bài giảng
 
-- Kết nối cơ sở dữ liệu trung tâm với nhiều phía sử dụng, bao gồm ứng dụng và người dùng.
-- Cho phép người dùng tạo, cập nhật và truy vấn cơ sở dữ liệu một cách hiệu quả.
-- Đảm bảo tính toàn vẹn, tính nhất quán và tính bảo mật của dữ liệu khi có nhiều người dùng và ứng dụng cùng sử dụng.
-- Giảm dư thừa dữ liệu và tình trạng dữ liệu không nhất quán thông qua cơ chế quản lý tập trung.
-- Hỗ trợ truy cập đồng thời, quản lý giao dịch và sao lưu tự động.
-	- Sử dụng API để xử lý các yêu cầu dữ liệu, từ đó đảm bảo truy cập an toàn và hiệu quả.
+Sau khi hoàn thành bài học này, người học sẽ có thể:
+
+1. Giải thích được vai trò và khái niệm cơ bản của DBMS.
+2. Liệt kê và mô tả các thành phần chính của một hệ DBMS (phần cứng, phần mềm, dữ liệu, quy trình, ngôn ngữ truy cập, con người).
+3. So sánh ưu nhược điểm giữa hệ quản lý tệp truyền thống và DBMS.
+4. Phân loại các loại DBMS phổ biến (RDBMS, NoSQL, OODBMS, v.v.).
+5. Trình bày các thao tác CRUD cơ bản và khái niệm transaction/ACID.
+6. Nêu một số ứng dụng thực tế và tiêu chí lựa chọn DBMS phù hợp.
 
 ![DBMS illustration](images/DBMS.webp)
 
