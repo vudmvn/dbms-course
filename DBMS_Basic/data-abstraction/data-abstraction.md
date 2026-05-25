@@ -107,13 +107,6 @@ Người dùng thường không nhìn thấy các chi tiết như:
 
 ---
 
-<p align="center">
-  <img src="images/db.png" alt="Ví dụ Data Abstraction khi mua quần áo" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 2. Ví dụ trừu tượng hóa dữ liệu khi người dùng mua quần áo. (Sử dụng `images/db.png` tạm thời)</em>
-</p>
 
 ---
 
@@ -166,15 +159,7 @@ Physical / Internal Level
 
 ---
 
-<p align="center">
-  <img src="images/db.png" alt="Các mức trừu tượng dữ liệu trong DBMS" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 3. Ba mức trừu tượng dữ liệu trong DBMS. (Sử dụng `images/db.png` tạm thời)</em>
-</p>
-
-<!-- Nếu bạn muốn ảnh cụ thể hơn, cung cấp các ảnh bổ sung hoặc tôi sẽ cố gắng trích xuất thêm từ nguồn. -->
+<!-- Chỉ giữ ảnh thực tế có trong bài gốc: images/db.png -->
 
 ---
 
