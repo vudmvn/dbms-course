@@ -137,39 +137,6 @@ Trên Windows, có ba cách phổ biến để khởi động MySQL Server:
 
 ---
 
-## Hình ảnh minh họa
-
-Dưới đây là một số ảnh minh họa các bước mô tả trong bài viết (đã lưu cục bộ trong thư mục `images/`).
-
-![Mở Services](images/Window-services.webp)
-*Hình 1: Cửa sổ Services (services.msc).* 
-
-![Tìm MySQL trong danh sách services](images/search-mysql-list.webp)
-*Hình 2: Tìm dịch vụ MySQL trong danh sách services.*
-
-![Start MySQL qua Services](images/start-Mysql.webp)
-*Hình 3: Bắt đầu hoặc restart dịch vụ MySQL.*
-
-![MySQL Workbench - Startup/Shutdown](images/Mysql-Workbench.webp)
-*Hình 4: MySQL Workbench — tab Startup/Shutdown.*
-
-![Nút Start/Stop trong Workbench](images/start-and-stop-button.webp)
-*Hình 5: Nút Start/Stop trong MySQL Workbench.*
-
-![Start server qua Workbench](images/start-Mysql-server.webp)
-*Hình 6: Thao tác Start server trong Workbench.*
-
-![Stop MySQL Service](images/Stop-mysql.webp)
-*Hình 7: Ví dụ nút Stop để tắt MySQL service.*
-
-![Server dropdown trong Workbench](images/server-dropdown.webp)
-*Hình 8: Menu Server → Startup/Shutdown.*
-
-![Ví dụ screenshot](images/Screenshot_2025-07-31_120349_optimized_100.webp)
-*Hình 9: Screenshot minh họa thao tác.*
-
----
-
 ## 5. Cách 1 trên Windows: Sử dụng `services.msc`
 
 Đây là cách trực quan và phù hợp với người mới học.
@@ -190,6 +157,9 @@ services.msc
 
 và nhấn **Enter**.
 
+![Mở Services](images/Window-services.webp)
+*Hình: Mở Services (services.msc).* 
+
 ### Bước 2. Tìm dịch vụ MySQL
 
 Trong danh sách dịch vụ, tìm dịch vụ có tên liên quan đến MySQL, ví dụ:
@@ -202,12 +172,18 @@ Trong danh sách dịch vụ, tìm dịch vụ có tên liên quan đến MySQL,
 
 Tên cụ thể có thể khác nhau tùy phiên bản cài đặt.
 
+![Tìm MySQL trong danh sách services](images/search-mysql-list.webp)
+*Hình: Tìm dịch vụ MySQL trong danh sách services.*
+
 ### Bước 3. Start hoặc Restart MySQL Server
 
 Nhấp chuột phải vào dịch vụ MySQL và chọn:
 
 - **Start** nếu dịch vụ đang dừng.
 - **Restart** nếu muốn khởi động lại dịch vụ.
+
+![Start MySQL qua Services](images/start-Mysql.webp)
+*Hình: Start / Restart dịch vụ MySQL qua Services.*
 
 ### Bước 4. Kiểm tra trạng thái
 
@@ -265,6 +241,9 @@ mysqld
 
 Mở **MySQL Workbench** từ Start Menu hoặc Desktop.
 
+![MySQL Workbench](images/Mysql-Workbench.webp)
+*Hình: Giao diện MySQL Workbench.*
+
 ### Bước 2. Vào menu Server
 
 Trên thanh menu phía trên, chọn:
@@ -273,6 +252,9 @@ Trên thanh menu phía trên, chọn:
 Server
 ```
 
+![Server dropdown trong Workbench](images/server-dropdown.webp)
+*Hình: Menu Server → Startup/Shutdown trong Workbench.*
+
 ### Bước 3. Chọn Startup/Shutdown
 
 Trong danh sách, chọn:
@@ -280,6 +262,9 @@ Trong danh sách, chọn:
 ```text
 Startup/Shutdown
 ```
+
+![Nút Start/Stop trong Workbench](images/start-and-stop-button.webp)
+*Hình: Nút Start/Stop trong MySQL Workbench.*
 
 ### Bước 4. Start Server
 
@@ -290,6 +275,12 @@ Start Server
 ```
 
 Sau đó kiểm tra trạng thái server đã chuyển sang running hay chưa.
+
+![Start server qua Workbench](images/start-Mysql-server.webp)
+*Hình: Thao tác Start server trong Workbench.*
+
+![Ví dụ screenshot](images/Screenshot_2025-07-31_120349_optimized_100.webp)
+*Hình: Screenshot minh họa thao tác.*
 
 ---
 
@@ -309,6 +300,9 @@ Trên Windows, có ba cách phổ biến để dừng MySQL Server:
 2. Nhập `services.msc`.
 3. Tìm service MySQL, ví dụ `MySQL80`.
 4. Nhấp chuột phải và chọn **Stop**.
+
+![Stop MySQL Service](images/Stop-mysql.webp)
+*Hình: Stop MySQL service qua Services.*
 
 ---
 
