@@ -485,7 +485,7 @@ S003      | Le Van C      | Information Systems
   <em>Hình 3. Flat Model.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình flat_model vào: images/flat-model.png -->
+<!-- Ảnh gốc đã lưu tại: images/flat_model.webp -->
 
 ---
 
@@ -530,7 +530,7 @@ Company
   <em>Hình 4. Hierarchical Model.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình Hierarchical Model vào: images/hierarchical-model.png -->
+<!-- Ảnh gốc đã lưu tại: images/hierarchical.png -->
 
 ---
 
@@ -568,7 +568,7 @@ Student B ── Course 3
   <em>Hình 5. Network Model.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình Network Model vào: images/network-model.png -->
+<!-- Ảnh gốc đã lưu tại: images/network.png -->
 
 ---
 
@@ -613,7 +613,7 @@ Quan hệ giữa hai bảng được biểu diễn bằng khóa ngoại `major_i
   <em>Hình 6. Relational Model.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình Relational model vào: images/relational-model.png -->
+<!-- Ảnh gốc đã lưu tại: images/relational.jpg -->
 
 ---
 
@@ -671,7 +671,7 @@ Dim_Time --- Fact_Sales --- Dim_Customer
   <em>Hình 7. Star Schema.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình Star Schema vào: images/star-schema.png -->
+<!-- Ảnh gốc đã lưu tại: images/star_schema.jpg -->
 
 ---
 
@@ -711,7 +711,7 @@ Dim_Supplier
   <em>Hình 8. Snowflake Schema.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình Snowflake Schema vào: images/snowflake-schema.png -->
+<!-- Ảnh gốc đã lưu tại: images/snowflake_schema.jpg -->
 
 ---
 
@@ -816,7 +816,7 @@ S003, Le Van C, Information Systems
   <em>Hình 9. Database Instance.</em>
 </p>
 
-<!-- TODO: Đặt ảnh gốc tương ứng với hình database_instance vào: images/database-instance.png -->
+<!-- Ảnh gốc đã lưu tại: images/database_instance.webp -->
 
 ---
 
