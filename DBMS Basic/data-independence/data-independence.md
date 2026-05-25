@@ -16,3 +16,9 @@ Tệp này chứa nội dung bài học tóm tắt và ảnh minh họa đã t�
 
 
 ---
+
+![DBMS Three-Level Architecture](images/data-independence-(1).png)
+*Hình: Ba tầng kiến trúc DBMS (minh hoạ Data Independence).* 
+
+![Database Management System](images/Databse-Management-System.webp)
+*Hình: Minh họa khái niệm hệ quản trị cơ sở dữ liệu.*
