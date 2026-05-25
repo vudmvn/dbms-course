@@ -5,7 +5,9 @@ title: "Giới thiệu về DBMS"
 
 # Giới thiệu về DBMS
 
-*Cập nhật lần cuối: 14/05/2026*
+**Cập nhật lần cuối:** 14/05/2026
+
+---
 
 DBMS (*Database Management System* - Hệ quản trị cơ sở dữ liệu) là một hệ thống phần mềm dùng để quản lý, lưu trữ và truy xuất dữ liệu một cách hiệu quả theo định dạng có cấu trúc. DBMS đóng vai trò như một cầu nối giữa cơ sở dữ liệu trung tâm và nhiều phía sử dụng khác nhau, bao gồm ứng dụng và người dùng.
 
@@ -18,7 +20,7 @@ Một hệ quản trị cơ sở dữ liệu có thể:
 - Hỗ trợ truy cập đồng thời, quản lý giao dịch và sao lưu tự động.
 	- Sử dụng API để xử lý các yêu cầu dữ liệu, từ đó đảm bảo truy cập an toàn và hiệu quả.
 
-![DBMS](images/DBMS.webp)
+![DBMS illustration](images/DBMS.webp)
 
 
 ---
@@ -222,7 +224,7 @@ Ngôn ngữ cơ sở dữ liệu là tập hợp các lệnh và chỉ dẫn chu
 
 Các nhóm ngôn ngữ cơ sở dữ liệu chính gồm:
 
-![Database Languages](images/type_of_dbms_language.webp)
+![Database languages](images/type_of_dbms_language.webp)
 
 ### 4.1. Ngôn ngữ định nghĩa dữ liệu
 
@@ -284,7 +286,7 @@ Lệnh chính của DQL là:
 
 DBMS được sử dụng rộng rãi trong nhiều lĩnh vực khác nhau.
 
-![Database Applications](images/Database-Applications.webp)
+![Database applications](images/Database-Applications.webp)
 
 Một số ứng dụng tiêu biểu gồm:
 
