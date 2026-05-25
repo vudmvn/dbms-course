@@ -303,7 +303,96 @@ Một số ứng dụng tiêu biểu gồm:
 
 ## 7. Tóm tắt
 
+
 DBMS là một thành phần quan trọng trong các hệ thống thông tin hiện đại. Nó giúp tổ chức, lưu trữ, bảo vệ và khai thác dữ liệu một cách hiệu quả. So với hệ thống tệp truyền thống, DBMS có nhiều ưu điểm hơn về tính nhất quán, bảo mật, khả năng truy cập đồng thời, quản lý giao dịch và sao lưu dữ liệu.
 
 Các loại DBMS như RDBMS, NoSQL, OODBMS, cơ sở dữ liệu phân cấp, cơ sở dữ liệu mạng và cơ sở dữ liệu đám mây được thiết kế để đáp ứng các nhu cầu dữ liệu khác nhau. Bên cạnh đó, các nhóm ngôn ngữ cơ sở dữ liệu như DDL, DML, DCL, TCL và DQL giúp người dùng định nghĩa, thao tác, kiểm soát và truy vấn dữ liệu một cách có hệ thống.
+
+---
+
+## 8. Câu hỏi ôn tập và kiểm tra
+
+### 8.1. Quiz (Trắc nghiệm)
+
+1. DBMS viết tắt của từ nào?
+	- A. Data Backup Management System
+	- B. Database Management System
+	- C. Document Management System
+	- D. Distributed Memory System
+
+2. Lệnh nào sau đây thuộc DDL?
+	- A. INSERT
+	- B. SELECT
+	- C. CREATE
+	- D. COMMIT
+
+3. ACID là tập hợp các thuộc tính liên quan đến:
+	- A. Hiệu năng truy vấn
+	- B. Tính toàn vẹn và giao dịch
+	- C. Phân mảnh dữ liệu
+	- D. Bảo mật người dùng
+
+4. Ví dụ nào sau đây thuộc NoSQL?
+	- A. MySQL
+	- B. PostgreSQL
+	- C. MongoDB
+	- D. Oracle
+
+5. Lệnh nào dùng để hoàn tác các thay đổi trong một transaction chưa được commit?
+	- A. SAVEPOINT
+	- B. COMMIT
+	- C. ROLLBACK
+	- D. LOCK TABLE
+
+6. Thành phần nào không phải là một phần trực tiếp của DBMS?
+	- A. Phần cứng
+	- B. Người dùng cuối (end user)
+	- C. Hệ điều hành của máy tính cá nhân
+	- D. Ngôn ngữ truy cập cơ sở dữ liệu
+
+### 8.2. Câu hỏi ôn tập (Tự luận)
+
+1. Nêu sự khác biệt chính giữa hệ quản lý tệp truyền thống và DBMS.
+2. Liệt kê các thành phần chính của một hệ DBMS và mô tả vai trò ngắn gọn của từng thành phần.
+3. Giải thích khái niệm transaction và nêu tóm tắt các thuộc tính ACID.
+4. Khi nào bạn nên chọn NoSQL thay vì RDBMS? Nêu ít nhất hai tình huống cụ thể.
+5. Trình bày các bước cơ bản để sao lưu và phục hồi dữ liệu trong DBMS.
+
+### 8.3. Từ khóa
+
+- DBMS
+- RDBMS
+- NoSQL
+- CRUD
+- ACID
+- Transaction
+- DDL, DML, DCL, TCL, DQL
+- Metadata
+- Concurrency
+- Index
+
+### 8.4. Đáp án và gợi ý trả lời
+
+Quiz (Đáp án nhanh): 1-B, 2-C, 3-B, 4-C, 5-C, 6-C
+
+Gợi ý trả lời cho câu hỏi tự luận:
+
+1. Khác biệt chính: hệ quản lý tệp lưu dữ liệu rời rạc trong các tệp độc lập, dễ dư thừa và không nhất quán; DBMS tổ chức dữ liệu có cấu trúc, quản lý trung tâm, hỗ trợ truy vấn, bảo mật và giao dịch.
+
+2. Thành phần chính (ví dụ):
+	- Phần cứng: lưu trữ và xử lý vật lý.
+	- Phần mềm (DBMS): xử lý truy vấn, quản lý lưu trữ, bảo mật.
+	- Dữ liệu: thông tin vận hành và siêu dữ liệu.
+	- Quy trình: chính sách vận hành, sao lưu, bảo mật.
+	- Ngôn ngữ truy cập: SQL và các ngôn ngữ phụ trợ.
+	- Con người: DBA, nhà phát triển, người dùng cuối.
+
+3. Transaction: một đơn vị công việc chứa nhiều thao tác dữ liệu; ACID gồm Atomicity (tính nguyên tử), Consistency (tính nhất quán), Isolation (độc lập), Durability (bền vững).
+
+4. Khi chọn NoSQL: khi cần mở rộng ngang lớn (big data, high throughput), khi dữ liệu phi cấu trúc hoặc schema thay đổi thường xuyên (ví dụ: logging, social feeds, document stores).
+
+5. Sao lưu và phục hồi (tóm tắt): thực hiện backup định kỳ (full/incremental), lưu trữ bản sao an toàn, kiểm tra backup, sử dụng tính năng point-in-time recovery với transaction logs để phục hồi đến thời điểm mong muốn.
+
+---
+
 
