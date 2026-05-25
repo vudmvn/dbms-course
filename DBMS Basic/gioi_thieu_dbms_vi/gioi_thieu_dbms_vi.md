@@ -27,7 +27,7 @@ Sau khi hoàn thành bài học này, người học sẽ có thể:
 
 ---
 
-## 1. Các vấn đề của hệ thống quản lý tệp truyền thống
+## 2. Các vấn đề của hệ thống quản lý tệp truyền thống
 
 Trước khi các hệ quản trị cơ sở dữ liệu hiện đại ra đời, dữ liệu thường được quản lý bằng các hệ thống tệp cơ bản trên ổ cứng. Cách tiếp cận này cho phép người dùng lưu trữ, truy xuất và cập nhật tệp khi cần, nhưng cũng phát sinh nhiều hạn chế.
 
@@ -45,13 +45,13 @@ Ví dụ, một hệ thống quản lý dữ liệu trong trường đại học
 
 ---
 
-## 2. Các thành phần của ứng dụng DBMS
+## 3. Các thành phần của ứng dụng DBMS
 
 Một ứng dụng dựa trên DBMS thường gồm sáu thành phần chính phối hợp với nhau để xử lý dữ liệu một cách hiệu quả.
 
 ![Components of DBMS Applications](images/third_window.webp)
 
-### 2.1. Phần cứng
+### 3.1. Phần cứng
 
 Phần cứng bao gồm các thiết bị vật lý như máy chủ, ổ đĩa, thiết bị nhập - xuất như bàn phím, màn hình và máy in.
 
@@ -63,7 +63,7 @@ Vai trò chính của phần cứng là:
 
 Ví dụ: ổ cứng máy tính cá nhân, RAM, thiết bị mạng và máy chủ cơ sở dữ liệu.
 
-### 2.2. Phần mềm
+### 3.2. Phần mềm
 
 Phần mềm là thành phần thực hiện các chức năng quản trị cơ sở dữ liệu. Các ví dụ phổ biến gồm MySQL, Oracle và PostgreSQL.
 
@@ -77,7 +77,7 @@ Thành phần phần mềm có thể bao gồm:
 
 Phần mềm DBMS có nhiệm vụ chuyển đổi các ngôn ngữ truy cập cơ sở dữ liệu thành các thao tác cụ thể trên dữ liệu.
 
-### 2.3. Dữ liệu
+### 3.3. Dữ liệu
 
 Dữ liệu là các sự kiện hoặc thông tin thô được lưu trữ dưới dạng có cấu trúc hoặc phi cấu trúc.
 
@@ -88,7 +88,7 @@ Trong DBMS, dữ liệu thường bao gồm:
 
 Dữ liệu là lý do cốt lõi khiến DBMS tồn tại, bởi DBMS được xây dựng để quản lý, lưu trữ và khai thác dữ liệu một cách hiệu quả.
 
-### 2.4. Quy trình
+### 3.4. Quy trình
 
 Quy trình là tập hợp các hướng dẫn và quy tắc để sử dụng DBMS một cách hiệu quả.
 
@@ -103,7 +103,7 @@ Các quy trình thường bao gồm:
 
 Quy trình giúp đảm bảo hệ thống được sử dụng một cách nhất quán, an toàn và có kiểm soát.
 
-### 2.5. Ngôn ngữ truy cập cơ sở dữ liệu
+### 3.5. Ngôn ngữ truy cập cơ sở dữ liệu
 
 Ngôn ngữ truy cập cơ sở dữ liệu được dùng để tương tác với cơ sở dữ liệu, bao gồm tạo, đọc, cập nhật và xóa dữ liệu.
 
@@ -118,7 +118,7 @@ Một số nhóm lệnh quan trọng gồm:
 - **DDL** (*Data Definition Language*): Ngôn ngữ định nghĩa dữ liệu, gồm các lệnh như `CREATE`, `ALTER`, `DROP`.
 - **DML** (*Data Manipulation Language*): Ngôn ngữ thao tác dữ liệu, gồm các lệnh như `INSERT`, `UPDATE`, `DELETE`.
 
-### 2.6. Con người
+### 3.6. Con người
 
 Con người là những đối tượng tương tác với DBMS ở nhiều cấp độ khác nhau.
 
@@ -130,11 +130,11 @@ Các nhóm người dùng chính gồm:
 
 ---
 
-## 3. Các loại DBMS
+## 4. Các loại DBMS
 
 Có nhiều loại hệ quản trị cơ sở dữ liệu khác nhau. Mỗi loại được thiết kế để phù hợp với một kiểu cấu trúc dữ liệu, nhu cầu mở rộng và mục đích ứng dụng nhất định.
 
-### 3.1. Hệ quản trị cơ sở dữ liệu quan hệ
+### 4.1. Hệ quản trị cơ sở dữ liệu quan hệ
 
 Hệ quản trị cơ sở dữ liệu quan hệ (*Relational Database Management System - RDBMS*) tổ chức dữ liệu thành các bảng, còn gọi là các quan hệ. Mỗi bảng gồm các hàng và cột.
 
@@ -147,7 +147,7 @@ Hệ quản trị cơ sở dữ liệu quan hệ (*Relational Database Managemen
 
 Ví dụ: MySQL, Oracle, Microsoft SQL Server, PostgreSQL.
 
-### 3.2. NoSQL DBMS
+### 4.2. NoSQL DBMS
 
 NoSQL DBMS được thiết kế để xử lý dữ liệu quy mô lớn và cung cấp hiệu năng cao trong những tình huống mà mô hình quan hệ truyền thống có thể bị hạn chế.
 
@@ -160,7 +160,7 @@ NoSQL DBMS được thiết kế để xử lý dữ liệu quy mô lớn và cu
 
 Ví dụ: MongoDB, Cassandra, DynamoDB, Redis.
 
-### 3.3. Hệ quản trị cơ sở dữ liệu hướng đối tượng
+### 4.3. Hệ quản trị cơ sở dữ liệu hướng đối tượng
 
 Hệ quản trị cơ sở dữ liệu hướng đối tượng (*Object-Oriented DBMS - OODBMS*) tích hợp các khái niệm của lập trình hướng đối tượng vào môi trường cơ sở dữ liệu. Dữ liệu có thể được lưu dưới dạng các đối tượng.
 
@@ -172,7 +172,7 @@ Hệ quản trị cơ sở dữ liệu hướng đối tượng (*Object-Oriente
 
 Ví dụ: ObjectDB, db4o.
 
-### 3.4. Cơ sở dữ liệu phân cấp
+### 4.4. Cơ sở dữ liệu phân cấp
 
 Cơ sở dữ liệu phân cấp tổ chức dữ liệu theo cấu trúc dạng cây. Mỗi bản ghi, hay còn gọi là một nút, có một nút cha và có thể có nhiều nút con.
 
@@ -186,7 +186,7 @@ Cơ sở dữ liệu phân cấp tổ chức dữ liệu theo cấu trúc dạng
 
 Ví dụ: IBM Information Management System (IMS).
 
-### 3.5. Cơ sở dữ liệu mạng
+### 4.5. Cơ sở dữ liệu mạng
 
 Cơ sở dữ liệu mạng sử dụng mô hình dạng đồ thị để biểu diễn các quan hệ phức tạp giữa các thực thể.
 
@@ -200,7 +200,7 @@ Cơ sở dữ liệu mạng sử dụng mô hình dạng đồ thị để biể
 
 Ví dụ: Integrated Data Store (IDS), TurboIMAGE.
 
-### 3.6. Cơ sở dữ liệu trên nền tảng đám mây
+### 4.6. Cơ sở dữ liệu trên nền tảng đám mây
 
 Cơ sở dữ liệu trên nền tảng đám mây được lưu trữ trên các nền tảng điện toán đám mây như AWS, Azure hoặc Google Cloud.
 
@@ -218,7 +218,7 @@ Ví dụ: Amazon RDS cho cơ sở dữ liệu SQL, MongoDB Atlas cho NoSQL, Goog
 
 ---
 
-## 4. Ngôn ngữ cơ sở dữ liệu
+## 5. Ngôn ngữ cơ sở dữ liệu
 
 Ngôn ngữ cơ sở dữ liệu là tập hợp các lệnh và chỉ dẫn chuyên biệt được dùng để định nghĩa, thao tác và kiểm soát dữ liệu trong cơ sở dữ liệu. Mỗi loại ngôn ngữ đóng một vai trò riêng trong quản trị cơ sở dữ liệu, giúp đảm bảo lưu trữ, truy xuất và bảo mật dữ liệu hiệu quả.
 
@@ -228,7 +228,7 @@ Các nhóm ngôn ngữ cơ sở dữ liệu chính gồm:
 
 ![Database languages](images/type_of_dbms_language.webp)
 
-### 4.1. Ngôn ngữ định nghĩa dữ liệu
+### 5.1. Ngôn ngữ định nghĩa dữ liệu
 
 DDL là viết tắt của *Data Definition Language*, tức ngôn ngữ định nghĩa dữ liệu. Nhóm lệnh này liên quan đến lược đồ cơ sở dữ liệu và mô tả cách dữ liệu được tổ chức trong cơ sở dữ liệu.
 
@@ -241,7 +241,7 @@ Các lệnh phổ biến:
 - `COMMENT`: Thêm chú thích vào từ điển dữ liệu.
 - `RENAME`: Đổi tên một đối tượng.
 
-### 4.2. Ngôn ngữ thao tác dữ liệu
+### 5.2. Ngôn ngữ thao tác dữ liệu
 
 DML là viết tắt của *Data Manipulation Language*, tức ngôn ngữ thao tác dữ liệu. DML tập trung vào việc thao tác với dữ liệu được lưu trong cơ sở dữ liệu, cho phép người dùng truy xuất, thêm, cập nhật và xóa dữ liệu.
 
@@ -255,7 +255,7 @@ Các lệnh phổ biến:
 - `EXPLAIN PLAN`: Diễn giải đường dẫn truy cập dữ liệu.
 - `LOCK TABLE`: Khóa bảng để kiểm soát truy cập đồng thời.
 
-### 4.3. Ngôn ngữ kiểm soát dữ liệu
+### 5.3. Ngôn ngữ kiểm soát dữ liệu
 
 DCL là viết tắt của *Data Control Language*, tức ngôn ngữ kiểm soát dữ liệu. Các lệnh DCL quản lý quyền truy cập, giúp đảm bảo bảo mật dữ liệu bằng cách kiểm soát người dùng nào được thực hiện hành động nào trên cơ sở dữ liệu.
 
@@ -264,7 +264,7 @@ Các lệnh phổ biến:
 - `GRANT`: Cấp quyền cụ thể cho người dùng, ví dụ như quyền `SELECT`, `INSERT`.
 - `REVOKE`: Thu hồi các quyền đã cấp cho người dùng.
 
-### 4.4. Ngôn ngữ kiểm soát giao dịch
+### 5.4. Ngôn ngữ kiểm soát giao dịch
 
 TCL là viết tắt của *Transaction Control Language*, tức ngôn ngữ kiểm soát giao dịch. Các lệnh TCL quản lý dữ liệu giao dịch nhằm duy trì tính nhất quán, độ tin cậy và tính nguyên tử của giao dịch.
 
@@ -274,7 +274,7 @@ Các lệnh phổ biến:
 - `COMMIT`: Lưu toàn bộ các thay đổi đã thực hiện trong một giao dịch.
 - `SAVEPOINT`: Thiết lập một điểm trong giao dịch để có thể quay lui về điểm đó sau này.
 
-### 4.5. Ngôn ngữ truy vấn dữ liệu
+### 5.5. Ngôn ngữ truy vấn dữ liệu
 
 DQL là viết tắt của *Data Query Language*, tức ngôn ngữ truy vấn dữ liệu. DQL là một tập con của SQL, dùng để truy xuất dữ liệu từ cơ sở dữ liệu mà không làm thay đổi dữ liệu.
 
@@ -284,7 +284,7 @@ Lệnh chính của DQL là:
 
 ---
 
-## 5. Ứng dụng của DBMS
+## 6. Ứng dụng của DBMS
 
 DBMS được sử dụng rộng rãi trong nhiều lĩnh vực khác nhau.
 
@@ -301,7 +301,7 @@ Một số ứng dụng tiêu biểu gồm:
 
 ---
 
-## 6. Tóm tắt
+## 7. Tóm tắt
 
 DBMS là một thành phần quan trọng trong các hệ thống thông tin hiện đại. Nó giúp tổ chức, lưu trữ, bảo vệ và khai thác dữ liệu một cách hiệu quả. So với hệ thống tệp truyền thống, DBMS có nhiều ưu điểm hơn về tính nhất quán, bảo mật, khả năng truy cập đồng thời, quản lý giao dịch và sao lưu dữ liệu.
 
