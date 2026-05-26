@@ -1,7 +1,7 @@
 title: DBMS
 description: Tai lieu hoc tap ve he quan tri co so du lieu va MySQL.
 url: "https://vudmvn.github.io"
-baseurl: "/dbms"
+baseurl: "/dbms-course"
 
 markdown: kramdown
 permalink: pretty

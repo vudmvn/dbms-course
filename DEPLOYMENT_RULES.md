@@ -1,6 +1,6 @@
 # Deployment rules
 
-Site dich: https://vudmvn.github.io/dbms
+Site dich: https://vudmvn.github.io/dbms-course
 
 ## Dieu kien deploy
 
@@ -20,10 +20,10 @@ Site dich: https://vudmvn.github.io/dbms
 
 - Vao `Settings` -> `Pages`.
 - Chon `Source: GitHub Actions`.
-- Sau lan deploy thanh cong dau tien, site se xuat hien tai `https://vudmvn.github.io/dbms`.
+- Sau lan deploy thanh cong dau tien, site se xuat hien tai `https://vudmvn.github.io/dbms-course`.
 
 ## Ghi chu
 
-- `_config.yml` dat `baseurl` la `/dbms` de khop voi duong dan GitHub Pages.
+- `_config.yml` dat `baseurl` la `/dbms-course` de khop voi duong dan GitHub Pages.
 - Cac file Markdown khong can them YAML front matter; Jekyll se render chung nho `jekyll-optional-front-matter`.
 - `TEMP_MARKDOWN_INPUT.md` va cac file build tam thoi khong duoc publish.
