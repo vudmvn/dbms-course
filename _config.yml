@@ -1,0 +1,33 @@
+title: DBMS
+description: Tai lieu hoc tap ve he quan tri co so du lieu va MySQL.
+url: "https://vudmvn.github.io"
+baseurl: "/dbms"
+
+markdown: kramdown
+permalink: pretty
+
+plugins:
+  - jekyll-optional-front-matter
+  - jekyll-relative-links
+  - jekyll-default-layout
+  - jekyll-titles-from-headings
+
+optional_front_matter:
+  remove_originals: true
+
+relative_links:
+  enabled: true
+  collections: true
+
+include:
+  - DBMS_Basic
+  - MySQL
+
+exclude:
+  - TEMP_MARKDOWN_INPUT.md
+  - node_modules
+  - "*.log"
+  - "*.aux"
+  - "*.toc"
+  - "*.out"
+  - "*.gz"

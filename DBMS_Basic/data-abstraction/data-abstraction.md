@@ -178,7 +178,7 @@ Nó liên quan đến các chi tiết như:
 - Cấu trúc dữ liệu nào được dùng để lưu trữ.
 - Chỉ mục được xây dựng như thế nào.
 - Không gian lưu trữ được phân bổ ra sao.
-- Phương pháp truy cập dữ liệu là gì.
+- Phương pháp truy cậ6p dữ liệu là gì.
 - Dữ liệu được nén, phân mảnh hoặc sao chép như thế nào.
 
 ### 6.2. Ai làm việc với mức vật lý?
