@@ -27,3 +27,4 @@ Site dich: https://vudmvn.github.io/dbms-course
 - `_config.yml` dat `baseurl` la `/dbms-course` de khop voi duong dan GitHub Pages.
 - Cac file Markdown khong can them YAML front matter; Jekyll se render chung nho `jekyll-optional-front-matter`.
 - `TEMP_MARKDOWN_INPUT.md` va cac file build tam thoi khong duoc publish.
+- Lan kich hoat deploy gan nhat: 2026-05-27.
