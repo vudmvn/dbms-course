@@ -6,6 +6,14 @@ title: DBMS
 
 Tai lieu hoc tap ve he quan tri co so du lieu va MySQL.
 
+## Sach tham khao
+
+<p>
+  <img src="assets/images/database-systems-14th-cover.jpg" alt="Database Systems: Design, Implementation, and Management, 14th Edition" width="180">
+</p>
+
+- **Database Systems: Design, Implementation, & Management, 14th Edition** - Carlos Coronel, Steven Morris. Cengage, 2023. ISBN-13: 9780357673034. [Thong tin sach](https://www.cengageasia.com/title/default/detail?isbn=9780357673034)
+
 ## DBMS Basic
 
 - [Gioi thieu co so du lieu](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md)
