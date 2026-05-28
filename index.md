@@ -14,6 +14,12 @@ Tai lieu hoc tap ve he quan tri co so du lieu va MySQL.
 
 - **Database Systems: Design, Implementation, & Management, 14th Edition** - Carlos Coronel, Steven Morris. Cengage, 2023. ISBN-13: 9780357673034. [Thong tin sach](https://www.cengageasia.com/title/default/detail?isbn=9780357673034)
 
+<p>
+  <img src="assets/images/database-systems-pragmatic-approach-3rd-cover.jpg" alt="Database Systems: A Pragmatic Approach, 3rd edition" width="180">
+</p>
+
+- **Database Systems: A Pragmatic Approach, 3rd edition** - Elvis C. Foster, Shripad Godbole. CRC Press / Taylor & Francis, 2022. ISBN-13: 9781032202020. [Thong tin sach](https://www.routledge.com/Database-Systems-A-Pragmatic-Approach-3rd-edition/Foster-Godbole/p/book/9781032202020)
+
 ## DBMS Basic
 
 - [Gioi thieu co so du lieu](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md)
