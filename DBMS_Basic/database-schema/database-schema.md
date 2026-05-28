@@ -2,7 +2,7 @@
 
 **Cập nhật lần cuối:** 08/12/2025
 
-**Nguồn tham khảo:** GeeksforGeeks - [Difference between Schema and Instance in DBMS](https://www.geeksforgeeks.org/dbms/difference-between-schema-and-instance-in-dbms/)
+**Nguồn tham khảo:** GeeksforGeeks - [Database Schemas](https://www.geeksforgeeks.org/dbms/database-schemas/)
 
 ---
 
@@ -811,7 +811,7 @@ S003, Le Van C, Information Systems
 ---
 
 <p align="center">
-  <img src="images/database-instance.png" alt="Database Instance" width="650">
+  <img src="images/database_instance.webp" alt="Database Instance" width="650">
 </p>
 
 <p align="center">
