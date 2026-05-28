@@ -7,6 +7,8 @@ title: "Giới thiệu về DBMS"
 
 **Cập nhật lần cuối:** 14/05/2026
 
+**Nguồn tham khảo:** GeeksforGeeks - [Introduction of DBMS](https://www.geeksforgeeks.org/dbms/introduction-of-dbms-database-management-system-set-1/)
+
 ---
 
 DBMS (*Database Management System* - Hệ quản trị cơ sở dữ liệu) là phần mềm trung gian chịu trách nhiệm lưu trữ, quản lý, truy vấn và bảo vệ dữ liệu cho nhiều ứng dụng và người dùng. DBMS giúp tổ chức dữ liệu theo cấu trúc, giảm dư thừa, đảm bảo tính toàn vẹn và cho phép truy cập đồng thời một cách an toàn và có kiểm soát. Trong các hệ thống hiện đại, DBMS là thành phần cốt lõi giúp ứng dụng xử lý dữ liệu một cách hiệu quả và đáng tin cậy.

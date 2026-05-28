@@ -7,6 +7,8 @@ title: "Giới thiệu về Cơ sở dữ liệu"
 
 **Cập nhật lần cuối:** 28/04/2026
 
+**Nguồn tham khảo:** GeeksforGeeks - [Getting started with Databases: Essential Guide for Beginners](https://www.geeksforgeeks.org/getting-started-with-database-management-system/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

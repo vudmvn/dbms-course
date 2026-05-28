@@ -2,6 +2,8 @@
 
 **Cập nhật lần cuối:** 08/12/2025
 
+**Nguồn tham khảo:** GeeksforGeeks - [Difference between Schema and Instance in DBMS](https://www.geeksforgeeks.org/dbms/difference-between-schema-and-instance-in-dbms/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

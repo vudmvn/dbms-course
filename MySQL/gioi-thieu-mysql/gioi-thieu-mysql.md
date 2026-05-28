@@ -2,6 +2,8 @@
 
 **Cập nhật lần cuối:** 13/03/2026
 
+**Nguồn tham khảo:** GeeksforGeeks - [What is MySQL?](https://www.geeksforgeeks.org/sql/what-is-mysql/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

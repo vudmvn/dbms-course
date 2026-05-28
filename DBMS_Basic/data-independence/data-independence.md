@@ -9,6 +9,8 @@ source: "https://www.geeksforgeeks.org/dbms/what-is-data-independence-in-dbms/"
 
 **Cập nhật lần cuối:** 15/07/2025
 
+**Nguồn tham khảo:** GeeksforGeeks - [What is Data Independence in DBMS?](https://www.geeksforgeeks.org/dbms/what-is-data-independence-in-dbms/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

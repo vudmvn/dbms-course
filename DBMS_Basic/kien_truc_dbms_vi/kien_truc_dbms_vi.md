@@ -7,6 +7,8 @@ title: "Các loại kiến trúc DBMS"
 
 **Cập nhật lần cuối:** 24/04/2026
 
+**Nguồn tham khảo:** GeeksforGeeks - [DBMS Architecture 1-level, 2-Level, 3-Level](https://www.geeksforgeeks.org/dbms-architecture-2-level-3-level/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

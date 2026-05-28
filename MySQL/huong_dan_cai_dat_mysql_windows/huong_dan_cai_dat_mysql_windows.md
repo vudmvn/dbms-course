@@ -5,7 +5,7 @@ title: "Hướng dẫn cài đặt MySQL trên Windows"
 
 # Hướng dẫn cài đặt MySQL trên Windows
 
-**Nguồn tham khảo:** GeeksforGeeks - How to Install MySQL in Windows
+**Nguồn tham khảo:** GeeksforGeeks - [How to Install MySQL in Windows](https://www.geeksforgeeks.org/installation-guide/how-to-install-mysql-in-windows/)
 
 ---
 
@@ -138,4 +138,4 @@ Mở `MySQL Command Line Client` hoặc `MySQL Workbench` trong Start Menu, sau 
 
 ## 7. Nguồn tham khảo
 
-- GeeksforGeeks: How to Install MySQL in Windows
+- GeeksforGeeks: [How to Install MySQL in Windows](https://www.geeksforgeeks.org/installation-guide/how-to-install-mysql-in-windows/)

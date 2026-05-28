@@ -7,6 +7,8 @@ title: "Nhu cầu sử dụng DBMS"
 
 *Cập nhật lần cuối: 24/04/2026*
 
+**Nguồn tham khảo:** GeeksforGeeks - [Need for DBMS](https://www.geeksforgeeks.org/need-for-dbms/)
+
 Hệ quản trị cơ sở dữ liệu (**Database Management System – DBMS**) là phần mềm cho phép lưu trữ, tổ chức và quản lý lượng dữ liệu lớn. DBMS đảm bảo tính nhất quán, toàn vẹn và bảo mật của dữ liệu, đồng thời cho phép nhiều người dùng truy cập và thao tác với dữ liệu.
 
 ## Các lợi ích chính của DBMS

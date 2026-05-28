@@ -97,4 +97,4 @@ VALUES('Gaurav','123456789','Mumbai,India','pass134'),('Sakshi','987654321','Che
 - VS Code hỗ trợ quản lý cơ sở dữ liệu tiện lợi khi kết hợp extension phù hợp.
 
 ## Tham khảo
-- GeeksforGeeks - How to Connect to Mysql Server Using VS Code and Fix errors?
+- GeeksforGeeks: [How to Connect to MySQL Server Using VS Code and Fix errors?](https://www.geeksforgeeks.org/sql/how-to-connect-to-mysql-server-using-vs-code-and-fix-errors/)

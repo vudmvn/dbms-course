@@ -70,4 +70,4 @@ mysql --help
 - Trong client, các lệnh hữu ích: `quit`, `exit`, `connect`, `print`.
 
 ## Tham khảo
-- Bài gốc: GeeksforGeeks — Connecting to MySQL Using Command Options
+- GeeksforGeeks: [Connecting to MySQL Using Command Options](https://www.geeksforgeeks.org/sql/connecting-to-mysql-using-command-options/)

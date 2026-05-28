@@ -9,6 +9,8 @@ source: "https://www.geeksforgeeks.org/dbms/physical-and-logical-data-independen
 
 **Cập nhật lần cuối:** 15/07/2025
 
+**Nguồn tham khảo:** GeeksforGeeks - [Physical and Logical Data Independence](https://www.geeksforgeeks.org/dbms/physical-and-logical-data-independence/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

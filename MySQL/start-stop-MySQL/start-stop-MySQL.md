@@ -8,6 +8,8 @@ source: "https://www.geeksforgeeks.org/sql/how-to-stop-mysql-server-on-windows-a
 
 **Cập nhật lần cuối:** 14/04/2026
 
+**Nguồn tham khảo:** GeeksforGeeks - [How to Stop MySQL Server on Windows and Linux?](https://www.geeksforgeeks.org/sql/how-to-stop-mysql-server-on-windows-and-linux/)
+
 ---
 
 ## 1. Mục tiêu bài giảng

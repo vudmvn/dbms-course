@@ -2,6 +2,8 @@
 
 **Cập nhật lần cuối:** 23/07/2025
 
+**Nguồn tham khảo:** GeeksforGeeks - [What is Data Abstraction in DBMS?](https://www.geeksforgeeks.org/dbms/what-is-data-abstraction-in-dbms/)
+
 ---
 
 ## 1. Mục tiêu bài giảng
