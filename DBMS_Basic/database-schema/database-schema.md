@@ -1,3 +1,7 @@
+---
+permalink: /DBMS_Basic/database-schema/
+---
+
 # Bài giảng: Database Schemas
 
 **Cập nhật lần cuối:** 08/12/2025
