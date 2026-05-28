@@ -6,6 +6,10 @@ title: DBMS
 
 Tai lieu hoc tap ve he quan tri co so du lieu va MySQL.
 
+## De cuong mon hoc
+
+- [Syllabus Database VNUIS](assets/files/Syllabus_Database_VNUIS.pdf)
+
 ## Sach tham khao
 
 <p>
