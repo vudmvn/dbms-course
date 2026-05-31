@@ -42,7 +42,7 @@ Nói cách khác, data abstraction giúp người dùng:
 </p>
 
 <p align="center">
-  <em>Hình 1. Tổng quan về Data Abstraction trong DBMS. (Ảnh gốc lưu tại `images/db.png`)</em>
+  <em>Hình 1. Tổng quan về Data Abstraction trong DBMS.</em>
 </p>
 
 ---
@@ -161,10 +161,6 @@ Physical / Internal Level
 
 ---
 
-<!-- Chỉ giữ ảnh thực tế có trong bài gốc: images/db.png -->
-
----
-
 ## 6. Physical/Internal Level - Mức vật lý hoặc mức trong
 
 ### 6.1. Khái niệm
@@ -214,18 +210,6 @@ WHERE student_id = 'S001';
 ```
 
 Họ không cần biết DBMS đã dùng index hay đọc dữ liệu từ block nào.
-
----
-
-<p align="center">
-  <img src="images/physical-internal-level.png" alt="Physical/Internal Level trong DBMS" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 4. Physical/Internal Level mô tả chi tiết lưu trữ vật lý.</em>
-</p>
-
-<!-- TODO: Đặt ảnh minh họa Physical/Internal Level vào file: images/physical-internal-level.png -->
 
 ---
 
@@ -301,18 +285,6 @@ Các quan hệ có thể gồm:
 
 ---
 
-<p align="center">
-  <img src="images/logical-conceptual-level.png" alt="Logical/Conceptual Level trong DBMS" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 5. Logical/Conceptual Level mô tả cấu trúc logic của database.</em>
-</p>
-
-<!-- TODO: Đặt ảnh minh họa Logical/Conceptual Level vào file: images/logical-conceptual-level.png -->
-
----
-
 ### Quiz: Logical/Conceptual Level
 
 **Câu 1.** Logical/Conceptual Level mô tả điều gì?
@@ -367,18 +339,6 @@ FROM Enrollments;
 ```
 
 View này chỉ hiển thị thông tin điểm cần thiết.
-
----
-
-<p align="center">
-  <img src="images/view-external-level.png" alt="View/External Level trong DBMS" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 6. View/External Level hiển thị dữ liệu phù hợp với từng nhóm người dùng.</em>
-</p>
-
-<!-- TODO: Đặt ảnh minh họa View/External Level vào file: images/view-external-level.png -->
 
 ---
 
@@ -453,18 +413,6 @@ Xét hệ thống quản lý sinh viên.
 - Giảng viên chỉ xem danh sách lớp và điểm của lớp mình dạy.
 - Phòng đào tạo xem nhiều dữ liệu học vụ hơn.
 - Quản trị viên có thể xem và quản lý toàn hệ thống.
-
----
-
-<p align="center">
-  <img src="images/student-management-abstraction-example.png" alt="Ví dụ ba mức trừu tượng trong hệ thống quản lý sinh viên" width="650">
-</p>
-
-<p align="center">
-  <em>Hình 7. Ví dụ ba mức trừu tượng trong hệ thống quản lý sinh viên.</em>
-</p>
-
-<!-- TODO: Đặt ảnh minh họa ví dụ quản lý sinh viên vào file: images/student-management-abstraction-example.png -->
 
 ---
 
