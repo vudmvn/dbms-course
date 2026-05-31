@@ -107,6 +107,13 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Lược đồ cơ sở dữ liệu | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
 | Cách lựa chọn DBMS phù hợp | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Có slides song ngữ |
 
+## Data Modeling
+
+| Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
+|---|---|---|---|
+| Mô hình hóa dữ liệu trong DBMS | [Markdown](Data%20Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Giới thiệu ER Model trong DBMS | [Markdown](Data%20Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
+
 ## MySQL
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
@@ -154,6 +161,13 @@ Learning materials for database management systems and MySQL.
 | Physical and Logical Independence | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | |
 | Database Schema | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
 | How to Choose the Right DBMS | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Bilingual slides |
+
+## Data Modeling
+
+| Lesson | Markdown Lecture | Slides PDF | Notes |
+|---|---|---|---|
+| Data Modeling in DBMS | [Markdown](Data%20Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Introduction to ER Model in DBMS | [Markdown](Data%20Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
 
 ## MySQL
 
