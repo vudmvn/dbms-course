@@ -122,6 +122,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
+- MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
 
 </section>
 
@@ -169,6 +170,7 @@ Learning materials for database management systems and MySQL.
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
+- MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
 
 </section>
 
