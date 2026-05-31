@@ -38,7 +38,7 @@ Nói cách khác, data abstraction giúp người dùng:
 ---
 
 <p align="center">
-  <img src="images/db.png" alt="Tổng quan về Data Abstraction trong DBMS" width="650">
+  <img src="../images/db.png" alt="Tổng quan về Data Abstraction trong DBMS" width="650">
 </p>
 
 <p align="center">
