@@ -38,6 +38,37 @@ title: DBMS
     max-width: 180px;
     height: auto;
   }
+
+  .language-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 2rem;
+  }
+
+  .language-panel table th,
+  .language-panel table td {
+    border: 1px solid #d0d7de;
+    padding: 0.55rem 0.7rem;
+    vertical-align: top;
+  }
+
+  .language-panel table th {
+    background: #f6f8fa;
+    text-align: left;
+  }
+
+  .language-panel table td:nth-child(1) {
+    width: 34%;
+  }
+
+  .language-panel table td:nth-child(2),
+  .language-panel table td:nth-child(3) {
+    width: 22%;
+  }
+
+  .missing {
+    color: #6e7781;
+  }
 </style>
 
 # DBMS
@@ -71,23 +102,28 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 ## DBMS Basic
 
-- [Giới thiệu cơ sở dữ liệu](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md)
-- [Giới thiệu DBMS](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md)
-- [Nhu cầu sử dụng DBMS](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md)
-- [Kiến trúc DBMS](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md)
-- [Trừu tượng hóa dữ liệu](DBMS_Basic/data-abstraction/data-abstraction.md)
-- [Độc lập dữ liệu](DBMS_Basic/data-independence/data-independence.md)
-- [Độc lập vật lý và độc lập logic](DBMS_Basic/physical-logical-independence/physical-logical-independence.md)
-- [Lược đồ cơ sở dữ liệu](DBMS_Basic/database-schema/database-schema.md)
+| Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
+|---|---|---|---|
+| Giới thiệu cơ sở dữ liệu | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf)<br>[EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Có slides song ngữ |
+| Giới thiệu DBMS | [Markdown](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md) | <span class="missing">—</span> | |
+| Nhu cầu sử dụng DBMS | [Markdown](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md) | <span class="missing">—</span> | |
+| Kiến trúc DBMS | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf)<br>[EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Có slides song ngữ |
+| Trừu tượng hóa dữ liệu | [Markdown](DBMS_Basic/data-abstraction/data-abstraction.md) | <span class="missing">—</span> | |
+| Độc lập dữ liệu | [Markdown](DBMS_Basic/data-independence/data-independence.md) | <span class="missing">—</span> | |
+| Độc lập vật lý và độc lập logic | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | |
+| Lược đồ cơ sở dữ liệu | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
+| Cách lựa chọn DBMS phù hợp | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Có slides song ngữ |
 
 ## MySQL
 
-- [Giới thiệu MySQL](MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md)
-- [Cài đặt MySQL trên Windows](MySQL/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md)
-- [Cài đặt MySQL Workbench trên Windows](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md)
-- [Kết nối MySQL bằng command options](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md)
-- [Kết nối MySQL trong VS Code](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md)
-- [Khởi động và dừng MySQL](MySQL/start-stop-MySQL/start-stop-MySQL.md)
+| Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
+|---|---|---|---|
+| Giới thiệu MySQL | [Markdown](MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | |
+| Cài đặt MySQL trên Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | |
+| Cài đặt MySQL Workbench trên Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
+| Kết nối MySQL bằng command options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
+| Kết nối MySQL trong VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
+| Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 </section>
 
@@ -115,23 +151,28 @@ Learning materials for database management systems and MySQL.
 
 ## DBMS Basic
 
-- [Introduction to Databases](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md)
-- [Introduction to DBMS](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md)
-- [Why Use a DBMS?](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md)
-- [DBMS Architecture](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md)
-- [Data Abstraction](DBMS_Basic/data-abstraction/data-abstraction.md)
-- [Data Independence](DBMS_Basic/data-independence/data-independence.md)
-- [Physical and Logical Independence](DBMS_Basic/physical-logical-independence/physical-logical-independence.md)
-- [Database Schema](DBMS_Basic/database-schema/database-schema.md)
+| Lesson | Markdown Lecture | Slides PDF | Notes |
+|---|---|---|---|
+| Introduction to Databases | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf)<br>[EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Bilingual slides |
+| Introduction to DBMS | [Markdown](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md) | <span class="missing">—</span> | |
+| Why Use a DBMS? | [Markdown](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md) | <span class="missing">—</span> | |
+| DBMS Architecture | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf)<br>[EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Bilingual slides |
+| Data Abstraction | [Markdown](DBMS_Basic/data-abstraction/data-abstraction.md) | <span class="missing">—</span> | |
+| Data Independence | [Markdown](DBMS_Basic/data-independence/data-independence.md) | <span class="missing">—</span> | |
+| Physical and Logical Independence | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | |
+| Database Schema | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
+| How to Choose the Right DBMS | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Bilingual slides |
 
 ## MySQL
 
-- [Introduction to MySQL](MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md)
-- [Install MySQL on Windows](MySQL/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md)
-- [Install MySQL Workbench on Windows](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md)
-- [Connect to MySQL with Command Options](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md)
-- [Connect to MySQL in VS Code](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md)
-- [Start and Stop MySQL](MySQL/start-stop-MySQL/start-stop-MySQL.md)
+| Lesson | Markdown Lecture | Slides PDF | Notes |
+|---|---|---|---|
+| Introduction to MySQL | [Markdown](MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | |
+| Install MySQL on Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | |
+| Install MySQL Workbench on Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
+| Connect to MySQL with Command Options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
+| Connect to MySQL in VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
+| Start and Stop MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 </section>
 

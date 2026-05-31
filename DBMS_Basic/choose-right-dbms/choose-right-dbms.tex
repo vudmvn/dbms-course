@@ -1,0 +1,1403 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Compile with XeLaTeX
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Graphics
+\graphicspath{{images/}{./}{/mnt/data/images/}}
+\hypersetup{unicode=true}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,72,160}
+\definecolor{codestr}{RGB}{150,60,30}
+\definecolor{accent}{RGB}{0,90,150}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  keepspaces=true,
+  language=SQL
+}
+
+\newcommand{\keyword}[1]{\textcolor{accent}{\textbf{#1}}}
+\newcommand{\kw}[1]{\keyword{#1}}
+\newcommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\qoption}[2]{\item[#1.] #2}
+\newcommand{\safeimage}[3]{%
+\IfFileExists{#1}{\includegraphics[width=#2,height=0.62\textheight,keepaspectratio]{#1}}{%
+\fbox{\parbox[c][0.40\textheight][c]{0.78\textwidth}{\centering #3\\[2mm]{\scriptsize #1}}}}}
+
+\title[Cách lựa chọn DBMS]{Cách lựa chọn hệ quản trị cơ sở dữ liệu phù hợp}
+\subtitle{Tiêu chí lựa chọn, các loại cơ sở dữ liệu và mô hình vận hành}
+\author{Tài liệu bài giảng}
+\institute{Môn học: Cơ sở dữ liệu}
+\date{Cập nhật: 31/05/2026}
+
+\AtBeginSection[]{
+  \begin{frame}{Nội dung phần học}
+    \tableofcontents[currentsection,subsectionstyle=show/show/hide]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% \begin{frame}{Nguồn tham khảo}
+% \begin{itemize}
+%   \item GeeksforGeeks: \emph{How to Choose the Database}.
+%   \item Nội dung bài giảng được tổ chức lại theo định dạng bài giảng tiếng Việt.
+% \end{itemize}
+% \end{frame}
+
+\begin{frame}{Mục tiêu bài giảng}
+Sau khi hoàn thành bài học này, người học có thể:
+\begin{enumerate}
+  \smallitem
+  \item Hiểu vì sao việc lựa chọn hệ quản trị cơ sở dữ liệu là một quyết định kiến trúc quan trọng.
+  \item Phân biệt các loại cơ sở dữ liệu phổ biến: quan hệ, tài liệu, khóa-giá trị, chuỗi thời gian, cột và đồ thị.
+  \item Biết các tiêu chí chính khi lựa chọn DBMS cho một hệ thống phần mềm.
+  \item Hiểu khi nào nên dùng cơ sở dữ liệu tự quản lý và khi nào nên dùng dịch vụ cơ sở dữ liệu được quản lý.
+  \item Vận dụng kiến thức để chọn loại cơ sở dữ liệu phù hợp cho một bài toán thực tế.
+  \item Hoàn thành các câu hỏi ôn tập và bài tập vận dụng về lựa chọn DBMS.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Cấu trúc bài giảng}
+\small
+\tableofcontents
+\end{frame}
+
+\section{Giới thiệu tổng quan}
+
+\begin{frame}{Vì sao cần lựa chọn đúng DBMS?}
+Trong bất kỳ hệ thống phần mềm nào có sử dụng dữ liệu, việc lựa chọn đúng \kw{hệ quản trị cơ sở dữ liệu} là một quyết định rất quan trọng.
+
+\vspace{2mm}
+Một lựa chọn phù hợp có thể giúp hệ thống:
+\begin{itemize}
+  \smallitem
+  \item Lưu trữ dữ liệu an toàn và nhất quán.
+  \item Truy vấn dữ liệu nhanh hơn.
+  \item Dễ mở rộng khi số lượng người dùng tăng.
+  \item Giảm chi phí vận hành.
+  \item Dễ bảo trì và phát triển trong tương lai.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hậu quả khi chọn sai DBMS}
+Nếu lựa chọn sai loại cơ sở dữ liệu, hệ thống có thể gặp nhiều vấn đề:
+\begin{itemize}
+  \smallitem
+  \item Truy vấn chậm.
+  \item Khó mở rộng.
+  \item Dữ liệu không nhất quán.
+  \item Chi phí vận hành cao.
+  \item Khó thay đổi cấu trúc dữ liệu khi hệ thống phát triển.
+\end{itemize}
+
+\begin{block}{Thông điệp chính}
+Không nên chọn cơ sở dữ liệu chỉ vì nó phổ biến. Cần chọn dựa trên bản chất dữ liệu, mẫu truy vấn, hiệu năng, tính nhất quán, khả năng mở rộng và năng lực vận hành.
+\end{block}
+\end{frame}
+
+\begin{frame}{Các yếu tố cần cân nhắc khi chọn database}
+Cần lựa chọn dựa trên:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Kiểu dữ liệu của hệ thống.
+  \item Cách dữ liệu được truy vấn.
+  \item Yêu cầu về hiệu năng.
+  \item Yêu cầu về tính nhất quán.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Khả năng mở rộng.
+  \item Năng lực vận hành của đội ngũ kỹ thuật.
+  \item Chi phí.
+  \item Định hướng phát triển hệ thống.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Hình 1. Tổng quan lựa chọn cơ sở dữ liệu phù hợp}
+\centering
+\safeimage{images/choose-your-right-database.png}{0.82\textwidth}{Choose your right database}
+
+\vspace{2mm}
+{\small Tổng quan về việc lựa chọn cơ sở dữ liệu phù hợp.}
+\end{frame}
+
+\begin{frame}{Quiz nhanh: Giới thiệu tổng quan}
+\small
+\textbf{Câu 1.} Vì sao không nên chọn DBMS chỉ vì nó phổ biến?
+\begin{enumerate}[A.]
+  \item Vì DBMS phổ biến luôn miễn phí
+  \item Vì lựa chọn DBMS cần dựa trên dữ liệu, truy vấn, hiệu năng và vận hành
+  \item Vì DBMS phổ biến không hỗ trợ bảo mật
+  \item Vì mọi hệ thống chỉ nên dùng một loại database
+\end{enumerate}
+
+\textbf{Câu 2.} Một lựa chọn DBMS không phù hợp có thể gây ra vấn đề nào?
+\begin{enumerate}[A.]
+  \item Truy vấn chậm và khó mở rộng
+  \item Tăng độ phân giải màn hình
+  \item Giảm số lượng bảng bắt buộc trong mọi hệ thống
+  \item Tự động loại bỏ nhu cầu backup
+\end{enumerate}
+\end{frame}
+
+\section{Khái niệm cơ bản}
+
+\begin{frame}{DBMS là gì?}
+\kw{DBMS} là viết tắt của \kw{Database Management System}, nghĩa là \kw{hệ quản trị cơ sở dữ liệu}.
+
+\vspace{2mm}
+DBMS là phần mềm dùng để:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Tạo cơ sở dữ liệu.
+  \item Lưu trữ dữ liệu.
+  \item Truy vấn dữ liệu.
+  \item Cập nhật dữ liệu.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Xóa dữ liệu.
+  \item Đảm bảo an toàn dữ liệu.
+  \item Đảm bảo toàn vẹn dữ liệu.
+  \item Quản lý truy cập và giao dịch.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ví dụ về DBMS}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item MySQL
+  \item PostgreSQL
+  \item SQL Server
+  \item Oracle Database
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item MongoDB
+  \item Redis
+  \item Neo4j
+  \item Snowflake
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Quiz nhanh: Khái niệm cơ bản}
+\small
+\textbf{Câu 1.} DBMS là viết tắt của cụm từ nào?
+\begin{enumerate}[A.]
+  \item Database Management System
+  \item Data Backup Monitoring Service
+  \item Distributed Binary Model Server
+  \item Database Mapping Syntax
+\end{enumerate}
+
+\textbf{Câu 2.} Chức năng nào sau đây thuộc về DBMS?
+\begin{enumerate}[A.]
+  \item Tạo, lưu trữ, truy vấn, cập nhật và bảo vệ dữ liệu
+  \item Thiết kế giao diện đồ họa cho người dùng
+  \item Biên dịch mã nguồn ứng dụng
+  \item Thay thế hoàn toàn hệ điều hành
+\end{enumerate}
+\end{frame}
+
+\section{Các tiêu chí lựa chọn DBMS}
+
+\begin{frame}{Tổng quan các tiêu chí chính}
+Khi lựa chọn cơ sở dữ liệu cho một hệ thống, cần xem xét:
+\begin{enumerate}
+  \smallitem
+  \item Khả năng mở rộng.
+  \item Tính nhất quán dữ liệu.
+  \item Mẫu truy vấn và khối lượng công việc.
+  \item Độ phức tạp vận hành.
+  \item Khả năng phục hồi và độ sẵn sàng.
+  \item Yêu cầu hiệu năng.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Tiêu chí 1: Khả năng mở rộng}
+Khả năng mở rộng cho biết hệ thống có thể xử lý tốt hơn khi dữ liệu hoặc số lượng người dùng tăng lên hay không.
+
+\vspace{2mm}
+Có hai hướng mở rộng chính:
+\begin{block}{Mở rộng theo chiều dọc}
+Tăng tài nguyên cho một máy chủ hiện có.
+\end{block}
+\begin{block}{Mở rộng theo chiều ngang}
+Thêm nhiều máy chủ vào hệ thống để chia dữ liệu hoặc phân tán tải.
+\end{block}
+\end{frame}
+
+\begin{frame}{Mở rộng theo chiều dọc}
+Mở rộng theo chiều dọc nghĩa là tăng tài nguyên cho một máy chủ hiện có.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+  \smallitem
+  \item Tăng CPU.
+  \item Tăng RAM.
+  \item Tăng dung lượng ổ cứng.
+  \item Dùng máy chủ mạnh hơn.
+\end{itemize}
+
+\begin{block}{Ghi nhớ}
+Các cơ sở dữ liệu quan hệ như MySQL, PostgreSQL, SQL Server thường phù hợp với mở rộng theo chiều dọc.
+\end{block}
+\end{frame}
+
+\begin{frame}{Mở rộng theo chiều ngang}
+Mở rộng theo chiều ngang nghĩa là thêm nhiều máy chủ vào hệ thống.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+  \smallitem
+  \item Chia dữ liệu trên nhiều máy.
+  \item Phân tán tải truy vấn.
+  \item Sử dụng cụm máy chủ.
+\end{itemize}
+
+\begin{block}{Ghi nhớ}
+Các cơ sở dữ liệu NoSQL thường được thiết kế tốt cho mở rộng theo chiều ngang.
+\end{block}
+\end{frame}
+
+\begin{frame}{Tiêu chí 2: Tính nhất quán dữ liệu}
+Tính nhất quán dữ liệu cho biết dữ liệu có chính xác và đồng bộ tại mọi thời điểm hay không.
+
+\begin{exampleblock}{Ví dụ ngân hàng}
+Khi tài khoản A chuyển tiền cho tài khoản B, số tiền của A phải bị trừ và số tiền của B phải được cộng. Hai thao tác này phải xảy ra cùng nhau.
+\end{exampleblock}
+
+Nếu chỉ trừ tiền A mà chưa cộng tiền B thì dữ liệu bị sai lệch.
+\end{frame}
+
+\begin{frame}{Nhất quán mạnh và nhất quán sau cùng}
+\begin{block}{Nhất quán mạnh}
+Các hệ thống tài chính, kế toán, ngân hàng thường cần tính nhất quán mạnh và tuân thủ ACID.
+\end{block}
+
+\begin{block}{Nhất quán sau cùng}
+Một số hệ thống có thể chấp nhận dữ liệu nhất quán sau một khoảng thời gian ngắn, ví dụ mạng xã hội, hệ thống gợi ý, hệ thống log hoặc thống kê lượt xem.
+\end{block}
+\end{frame}
+
+\begin{frame}{Tiêu chí 3: Mẫu truy vấn và khối lượng công việc}
+Trước khi chọn DBMS, cần hiểu hệ thống chủ yếu làm gì với dữ liệu.
+
+\vspace{2mm}
+Một số kiểu workload:
+\begin{itemize}
+  \smallitem
+  \item Đọc nhiều hơn ghi.
+  \item Ghi nhiều hơn đọc.
+  \item Cân bằng giữa đọc và ghi.
+  \item Cần truy vấn phức tạp.
+  \item Cần truy vấn đơn giản nhưng tốc độ rất cao.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mẫu truy vấn và loại cơ sở dữ liệu phù hợp}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.44\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Đặc điểm hệ thống} & \textbf{Loại cơ sở dữ liệu phù hợp} \\
+\midrule
+Cần nhiều phép JOIN phức tạp & Cơ sở dữ liệu quan hệ \\
+Cần báo cáo, thống kê, phân tích & Cơ sở dữ liệu quan hệ hoặc columnar database \\
+Cần truy xuất theo khóa rất nhanh & Key-value store \\
+Dữ liệu dạng JSON linh hoạt & Document database \\
+Dữ liệu cảm biến theo thời gian & Time-series database \\
+Dữ liệu có nhiều quan hệ phức tạp & Graph database \\
+\bottomrule
+\end{tabularx}
+\end{adjustbox}
+\end{frame}
+
+\begin{frame}{Tiêu chí 4: Độ phức tạp vận hành}
+Một hệ thống cơ sở dữ liệu không chỉ cần thiết kế tốt mà còn cần được vận hành tốt.
+
+\vspace{2mm}
+Các công việc vận hành bao gồm:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Sao lưu dữ liệu.
+  \item Khôi phục dữ liệu.
+  \item Cập nhật phiên bản.
+  \item Giám sát hiệu năng.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Phân quyền người dùng.
+  \item Mã hóa dữ liệu.
+  \item Thiết lập nhân bản dữ liệu.
+  \item Xử lý sự cố.
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{1mm}
+Nếu đội ngũ kỹ thuật chưa có nhiều kinh nghiệm quản trị cơ sở dữ liệu, nên cân nhắc sử dụng \kw{managed database}.
+\end{frame}
+
+\begin{frame}{Tiêu chí 5: Phục hồi và độ sẵn sàng}
+Một số hệ thống yêu cầu phải hoạt động liên tục:
+\begin{itemize}
+  \smallitem
+  \item Ngân hàng số.
+  \item Thương mại điện tử.
+  \item Hệ thống đặt vé.
+  \item Hệ thống quản lý bệnh viện.
+  \item Hệ thống logistics thời gian thực.
+\end{itemize}
+
+Các hệ thống này cần tự động sao lưu, tự động chuyển đổi khi máy chủ lỗi, nhân bản dữ liệu, hỗ trợ nhiều vùng địa lý và khả năng khôi phục sau thảm họa.
+\end{frame}
+
+\begin{frame}{Tiêu chí 6: Yêu cầu hiệu năng}
+Hiệu năng có thể được đánh giá qua:
+\begin{itemize}
+  \smallitem
+  \item Độ trễ thấp.
+  \item Thông lượng cao.
+  \item Tốc độ ghi dữ liệu.
+  \item Tốc độ đọc dữ liệu.
+  \item Khả năng xử lý truy vấn đồng thời.
+\end{itemize}
+
+\begin{exampleblock}{Ví dụ}
+Cache cần độ trễ rất thấp; IoT cần tốc độ ghi rất cao; BI cần xử lý truy vấn phân tích lớn; giao dịch cần tính nhất quán và độ tin cậy cao.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Quiz nhanh: Tiêu chí lựa chọn DBMS}
+\small
+\textbf{Câu 1.} Khả năng mở rộng theo chiều ngang có nghĩa là gì?
+\begin{enumerate}[A.]
+  \item Tăng thêm CPU, RAM cho một máy chủ hiện có
+  \item Thêm nhiều máy chủ vào hệ thống để phân tán tải hoặc dữ liệu
+  \item Giảm số lượng người dùng của hệ thống
+  \item Chuyển mọi dữ liệu sang file văn bản
+\end{enumerate}
+
+\textbf{Câu 2.} Hệ thống ngân hàng thường cần đặc tính nào?
+\begin{enumerate}[A.]
+  \item Tính nhất quán mạnh và giao dịch ACID
+  \item Chỉ cần eventual consistency trong mọi giao dịch
+  \item Không cần kiểm soát toàn vẹn dữ liệu
+  \item Không cần backup
+\end{enumerate}
+\end{frame}
+
+\section{Các loại cơ sở dữ liệu phổ biến}
+
+\begin{frame}{Hình 2. Các loại cơ sở dữ liệu phổ biến}
+\centering
+\safeimage{images/types-of-databases.png}{0.82\textwidth}{Types of databases}
+
+\vspace{2mm}
+{\small Các loại cơ sở dữ liệu phổ biến.}
+\end{frame}
+
+\begin{frame}{Các loại database trong bài học}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Relational database.
+  \item Document database.
+  \item Key-value store.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Time-series database.
+  \item Columnar database.
+  \item Graph database.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Quiz nhanh: Các loại cơ sở dữ liệu phổ biến}
+\small
+\textbf{Câu 1.} Dữ liệu dạng bảng, có khóa chính và khóa ngoại thường phù hợp với loại database nào?
+\begin{enumerate}[A.]
+  \item Relational database
+  \item Time-series database
+  \item Graph database
+  \item Key-value store
+\end{enumerate}
+
+\textbf{Câu 2.} Dữ liệu JSON linh hoạt thường phù hợp với loại database nào?
+\begin{enumerate}[A.]
+  \item Document database
+  \item Columnar database
+  \item Relational database bắt buộc trong mọi trường hợp
+  \item Time-series database
+\end{enumerate}
+\end{frame}
+
+\subsection{Relational Database}
+
+\begin{frame}{Cơ sở dữ liệu quan hệ: Khái niệm}
+\kw{Relational Database Management System} hay \kw{RDBMS} là hệ quản trị cơ sở dữ liệu lưu dữ liệu dưới dạng bảng.
+
+\vspace{2mm}
+Mỗi bảng gồm:
+\begin{itemize}
+  \smallitem
+  \item Các hàng.
+  \item Các cột.
+  \item Khóa chính.
+  \item Khóa ngoại.
+  \item Ràng buộc dữ liệu.
+\end{itemize}
+
+RDBMS thường sử dụng ngôn ngữ SQL để truy vấn dữ liệu.
+\end{frame}
+
+\begin{frame}{Ví dụ bảng Students}
+\scriptsize
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{student\_id} & \textbf{full\_name} & \textbf{major} \\
+\midrule
+1 & Nguyễn An & Data Science \\
+2 & Trần Bình & Logistics \\
+3 & Lê Chi & Information Systems \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+Ví dụ truy vấn SQL:
+\begin{block}{SQL}
+\ttfamily SELECT full\_name, major FROM Students WHERE major = 'Data Science';
+\end{block}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng RDBMS?}
+Nên dùng RDBMS khi:
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu có cấu trúc rõ ràng.
+  \item Cần đảm bảo tính toàn vẹn dữ liệu.
+  \item Cần giao dịch ACID.
+  \item Cần JOIN giữa nhiều bảng.
+  \item Cần báo cáo và truy vấn phức tạp.
+  \item Hệ thống liên quan đến tài chính, kế toán, quản lý đơn hàng, quản lý sinh viên.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp với RDBMS}
+\begin{itemize}
+  \smallitem
+  \item Hệ thống ngân hàng.
+  \item Hệ thống quản lý sinh viên.
+  \item Hệ thống bán hàng.
+  \item Hệ thống quản lý kho.
+  \item Hệ thống kế toán.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Managed RDBMS?}
+Nên dùng dịch vụ RDBMS được quản lý khi:
+\begin{itemize}
+  \smallitem
+  \item Cần độ sẵn sàng cao.
+  \item Muốn tự động sao lưu dữ liệu.
+  \item Muốn khôi phục dữ liệu theo thời điểm.
+  \item Không muốn tự quản lý nâng cấp phiên bản.
+  \item Cần bảo mật, mã hóa và giám sát tích hợp.
+  \item Muốn giảm gánh nặng vận hành.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ Managed RDBMS và trường hợp không nên dùng}
+\begin{block}{Ví dụ}
+Amazon RDS, Google Cloud SQL, Azure SQL Database.
+\end{block}
+
+\begin{alertblock}{Không nên dùng managed RDBMS nếu}
+\begin{itemize}
+  \smallitem
+  \item Cần kiểm soát sâu bên trong database engine.
+  \item Có yêu cầu bắt buộc dữ liệu phải lưu tại chỗ.
+  \item Có ràng buộc pháp lý không cho phép lưu dữ liệu trên cloud.
+  \item Chi phí cloud không phù hợp với ngân sách.
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\subsection{Document Database}
+
+\begin{frame}{Document Database: Khái niệm}
+\kw{Document database} lưu dữ liệu dưới dạng tài liệu, thường là JSON hoặc BSON.
+
+\vspace{2mm}
+Khác với cơ sở dữ liệu quan hệ, document database không bắt buộc mọi bản ghi phải có cùng cấu trúc.
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ tài liệu JSON}
+\small
+\begin{verbatim}
+{
+  "student_id": 1,
+  "full_name": "Nguyễn An",
+  "major": "Data Science",
+  "skills": ["Python", "SQL", "Machine Learning"],
+  "address": {
+    "city": "Hanoi",
+    "district": "Hoan Kiem"
+  }
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Document Database?}
+Nên dùng document database khi:
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu có cấu trúc linh hoạt.
+  \item Dữ liệu dạng JSON.
+  \item Schema thay đổi thường xuyên.
+  \item Dữ liệu có cấu trúc lồng nhau.
+  \item Ứng dụng phát triển nhanh, cần thay đổi mô hình dữ liệu linh hoạt.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp và managed document database}
+\begin{block}{Ví dụ phù hợp}
+Hồ sơ người dùng, catalog sản phẩm, nội dung bài viết, ứng dụng mobile, hệ thống quản lý nội dung.
+\end{block}
+
+\begin{block}{Managed document database}
+MongoDB Atlas, Amazon DocumentDB, Couchbase Capella.
+\end{block}
+
+Nên dùng managed document database khi cần mở rộng nhanh, không muốn tự cấu hình replication, sharding, backup, cần triển khai nhiều khu vực địa lý và cần giám sát tích hợp.
+\end{frame}
+
+\subsection{Key-Value Store}
+
+\begin{frame}{Key-Value Store: Khái niệm}
+\kw{Key-value database} lưu dữ liệu dưới dạng cặp khóa và giá trị.
+
+\vspace{2mm}
+Loại cơ sở dữ liệu này rất đơn giản nhưng có tốc độ truy xuất rất nhanh.
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ key-value}
+\small
+\begin{verbatim}
+user:1001 -> "Nguyễn An"
+cart:1001 -> ["book", "laptop", "mouse"]
+session:abc123 -> "active"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Key-Value Store?}
+Nên dùng key-value store khi:
+\begin{itemize}
+  \smallitem
+  \item Cần truy xuất dữ liệu cực nhanh.
+  \item Dữ liệu được truy vấn chủ yếu bằng khóa.
+  \item Cần lưu session người dùng.
+  \item Cần cache dữ liệu.
+  \item Cần leaderboard trong game.
+  \item Cần xử lý hàng triệu request mỗi giây.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp và hệ quản trị}
+\begin{block}{Ví dụ phù hợp}
+Cache sản phẩm, phiên đăng nhập người dùng, giỏ hàng tạm thời, bảng xếp hạng, bộ đếm lượt xem.
+\end{block}
+
+\begin{block}{Ví dụ hệ quản trị}
+Redis, Memcached, Amazon ElastiCache, Azure Cache for Redis, Google Memorystore.
+\end{block}
+\end{frame}
+
+\subsection{Time-Series Database}
+
+\begin{frame}{Time-Series Database: Khái niệm}
+\kw{Time-series database} là cơ sở dữ liệu chuyên dùng cho dữ liệu gắn với thời gian.
+
+\vspace{2mm}
+Mỗi bản ghi thường có:
+\begin{itemize}
+  \smallitem
+  \item Timestamp.
+  \item Giá trị đo.
+  \item Nguồn phát sinh dữ liệu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ dữ liệu time-series}
+\small
+\begin{verbatim}
+2026-05-31 10:00:00 | sensor_01 | temperature | 32.5
+2026-05-31 10:01:00 | sensor_01 | temperature | 32.7
+2026-05-31 10:02:00 | sensor_01 | temperature | 32.6
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Time-Series Database?}
+Nên dùng time-series database khi xử lý:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu cảm biến.
+  \item Dữ liệu IoT.
+  \item Log hệ thống.
+  \item Metric giám sát.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu tài chính theo thời gian.
+  \item Dữ liệu vận hành máy móc.
+  \item Dashboard thời gian thực.
+  \item Phân tích lịch sử theo thời gian.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp và hệ quản trị}
+\begin{block}{Ví dụ phù hợp}
+Theo dõi nhiệt độ kho lạnh, giám sát CPU/RAM/disk của server, theo dõi vị trí xe tải theo thời gian, phân tích giá cổ phiếu, dữ liệu điện năng tiêu thụ.
+\end{block}
+
+\begin{block}{Ví dụ hệ quản trị}
+InfluxDB Cloud, Amazon Timestream, Azure Data Explorer, TimescaleDB.
+\end{block}
+\end{frame}
+
+\subsection{Columnar Database}
+
+\begin{frame}{Columnar Database: Khái niệm}
+\kw{Columnar database} lưu dữ liệu theo cột thay vì theo hàng.
+
+\vspace{2mm}
+Nếu cần tính tổng doanh thu, hệ thống chỉ cần đọc cột \texttt{amount}. Do đó, columnar database rất hiệu quả cho phân tích dữ liệu lớn.
+\end{frame}
+
+\begin{frame}{Ví dụ bảng bán hàng}
+\scriptsize
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{order\_id} & \textbf{customer\_id} & \textbf{amount} & \textbf{date} \\
+\midrule
+1 & C01 & 100 & 2026-05-01 \\
+2 & C02 & 200 & 2026-05-02 \\
+3 & C03 & 150 & 2026-05-03 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+Với truy vấn phân tích doanh thu, việc đọc theo cột giúp giảm lượng dữ liệu cần quét.
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Columnar Database?}
+Nên dùng columnar database khi:
+\begin{itemize}
+  \smallitem
+  \item Cần phân tích dữ liệu lớn.
+  \item Cần BI hoặc data warehouse.
+  \item Truy vấn chủ yếu là đọc và tổng hợp.
+  \item Cần tính toán thống kê trên nhiều triệu hoặc tỷ dòng dữ liệu.
+  \item Cần tách riêng lưu trữ và tính toán.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp và hệ quản trị}
+\begin{block}{Ví dụ phù hợp}
+Báo cáo doanh thu, phân tích hành vi khách hàng, dashboard quản trị, kho dữ liệu doanh nghiệp, phân tích dữ liệu logistics.
+\end{block}
+
+\begin{block}{Ví dụ hệ quản trị}
+Google BigQuery, Amazon Redshift, Snowflake, Azure Synapse Analytics.
+\end{block}
+\end{frame}
+
+\subsection{Graph Database}
+
+\begin{frame}{Graph Database: Khái niệm}
+\kw{Graph database} biểu diễn dữ liệu dưới dạng:
+\begin{itemize}
+  \smallitem
+  \item \kw{Node}: đỉnh.
+  \item \kw{Edge}: quan hệ.
+  \item \kw{Property}: thuộc tính.
+\end{itemize}
+
+Graph database rất phù hợp khi mối quan hệ giữa các đối tượng quan trọng hơn bản thân từng đối tượng riêng lẻ.
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ graph database}
+\small
+\begin{verbatim}
+Minh --friend_of--> An
+An --works_at--> Company A
+Company A --located_in--> Hanoi
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Khi nào nên dùng Graph Database?}
+Nên dùng graph database khi:
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu có nhiều quan hệ phức tạp.
+  \item Cần truy vấn đường đi hoặc mạng quan hệ.
+  \item Cần phân tích liên kết.
+  \item Cần phát hiện gian lận.
+  \item Cần xây dựng hệ thống gợi ý.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ví dụ phù hợp và hệ quản trị}
+\begin{block}{Ví dụ phù hợp}
+Mạng xã hội, gợi ý bạn bè, phân tích gian lận tài chính, gợi ý sản phẩm, quản lý tri thức, phân tích chuỗi cung ứng có nhiều quan hệ phụ thuộc.
+\end{block}
+
+\begin{block}{Ví dụ hệ quản trị}
+Neo4j Aura, Amazon Neptune, Azure Cosmos DB Gremlin API.
+\end{block}
+\end{frame}
+
+\section{Quản lý và vận hành cơ sở dữ liệu}
+\subsection{Managed Database}
+
+\begin{frame}{Managed Database là gì?}
+\kw{Managed database} là dịch vụ cơ sở dữ liệu được nhà cung cấp cloud quản lý thay cho đội ngũ kỹ thuật của doanh nghiệp.
+
+\vspace{2mm}
+Nhà cung cấp có thể hỗ trợ:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Sao lưu tự động.
+  \item Khôi phục dữ liệu.
+  \item Cập nhật phiên bản.
+  \item Mở rộng tài nguyên.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Nhân bản dữ liệu.
+  \item Giám sát hiệu năng.
+  \item Mã hóa dữ liệu.
+  \item Chuyển đổi khi có lỗi.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Ví dụ managed database}
+\begin{itemize}
+  \smallitem
+  \item Amazon RDS.
+  \item Google Cloud SQL.
+  \item Azure Cosmos DB.
+  \item MongoDB Atlas.
+  \item Amazon Timestream.
+  \item Snowflake.
+\end{itemize}
+\end{frame}
+
+\subsection{Khi nào nên chọn Managed Database?}
+\begin{frame}{Khi nào nên chọn Managed Database?}
+Nên chọn managed database khi:
+\begin{itemize}
+  \smallitem
+  \item Đội ngũ kỹ thuật nhỏ.
+  \item Không muốn mất nhiều thời gian vận hành.
+  \item Cần độ sẵn sàng cao.
+  \item Cần backup và recovery tự động.
+  \item Cần monitoring tích hợp.
+  \item Cần bảo mật và tuân thủ.
+  \item Muốn tập trung vào phát triển ứng dụng thay vì quản trị hạ tầng.
+\end{itemize}
+\end{frame}
+
+\subsection{Khi nào nên tự quản lý database?}
+\begin{frame}{Khi nào nên tự quản lý database?}
+Có thể tự quản lý database khi:
+\begin{itemize}
+  \smallitem
+  \item Cần kiểm soát sâu cấu hình hệ thống.
+  \item Cần cài đặt module đặc biệt.
+  \item Có yêu cầu dữ liệu phải đặt tại chỗ.
+  \item Có đội ngũ DBA mạnh.
+  \item Muốn tối ưu chi phí trong một số trường hợp cụ thể.
+  \item Có yêu cầu đặc thù về bảo mật hoặc pháp lý.
+\end{itemize}
+\end{frame}
+
+\section{Mẫu kiến trúc ảnh hưởng đến lựa chọn database}
+\subsection{Polyglot Persistence}
+
+\begin{frame}{Polyglot Persistence}
+\kw{Polyglot persistence} nghĩa là một hệ thống sử dụng nhiều loại cơ sở dữ liệu khác nhau cho các nhu cầu khác nhau.
+
+\begin{exampleblock}{Ví dụ thương mại điện tử}
+\begin{itemize}
+  \smallitem
+  \item PostgreSQL cho đơn hàng và thanh toán.
+  \item MongoDB cho catalog sản phẩm.
+  \item Redis cho cache.
+  \item Elasticsearch cho tìm kiếm.
+  \item Snowflake cho phân tích dữ liệu.
+\end{itemize}
+\end{exampleblock}
+
+Ý tưởng chính: không nhất thiết toàn bộ hệ thống phải dùng một loại database duy nhất.
+\end{frame}
+
+\subsection{CQRS}
+\begin{frame}{CQRS}
+\kw{CQRS} là viết tắt của \kw{Command Query Responsibility Segregation}.
+
+\vspace{2mm}
+Ý tưởng chính:
+\begin{itemize}
+  \smallitem
+  \item Tách phần ghi dữ liệu.
+  \item Tách phần đọc dữ liệu.
+\end{itemize}
+
+\begin{exampleblock}{Ví dụ}
+Cơ sở dữ liệu SQL dùng cho ghi giao dịch, trong khi columnar database dùng cho báo cáo và phân tích.
+\end{exampleblock}
+
+CQRS phù hợp khi hệ thống có sự khác biệt lớn giữa nhu cầu ghi và nhu cầu đọc.
+\end{frame}
+
+\subsection{Event Sourcing}
+\begin{frame}{Event Sourcing}
+\kw{Event sourcing} lưu lại các sự kiện thay đổi trạng thái thay vì chỉ lưu trạng thái cuối cùng.
+
+\begin{block}{Ví dụ với đơn hàng}
+\ttfamily OrderCreated \quad PaymentConfirmed \quad OrderPacked \quad OrderShipped \quad OrderDelivered
+\end{block}
+
+\begin{itemize}
+  \smallitem
+  \item Có lịch sử thay đổi đầy đủ.
+  \item Dễ audit.
+  \item Có thể tái dựng trạng thái tại một thời điểm trong quá khứ.
+  \item Phù hợp với hệ thống cần truy vết.
+\end{itemize}
+\end{frame}
+
+\subsection{Microservices}
+\begin{frame}{Microservices}
+Trong kiến trúc microservices, mỗi service có thể quản lý database riêng.
+
+\begin{exampleblock}{Ví dụ}
+\begin{itemize}
+  \smallitem
+  \item Service người dùng dùng PostgreSQL.
+  \item Service sản phẩm dùng MongoDB.
+  \item Service cache dùng Redis.
+  \item Service phân tích dùng BigQuery.
+\end{itemize}
+\end{exampleblock}
+
+Điều này giúp mỗi service chọn database phù hợp nhất với nghiệp vụ của nó.
+\end{frame}
+
+\section{So sánh và quy trình lựa chọn DBMS}
+\subsection{Bảng so sánh các loại database}
+
+\begin{frame}{Bảng so sánh nhanh các loại database}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabularx}{1.08\textwidth}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Loại database} & \textbf{Dạng dữ liệu chính} & \textbf{Phù hợp với} & \textbf{Ví dụ} \\
+\midrule
+Relational database & Bảng, hàng, cột & Giao dịch, dữ liệu có cấu trúc, JOIN & MySQL, PostgreSQL \\
+Document database & JSON, BSON & Dữ liệu linh hoạt, schema thay đổi & MongoDB \\
+Key-value store & Khóa - giá trị & Cache, session, truy xuất cực nhanh & Redis \\
+Time-series database & Dữ liệu theo thời gian & IoT, log, metric, sensor & InfluxDB \\
+Columnar database & Lưu theo cột & BI, OLAP, data warehouse & BigQuery, Snowflake \\
+Graph database & Node và edge & Quan hệ phức tạp, mạng xã hội, fraud detection & Neo4j \\
+\bottomrule
+\end{tabularx}
+\end{adjustbox}
+\end{frame}
+
+\subsection{Quy trình 5 bước}
+\begin{frame}{Quy trình lựa chọn DBMS}
+Có thể sử dụng quy trình 5 bước:
+\begin{enumerate}
+  \smallitem
+  \item Xác định bản chất dữ liệu.
+  \item Xác định kiểu truy vấn.
+  \item Xác định yêu cầu nhất quán.
+  \item Xác định yêu cầu mở rộng.
+  \item Xác định năng lực vận hành.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Bước 1: Xác định bản chất dữ liệu}
+Câu hỏi cần trả lời:
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu có cấu trúc cố định không?
+  \item Dữ liệu có dạng bảng không?
+  \item Dữ liệu có dạng JSON không?
+  \item Dữ liệu có phụ thuộc thời gian không?
+  \item Dữ liệu có nhiều quan hệ phức tạp không?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bước 2: Xác định kiểu truy vấn}
+Câu hỏi cần trả lời:
+\begin{itemize}
+  \smallitem
+  \item Có cần JOIN nhiều bảng không?
+  \item Có cần truy vấn theo khóa nhanh không?
+  \item Có cần phân tích dữ liệu lớn không?
+  \item Có cần truy vấn quan hệ nhiều tầng không?
+  \item Có cần dashboard thời gian thực không?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bước 3: Xác định yêu cầu nhất quán}
+Câu hỏi cần trả lời:
+\begin{itemize}
+  \smallitem
+  \item Hệ thống có cần ACID không?
+  \item Có thể chấp nhận eventual consistency không?
+  \item Sai lệch dữ liệu tạm thời có gây hậu quả nghiêm trọng không?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bước 4: Xác định yêu cầu mở rộng}
+Câu hỏi cần trả lời:
+\begin{itemize}
+  \smallitem
+  \item Hệ thống cần mở rộng theo chiều dọc hay chiều ngang?
+  \item Dữ liệu có tăng nhanh không?
+  \item Số lượng người dùng có tăng đột biến không?
+  \item Có cần triển khai đa vùng địa lý không?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bước 5: Xác định năng lực vận hành}
+Câu hỏi cần trả lời:
+\begin{itemize}
+  \smallitem
+  \item Đội ngũ có kinh nghiệm quản trị database không?
+  \item Có DBA chuyên trách không?
+  \item Có cần backup tự động không?
+  \item Có cần giám sát tích hợp không?
+  \item Có nên dùng managed database không?
+\end{itemize}
+\end{frame}
+
+\section{Ví dụ tình huống lựa chọn DBMS}
+\subsection{Hệ thống quản lý sinh viên}
+
+\begin{frame}{Tình huống 1: Hệ thống quản lý sinh viên}
+\begin{block}{Đặc điểm}
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu có cấu trúc rõ ràng.
+  \item Có nhiều bảng như sinh viên, lớp, môn học, điểm.
+  \item Cần JOIN dữ liệu.
+  \item Cần đảm bảo toàn vẹn dữ liệu.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lựa chọn phù hợp}
+PostgreSQL hoặc MySQL.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Tình huống 1: Lý do lựa chọn}
+PostgreSQL hoặc MySQL phù hợp vì:
+\begin{itemize}
+  \smallitem
+  \item Phù hợp với dữ liệu quan hệ.
+  \item Hỗ trợ SQL.
+  \item Hỗ trợ khóa chính, khóa ngoại.
+  \item Dễ tạo báo cáo.
+\end{itemize}
+\end{frame}
+
+\subsection{Ứng dụng mạng xã hội}
+\begin{frame}{Tình huống 2: Ứng dụng mạng xã hội}
+\begin{block}{Đặc điểm}
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu người dùng có thể linh hoạt.
+  \item Có bài viết, bình luận, tương tác.
+  \item Có quan hệ bạn bè, theo dõi.
+  \item Cần mở rộng lớn.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lựa chọn có thể kết hợp}
+MongoDB cho nội dung; Redis cho cache; Graph database cho quan hệ bạn bè; Columnar database cho phân tích.
+\end{exampleblock}
+\end{frame}
+
+\subsection{IoT giám sát nhiệt độ kho lạnh}
+\begin{frame}{Tình huống 3: IoT giám sát nhiệt độ kho lạnh}
+\begin{block}{Đặc điểm}
+\begin{itemize}
+  \smallitem
+  \item Dữ liệu được ghi liên tục theo thời gian.
+  \item Mỗi bản ghi có timestamp.
+  \item Cần dashboard thời gian thực.
+  \item Cần lưu trữ và tổng hợp dữ liệu lịch sử.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lựa chọn phù hợp}
+InfluxDB hoặc Amazon Timestream.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Tình huống 3: Lý do lựa chọn}
+InfluxDB hoặc Amazon Timestream phù hợp vì:
+\begin{itemize}
+  \smallitem
+  \item Tối ưu cho dữ liệu time-series.
+  \item Hỗ trợ retention policy.
+  \item Hỗ trợ phân tích dữ liệu theo thời gian.
+  \item Phù hợp với dashboard giám sát thời gian thực.
+\end{itemize}
+\end{frame}
+
+\subsection{Hệ thống thương mại điện tử}
+\begin{frame}{Tình huống 4: Hệ thống thương mại điện tử}
+\begin{block}{Đặc điểm}
+\begin{itemize}
+  \smallitem
+  \item Đơn hàng cần tính nhất quán cao.
+  \item Sản phẩm có thông tin linh hoạt.
+  \item Cần cache để tăng tốc.
+  \item Cần phân tích doanh thu.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Lựa chọn kết hợp}
+PostgreSQL cho đơn hàng; MongoDB cho catalog sản phẩm; Redis cho cache; BigQuery hoặc Snowflake cho phân tích.
+\end{exampleblock}
+\end{frame}
+
+\section{Lưu ý triển khai và tổng kết}
+
+\begin{frame}{Một số lưu ý triển khai}
+Khi triển khai hệ thống cơ sở dữ liệu, cần chú ý:
+\begin{itemize}
+  \smallitem
+  \item Thiết kế backup ngay từ đầu.
+  \item Có kế hoạch khôi phục sau sự cố.
+  \item Theo dõi hiệu năng truy vấn.
+  \item Theo dõi lỗi replication.
+  \item Thiết kế schema có khả năng tiến hóa.
+  \item Không tối ưu quá sớm khi chưa hiểu workload.
+  \item Không chọn database chỉ vì xu hướng công nghệ.
+  \item Ưu tiên giải pháp đơn giản nếu bài toán chưa quá phức tạp.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Tóm tắt bài học}
+Trong bài này, chúng ta đã học:
+\begin{itemize}
+  \smallitem
+  \item Lựa chọn DBMS là một quyết định kiến trúc quan trọng.
+  \item RDBMS phù hợp với dữ liệu có cấu trúc và yêu cầu tính nhất quán cao.
+  \item Document database phù hợp với dữ liệu linh hoạt như JSON.
+  \item Key-value store phù hợp với cache và truy xuất cực nhanh.
+  \item Time-series database phù hợp với dữ liệu theo thời gian.
+  \item Columnar database phù hợp với phân tích dữ liệu lớn.
+  \item Graph database phù hợp với dữ liệu có nhiều quan hệ phức tạp.
+  \item Managed database giúp giảm gánh nặng vận hành.
+  \item Một hệ thống lớn có thể dùng nhiều loại database khác nhau.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Kết luận}
+\begin{block}{Không có một loại cơ sở dữ liệu nào phù hợp với mọi bài toán}
+Một lựa chọn tốt cần dựa trên bản chất dữ liệu, kiểu truy vấn, yêu cầu nhất quán, hiệu năng, khả năng mở rộng, năng lực vận hành, chi phí và định hướng phát triển hệ thống.
+\end{block}
+
+\vspace{2mm}
+Trong các hệ thống hiện đại, việc kết hợp nhiều loại cơ sở dữ liệu là rất phổ biến. Điều quan trọng là mỗi loại database phải được dùng đúng với điểm mạnh của nó.
+\end{frame}
+
+\begin{frame}{Từ khóa chính}
+\small
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item DBMS
+  \item Relational Database
+  \item Document Database
+  \item Key-Value Store
+  \item Time-Series Database
+  \item Columnar Database
+  \item Graph Database
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Managed Database
+  \item ACID
+  \item Eventual Consistency
+  \item Scalability
+  \item Vertical Scaling
+  \item Horizontal Scaling
+  \item Backup
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Polyglot Persistence
+  \item CQRS
+  \item Event Sourcing
+  \item Microservices
+  \item Failover
+  \item Workload
+  \item Monitoring
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Câu hỏi và bài tập}
+
+\begin{frame}[allowframebreaks]{Câu hỏi ôn tập}
+\small
+\begin{enumerate}
+  \smallitem
+  \item Vì sao không nên chọn DBMS chỉ vì nó phổ biến?
+  \item Hãy phân biệt mở rộng theo chiều dọc và mở rộng theo chiều ngang.
+  \item Loại database nào phù hợp với hệ thống ngân hàng? Vì sao?
+  \item Khi nào nên sử dụng document database?
+  \item Redis thường được dùng trong những tình huống nào?
+  \item Time-series database phù hợp với loại dữ liệu nào?
+  \item Columnar database khác gì so với cơ sở dữ liệu lưu theo hàng?
+  \item Graph database phù hợp với bài toán nào?
+  \item Managed database có ưu điểm gì?
+  \item Polyglot persistence là gì?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Quiz ôn tập ngắn}
+\small
+\textbf{Câu 1.} Khi chọn DBMS, yếu tố nào nên được xem xét trước tiên?
+\begin{enumerate}[A.]
+  \item Logo của nhà cung cấp
+  \item Bản chất dữ liệu và cách hệ thống truy vấn dữ liệu
+  \item Database nào đang phổ biến nhất trên mạng xã hội
+  \item Ngôn ngữ lập trình của giao diện người dùng
+\end{enumerate}
+
+\textbf{Câu 2.} Hệ thống ngân hàng thường ưu tiên loại cơ sở dữ liệu nào?
+\begin{enumerate}[A.]
+  \item Relational database
+  \item Key-value store
+  \item Graph database
+  \item Time-series database
+\end{enumerate}
+
+\textbf{Câu 3.} Nếu dữ liệu có cấu trúc JSON linh hoạt và schema thay đổi thường xuyên, lựa chọn phù hợp là gì?
+\begin{enumerate}[A.]
+  \item Document database
+  \item Columnar database
+  \item Time-series database
+  \item Key-value store
+\end{enumerate}
+
+\textbf{Câu 4.} Redis thường phù hợp nhất với tình huống nào?
+\begin{enumerate}[A.]
+  \item Truy vấn JOIN phức tạp giữa nhiều bảng
+  \item Lưu cache, session hoặc dữ liệu truy xuất theo khóa rất nhanh
+  \item Phân tích dữ liệu lịch sử nhiều tỷ dòng
+  \item Mô hình hóa quan hệ xã hội nhiều tầng
+\end{enumerate}
+
+\textbf{Câu 5.} Dữ liệu cảm biến IoT gửi liên tục theo timestamp nên ưu tiên loại database nào?
+\begin{enumerate}[A.]
+  \item Graph database
+  \item Time-series database
+  \item Document database
+  \item Relational database
+\end{enumerate}
+
+\textbf{Câu 6.} Columnar database phù hợp nhất cho nhu cầu nào?
+\begin{enumerate}[A.]
+  \item Lưu session đăng nhập
+  \item Phân tích, tổng hợp và báo cáo dữ liệu lớn
+  \item Lưu quan hệ bạn bè trong mạng xã hội
+  \item Quản lý giao dịch ngân hàng theo ACID
+\end{enumerate}
+
+\textbf{Câu 7.} Graph database mạnh ở điểm nào?
+\begin{enumerate}[A.]
+  \item Truy vấn và phân tích quan hệ phức tạp giữa các đối tượng
+  \item Lưu file ảnh kích thước lớn
+  \item Thay thế hoàn toàn hệ điều hành
+  \item Chỉ lưu dữ liệu dạng bảng cố định
+\end{enumerate}
+
+\textbf{Câu 8.} Managed database giúp đội ngũ kỹ thuật giảm bớt công việc nào?
+\begin{enumerate}[A.]
+  \item Thiết kế giao diện người dùng
+  \item Viết toàn bộ nghiệp vụ ứng dụng
+  \item Backup, monitoring, cập nhật phiên bản và xử lý failover
+  \item Xóa bỏ nhu cầu bảo mật dữ liệu
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Bài tập vận dụng}
+\small
+\textbf{Bài tập 1.} Một startup xây dựng ứng dụng quản lý đơn hàng online. Hệ thống có các chức năng quản lý khách hàng, sản phẩm, đơn hàng, thanh toán, báo cáo doanh thu và tìm kiếm sản phẩm. Hãy đề xuất loại database phù hợp cho từng chức năng.
+
+\vspace{3mm}
+\textbf{Bài tập 2.} Một công ty logistics muốn lưu dữ liệu vị trí xe tải theo thời gian thực. Mỗi xe gửi dữ liệu GPS mỗi 10 giây. Hãy trả lời:
+\begin{itemize}
+  \smallitem
+  \item Nên dùng loại database nào?
+  \item Vì sao?
+  \item Có nên dùng RDBMS truyền thống không?
+  \item Nếu cần dashboard thời gian thực thì cần bổ sung công cụ gì?
+\end{itemize}
+
+\vspace{3mm}
+\textbf{Bài tập 3.} Một hệ thống mạng xã hội cần lưu hồ sơ người dùng, bài viết, bình luận, quan hệ bạn bè, gợi ý bạn bè và thống kê lượt xem. Hãy đề xuất kiến trúc lưu trữ dữ liệu sử dụng nhiều loại database khác nhau.
+\end{frame}
+
+\begin{frame}{Câu hỏi trắc nghiệm bổ sung}
+\small
+\textbf{Câu 1.} Loại database nào phù hợp nhất cho dữ liệu có cấu trúc rõ ràng và cần JOIN phức tạp?
+\begin{enumerate}[A.]
+  \item Key-value store
+  \item Relational database
+  \item Time-series database
+  \item Graph database
+\end{enumerate}
+
+\textbf{Câu 2.} Redis thường được dùng cho mục đích nào?
+\begin{enumerate}[A.]
+  \item Phân tích dữ liệu lớn
+  \item Lưu quan hệ xã hội phức tạp
+  \item Cache và session
+  \item Lưu dữ liệu dạng cột
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Câu hỏi trắc nghiệm bổ sung}
+\small
+\textbf{Câu 3.} Dữ liệu cảm biến IoT theo thời gian phù hợp nhất với loại database nào?
+\begin{enumerate}[A.]
+  \item Time-series database
+  \item Graph database
+  \item Document database
+  \item Relational database
+\end{enumerate}
+
+\textbf{Câu 4.} MongoDB là ví dụ phổ biến của loại database nào?
+\begin{enumerate}[A.]
+  \item Columnar database
+  \item Document database
+  \item Key-value store
+  \item Time-series database
+\end{enumerate}
+
+\textbf{Câu 5.} Graph database phù hợp nhất với bài toán nào?
+\begin{enumerate}[A.]
+  \item Lưu session người dùng
+  \item Phân tích quan hệ phức tạp
+  \item Tính tổng doanh thu theo tháng
+  \item Lưu log cảm biến
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\centering
+\Huge Cảm ơn!\\
+\vspace{4mm}
+\Large Câu hỏi và thảo luận
+\end{frame}
+
+\end{document}

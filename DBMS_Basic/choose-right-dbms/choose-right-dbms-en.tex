@@ -1,0 +1,1403 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Compile with XeLaTeX
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Graphics
+\graphicspath{{images/}{./}{/mnt/data/images/}}
+\hypersetup{unicode=true}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,72,160}
+\definecolor{codestr}{RGB}{150,60,30}
+\definecolor{accent}{RGB}{0,90,150}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  keepspaces=true,
+  language=SQL
+}
+
+\newcommand{\keyword}[1]{\textcolor{accent}{\textbf{#1}}}
+\newcommand{\kw}[1]{\keyword{#1}}
+\newcommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\qoption}[2]{\item[#1.] #2}
+\newcommand{\safeimage}[3]{%
+\IfFileExists{#1}{\includegraphics[width=#2,height=0.62\textheight,keepaspectratio]{#1}}{%
+\fbox{\parbox[c][0.40\textheight][c]{0.78\textwidth}{\centering #3\\[2mm]{\scriptsize #1}}}}}
+
+\title[Choosing a DBMS]{Choosing the Right Database Management System}
+\subtitle{Selection Criteria, Database Types, and Operational Models}
+\author{Lecture Notes}
+\institute{Course: Databases}
+\date{Updated: 31/05/2026}
+
+\AtBeginSection[]{
+  \begin{frame}{Section Outline}
+    \tableofcontents[currentsection,subsectionstyle=show/show/hide]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% \begin{frame}{References}
+% \begin{itemize}
+%   \item GeeksforGeeks: \emph{How to Choose the Database}.
+%   \item The lecture content has been reorganized into an instructional format.
+% \end{itemize}
+% \end{frame}
+
+\begin{frame}{Learning Objectives}
+After completing this lesson, learners will be able to:
+\begin{enumerate}
+  \smallitem
+  \item Understand why choosing a database management system is an important architectural decision.
+  \item Distinguish common database types: relational, document, key-value, time-series, columnar, and graph databases.
+  \item Identify the main criteria for selecting a DBMS for a software system.
+  \item Understand when to use a self-managed database and when to use a managed database service.
+  \item Apply the knowledge to choose a suitable database type for a practical problem.
+  \item Complete review questions and application exercises on DBMS selection.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Lecture Structure}
+\small
+\tableofcontents
+\end{frame}
+
+\section{Overview}
+
+\begin{frame}{Why Does Choosing the Right DBMS Matter?}
+In any software system that uses data, selecting the right \kw{database management system} is a very important decision.
+
+\vspace{2mm}
+A suitable choice can help the system:
+\begin{itemize}
+  \smallitem
+  \item Store data safely and consistently.
+  \item Query data faster.
+  \item Scale more easily as the number of users grows.
+  \item Reduce operational costs.
+  \item Become easier to maintain and evolve in the future.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Consequences of Choosing the Wrong DBMS}
+If the wrong database type is selected, the system may face many problems:
+\begin{itemize}
+  \smallitem
+  \item Slow queries.
+  \item Difficulty scaling.
+  \item Inconsistent data.
+  \item High operational costs.
+  \item Difficulty changing the data structure as the system evolves.
+\end{itemize}
+
+\begin{block}{Key Message}
+Do not choose a database simply because it is popular. The choice should depend on the nature of the data, query patterns, performance, consistency requirements, scalability, and operational capability.
+\end{block}
+\end{frame}
+
+\begin{frame}{Factors to Consider When Choosing a Database}
+The decision should be based on:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item The data type used by the system.
+  \item How the data is queried.
+  \item Performance requirements.
+  \item Consistency requirements.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Scalability requirements.
+  \item Operational capability of the technical team.
+  \item Cost.
+  \item Long-term system development direction.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Figure 1. Choosing the Right Database}
+\centering
+\safeimage{images/choose-your-right-database.png}{0.82\textwidth}{Choose your right database}
+
+\vspace{2mm}
+{\small Overview of choosing an appropriate database.}
+\end{frame}
+
+\begin{frame}{Quick Quiz: Overview}
+\small
+\textbf{Question 1.} Why should we not choose a DBMS only because it is popular?
+\begin{enumerate}
+  \qoption{A}{Because popular DBMSs are always free}
+  \qoption{B}{Because DBMS selection should depend on data, queries, performance, and operations}
+  \qoption{C}{Because popular DBMSs do not support security}
+  \qoption{D}{Because every system should use only one database type}
+\end{enumerate}
+
+\textbf{Question 2.} What problem may occur when the DBMS choice is unsuitable?
+\begin{enumerate}
+  \qoption{A}{Slow queries and difficulty scaling}
+  \qoption{B}{Higher monitor resolution}
+  \qoption{C}{Fewer tables required in every system}
+  \qoption{D}{Automatic removal of the need for backups}
+\end{enumerate}
+\end{frame}
+
+\section{Basic Concepts}
+
+\begin{frame}{What Is a DBMS?}
+\kw{DBMS} stands for \kw{Database Management System}.
+
+\vspace{2mm}
+A DBMS is software used to:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Create databases.
+  \item Store data.
+  \item Query data.
+  \item Update data.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Delete data.
+  \item Ensure data security.
+  \item Ensure data integrity.
+  \item Manage access and transactions.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Examples of DBMSs}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item MySQL
+  \item PostgreSQL
+  \item SQL Server
+  \item Oracle Database
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item MongoDB
+  \item Redis
+  \item Neo4j
+  \item Snowflake
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Quick Quiz: Basic Concepts}
+\small
+\textbf{Question 1.} What does DBMS stand for?
+\begin{enumerate}
+  \qoption{A}{Database Management System}
+  \qoption{B}{Data Backup Monitoring Service}
+  \qoption{C}{Distributed Binary Model Server}
+  \qoption{D}{Database Mapping Syntax}
+\end{enumerate}
+
+\textbf{Question 2.} Which of the following is a function of a DBMS?
+\begin{enumerate}
+  \qoption{A}{Creating, storing, querying, updating, and protecting data}
+  \qoption{B}{Designing graphical user interfaces}
+  \qoption{C}{Compiling application source code}
+  \qoption{D}{Completely replacing the operating system}
+\end{enumerate}
+\end{frame}
+
+\section{Criteria for Selecting a DBMS}
+
+\begin{frame}{Overview of the Main Criteria}
+When choosing a database for a system, consider:
+\begin{enumerate}
+  \smallitem
+  \item Scalability.
+  \item Data consistency.
+  \item Query patterns and workload.
+  \item Operational complexity.
+  \item Recoverability and availability.
+  \item Performance requirements.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Criterion 1: Scalability}
+Scalability indicates whether the system can handle increasing data volume or a growing number of users.
+
+\vspace{2mm}
+There are two main directions for scaling:
+\begin{block}{Vertical Scaling}
+Increasing the resources of an existing server.
+\end{block}
+\begin{block}{Horizontal Scaling}
+Adding more servers to the system to distribute data or load.
+\end{block}
+\end{frame}
+
+\begin{frame}{Vertical Scaling}
+Vertical scaling means increasing the resources of an existing server.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+  \smallitem
+  \item Adding more CPU.
+  \item Adding more RAM.
+  \item Increasing disk capacity.
+  \item Using a more powerful server.
+\end{itemize}
+
+\begin{block}{Remember}
+Relational databases such as MySQL, PostgreSQL, and SQL Server are often suitable for vertical scaling.
+\end{block}
+\end{frame}
+
+\begin{frame}{Horizontal Scaling}
+Horizontal scaling means adding more servers to the system.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+  \smallitem
+  \item Splitting data across multiple machines.
+  \item Distributing query load.
+  \item Using a server cluster.
+\end{itemize}
+
+\begin{block}{Remember}
+NoSQL databases are often designed to support horizontal scaling well.
+\end{block}
+\end{frame}
+
+\begin{frame}{Criterion 2: Data Consistency}
+Data consistency indicates whether data is accurate and synchronized at all times.
+
+\begin{exampleblock}{Banking Example}
+When account A transfers money to account B, the amount must be deducted from A and added to B. These two operations must occur together.
+\end{exampleblock}
+
+If money is deducted from A but not added to B, the data becomes incorrect.
+\end{frame}
+
+\begin{frame}{Strong Consistency and Eventual Consistency}
+\begin{block}{Strong Consistency}
+Financial, accounting, and banking systems usually require strong consistency and ACID-compliant transactions.
+\end{block}
+
+\begin{block}{Eventual Consistency}
+Some systems can tolerate data becoming consistent after a short delay, such as social networks, recommendation systems, logging systems, or view-count analytics.
+\end{block}
+\end{frame}
+
+\begin{frame}{Criterion 3: Query Patterns and Workload}
+Before choosing a DBMS, we need to understand what the system mainly does with its data.
+
+\vspace{2mm}
+Common workload patterns include:
+\begin{itemize}
+  \smallitem
+  \item Read-heavy workloads.
+  \item Write-heavy workloads.
+  \item Balanced read and write workloads.
+  \item Complex queries.
+  \item Simple queries requiring very high speed.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Query Patterns and Suitable Database Types}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.44\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{System Characteristic} & \textbf{Suitable Database Type} \\
+\midrule
+Requires many complex JOIN operations & Relational database \\
+Requires reporting, statistics, and analytics & Relational database or columnar database \\
+Requires very fast key-based access & Key-value store \\
+Uses flexible JSON data & Document database \\
+Uses sensor data over time & Time-series database \\
+Contains many complex relationships & Graph database \\
+\bottomrule
+\end{tabularx}
+\end{adjustbox}
+\end{frame}
+
+\begin{frame}{Criterion 4: Operational Complexity}
+A database system not only needs to be well designed; it also needs to be operated well.
+
+\vspace{2mm}
+Operational tasks include:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Backing up data.
+  \item Recovering data.
+  \item Upgrading versions.
+  \item Monitoring performance.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Managing user permissions.
+  \item Encrypting data.
+  \item Setting up replication.
+  \item Handling incidents.
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{1mm}
+If the technical team has limited database administration experience, a \kw{managed database} should be considered.
+\end{frame}
+
+\begin{frame}{Criterion 5: Recoverability and Availability}
+Some systems must run continuously:
+\begin{itemize}
+  \smallitem
+  \item Digital banking.
+  \item E-commerce.
+  \item Ticket booking systems.
+  \item Hospital management systems.
+  \item Real-time logistics systems.
+\end{itemize}
+
+Such systems need automatic backups, automatic failover, data replication, multi-region support, and disaster recovery capability.
+\end{frame}
+
+\begin{frame}{Criterion 6: Performance Requirements}
+Performance can be evaluated through:
+\begin{itemize}
+  \smallitem
+  \item Low latency.
+  \item High throughput.
+  \item Data write speed.
+  \item Data read speed.
+  \item Ability to process concurrent queries.
+\end{itemize}
+
+\begin{exampleblock}{Examples}
+Cache systems require very low latency; IoT systems need very high write speed; BI systems require large analytical queries; transaction systems require consistency and reliability.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Quick Quiz: DBMS Selection Criteria}
+\small
+\textbf{Question 1.} What does horizontal scaling mean?
+\begin{enumerate}
+  \qoption{A}{Adding more CPU and RAM to an existing server}
+  \qoption{B}{Adding more servers to distribute load or data}
+  \qoption{C}{Reducing the number of system users}
+  \qoption{D}{Moving all data into text files}
+\end{enumerate}
+
+\textbf{Question 2.} What property is usually required in a banking system?
+\begin{enumerate}
+  \qoption{A}{Strong consistency and ACID transactions}
+  \qoption{B}{Eventual consistency for all transactions only}
+  \qoption{C}{No need for data integrity control}
+  \qoption{D}{No need for backups}
+\end{enumerate}
+\end{frame}
+
+\section{Common Database Types}
+
+\begin{frame}{Figure 2. Common Database Types}
+\centering
+\safeimage{images/types-of-databases.png}{0.82\textwidth}{Types of databases}
+
+\vspace{2mm}
+{\small Common database types.}
+\end{frame}
+
+\begin{frame}{Database Types Covered in This Lesson}
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Relational database.
+  \item Document database.
+  \item Key-value store.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Time-series database.
+  \item Columnar database.
+  \item Graph database.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Quick Quiz: Common Database Types}
+\small
+\textbf{Question 1.} Tabular data with primary keys and foreign keys is usually suitable for which database type?
+\begin{enumerate}
+  \qoption{A}{Relational database}
+  \qoption{B}{Time-series database}
+  \qoption{C}{Graph database}
+  \qoption{D}{Key-value store}
+\end{enumerate}
+
+\textbf{Question 2.} Flexible JSON data is usually suitable for which database type?
+\begin{enumerate}
+  \qoption{A}{Document database}
+  \qoption{B}{Columnar database}
+  \qoption{C}{Relational database in every case}
+  \qoption{D}{Time-series database}
+\end{enumerate}
+\end{frame}
+
+\subsection{Relational Database}
+
+\begin{frame}{Relational Database: Concept}
+A \kw{Relational Database Management System}, or \kw{RDBMS}, stores data in tables.
+
+\vspace{2mm}
+Each table includes:
+\begin{itemize}
+  \smallitem
+  \item Rows.
+  \item Columns.
+  \item Primary keys.
+  \item Foreign keys.
+  \item Data constraints.
+\end{itemize}
+
+RDBMSs commonly use SQL to query data.
+\end{frame}
+
+\begin{frame}{Example: Students Table}
+\scriptsize
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{student\_id} & \textbf{full\_name} & \textbf{major} \\
+\midrule
+1 & Nguyen An & Data Science \\
+2 & Tran Binh & Logistics \\
+3 & Le Chi & Information Systems \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+Example SQL query:
+\begin{block}{SQL}
+\ttfamily SELECT full\_name, major FROM Students WHERE major = 'Data Science';
+\end{block}
+\end{frame}
+
+\begin{frame}{When Should We Use an RDBMS?}
+Use an RDBMS when:
+\begin{itemize}
+  \smallitem
+  \item The data has a clear structure.
+  \item Data integrity must be enforced.
+  \item ACID transactions are required.
+  \item JOIN operations across multiple tables are needed.
+  \item Reporting and complex queries are required.
+  \item The system involves finance, accounting, order management, or student management.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Examples Suitable for RDBMSs}
+\begin{itemize}
+  \smallitem
+  \item Banking systems.
+  \item Student management systems.
+  \item Sales systems.
+  \item Inventory management systems.
+  \item Accounting systems.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{When Should We Use a Managed RDBMS?}
+Use a managed RDBMS service when:
+\begin{itemize}
+  \smallitem
+  \item High availability is required.
+  \item Automatic backups are desired.
+  \item Point-in-time recovery is needed.
+  \item The team does not want to manage version upgrades manually.
+  \item Built-in security, encryption, and monitoring are required.
+  \item The team wants to reduce operational burden.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Examples and When Not to Use Managed RDBMS}
+\begin{block}{Examples}
+Amazon RDS, Google Cloud SQL, Azure SQL Database.
+\end{block}
+
+\begin{alertblock}{Managed RDBMS may not be suitable if}
+\begin{itemize}
+  \smallitem
+  \item Deep control over the database engine is required.
+  \item Data must be stored on premises.
+  \item Legal constraints do not allow data to be stored in the cloud.
+  \item Cloud costs do not fit the budget.
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\subsection{Document Database}
+
+\begin{frame}{Document Database: Concept}
+A \kw{document database} stores data as documents, usually in JSON or BSON format.
+
+\vspace{2mm}
+Unlike relational databases, document databases do not require every record to have the same structure.
+\end{frame}
+
+\begin{frame}[fragile]{Example JSON Document}
+\small
+\begin{verbatim}
+{
+  "student_id": 1,
+  "full_name": "Nguyen An",
+  "major": "Data Science",
+  "skills": ["Python", "SQL", "Machine Learning"],
+  "address": {
+    "city": "Hanoi",
+    "district": "Hoan Kiem"
+  }
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{When Should We Use a Document Database?}
+Use a document database when:
+\begin{itemize}
+  \smallitem
+  \item The data structure is flexible.
+  \item Data is naturally represented as JSON.
+  \item The schema changes frequently.
+  \item The data contains nested structures.
+  \item The application evolves quickly and requires flexible data modeling.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Suitable Examples and Managed Document Databases}
+\begin{block}{Suitable Examples}
+User profiles, product catalogs, article content, mobile applications, and content management systems.
+\end{block}
+
+\begin{block}{Managed Document Databases}
+MongoDB Atlas, Amazon DocumentDB, Couchbase Capella.
+\end{block}
+
+A managed document database is useful when fast scaling, replication, sharding, backup, multi-region deployment, access control, and monitoring are needed.
+\end{frame}
+
+\subsection{Key-Value Store}
+
+\begin{frame}{Key-Value Store: Concept}
+A \kw{key-value database} stores data as pairs of keys and values.
+
+\vspace{2mm}
+This database type is simple but provides very fast access speed.
+\end{frame}
+
+\begin{frame}[fragile]{Example Key-Value Data}
+\small
+\begin{verbatim}
+user:1001 -> "Nguyen An"
+cart:1001 -> ["book", "laptop", "mouse"]
+session:abc123 -> "active"
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{When Should We Use a Key-Value Store?}
+Use a key-value store when:
+\begin{itemize}
+  \smallitem
+  \item Extremely fast data access is required.
+  \item Data is mainly queried by key.
+  \item User sessions need to be stored.
+  \item Data caching is required.
+  \item Game leaderboards are needed.
+  \item Millions of requests per second must be processed.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Suitable Examples and Systems}
+\begin{block}{Suitable Examples}
+Product cache, user sessions, temporary shopping carts, leaderboards, and view counters.
+\end{block}
+
+\begin{block}{Example Systems}
+Redis, Memcached, Amazon ElastiCache, Azure Cache for Redis, Google Memorystore.
+\end{block}
+\end{frame}
+
+\subsection{Time-Series Database}
+
+\begin{frame}{Time-Series Database: Concept}
+A \kw{time-series database} is designed for data associated with time.
+
+\vspace{2mm}
+Each record usually contains:
+\begin{itemize}
+  \smallitem
+  \item A timestamp.
+  \item A measured value.
+  \item A data source.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example Time-Series Data}
+\small
+\begin{verbatim}
+2026-05-31 10:00:00 | sensor_01 | temperature | 32.5
+2026-05-31 10:01:00 | sensor_01 | temperature | 32.7
+2026-05-31 10:02:00 | sensor_01 | temperature | 32.6
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{When Should We Use a Time-Series Database?}
+Use a time-series database for:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Sensor data.
+  \item IoT data.
+  \item System logs.
+  \item Monitoring metrics.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Financial data over time.
+  \item Machine operation data.
+  \item Real-time dashboards.
+  \item Historical time-based analysis.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Suitable Examples and Systems}
+\begin{block}{Suitable Examples}
+Cold-storage temperature monitoring, server CPU/RAM/disk monitoring, truck location tracking over time, stock price analysis, and electricity consumption analysis.
+\end{block}
+
+\begin{block}{Example Systems}
+InfluxDB Cloud, Amazon Timestream, Azure Data Explorer, TimescaleDB.
+\end{block}
+\end{frame}
+
+\subsection{Columnar Database}
+
+\begin{frame}{Columnar Database: Concept}
+A \kw{columnar database} stores data by columns instead of by rows.
+
+\vspace{2mm}
+If the goal is to compute total revenue, the system only needs to read the \texttt{amount} column. Therefore, columnar databases are highly efficient for large-scale data analytics.
+\end{frame}
+
+\begin{frame}{Example: Sales Table}
+\scriptsize
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{order\_id} & \textbf{customer\_id} & \textbf{amount} & \textbf{date} \\
+\midrule
+1 & C01 & 100 & 2026-05-01 \\
+2 & C02 & 200 & 2026-05-02 \\
+3 & C03 & 150 & 2026-05-03 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+For revenue analytics, column-based reading reduces the amount of data that must be scanned.
+\end{frame}
+
+\begin{frame}{When Should We Use a Columnar Database?}
+Use a columnar database when:
+\begin{itemize}
+  \smallitem
+  \item Large-scale data analysis is required.
+  \item BI or data warehousing is needed.
+  \item Queries are mainly read and aggregation queries.
+  \item Statistical computation over millions or billions of rows is required.
+  \item Storage and compute should be separated.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Suitable Examples and Systems}
+\begin{block}{Suitable Examples}
+Revenue reporting, customer behavior analysis, management dashboards, enterprise data warehouses, and logistics data analysis.
+\end{block}
+
+\begin{block}{Example Systems}
+Google BigQuery, Amazon Redshift, Snowflake, Azure Synapse Analytics.
+\end{block}
+\end{frame}
+
+\subsection{Graph Database}
+
+\begin{frame}{Graph Database: Concept}
+A \kw{graph database} represents data using:
+\begin{itemize}
+  \smallitem
+  \item \kw{Nodes}: entities.
+  \item \kw{Edges}: relationships.
+  \item \kw{Properties}: attributes.
+\end{itemize}
+
+Graph databases are suitable when relationships among objects are more important than individual objects alone.
+\end{frame}
+
+\begin{frame}[fragile]{Example Graph Data}
+\small
+\begin{verbatim}
+Minh --friend_of--> An
+An --works_at--> Company A
+Company A --located_in--> Hanoi
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{When Should We Use a Graph Database?}
+Use a graph database when:
+\begin{itemize}
+  \smallitem
+  \item Data has many complex relationships.
+  \item Path or network queries are needed.
+  \item Link analysis is required.
+  \item Fraud detection is needed.
+  \item Recommendation systems need to be built.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Suitable Examples and Systems}
+\begin{block}{Suitable Examples}
+Social networks, friend recommendations, financial fraud analysis, product recommendations, knowledge management, and supply chain dependency analysis.
+\end{block}
+
+\begin{block}{Example Systems}
+Neo4j Aura, Amazon Neptune, Azure Cosmos DB Gremlin API.
+\end{block}
+\end{frame}
+
+\section{Database Management and Operations}
+\subsection{Managed Database}
+
+\begin{frame}{What Is a Managed Database?}
+A \kw{managed database} is a database service managed by a cloud provider on behalf of the technical team.
+
+\vspace{2mm}
+The provider may support:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Automatic backups.
+  \item Data recovery.
+  \item Version upgrades.
+  \item Resource scaling.
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Data replication.
+  \item Performance monitoring.
+  \item Data encryption.
+  \item Failover.
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Examples of Managed Databases}
+\begin{itemize}
+  \smallitem
+  \item Amazon RDS.
+  \item Google Cloud SQL.
+  \item Azure Cosmos DB.
+  \item MongoDB Atlas.
+  \item Amazon Timestream.
+  \item Snowflake.
+\end{itemize}
+\end{frame}
+
+\subsection{When Should We Choose a Managed Database?}
+\begin{frame}{When Should We Choose a Managed Database?}
+Choose a managed database when:
+\begin{itemize}
+  \smallitem
+  \item The technical team is small.
+  \item The team does not want to spend too much time on operations.
+  \item High availability is required.
+  \item Automatic backup and recovery are needed.
+  \item Integrated monitoring is required.
+  \item Security and compliance are important.
+  \item The team wants to focus on application development rather than infrastructure administration.
+\end{itemize}
+\end{frame}
+
+\subsection{When Should We Self-Manage a Database?}
+\begin{frame}{When Should We Self-Manage a Database?}
+Self-management may be suitable when:
+\begin{itemize}
+  \smallitem
+  \item Deep control over system configuration is required.
+  \item Special modules must be installed.
+  \item Data must be stored on premises.
+  \item The organization has a strong DBA team.
+  \item Cost optimization is needed in specific cases.
+  \item There are special security or legal requirements.
+\end{itemize}
+\end{frame}
+
+\section{Architectural Patterns Affecting Database Choice}
+\subsection{Polyglot Persistence}
+
+\begin{frame}{Polyglot Persistence}
+\kw{Polyglot persistence} means that one system uses multiple database types for different needs.
+
+\begin{exampleblock}{E-commerce Example}
+\begin{itemize}
+  \smallitem
+  \item PostgreSQL for orders and payments.
+  \item MongoDB for product catalogs.
+  \item Redis for caching.
+  \item Elasticsearch for search.
+  \item Snowflake for data analytics.
+\end{itemize}
+\end{exampleblock}
+
+The main idea: the entire system does not have to use only one database type.
+\end{frame}
+
+\subsection{CQRS}
+\begin{frame}{CQRS}
+\kw{CQRS} stands for \kw{Command Query Responsibility Segregation}.
+
+\vspace{2mm}
+Main idea:
+\begin{itemize}
+  \smallitem
+  \item Separate the write side.
+  \item Separate the read side.
+\end{itemize}
+
+\begin{exampleblock}{Example}
+An SQL database can be used for transactional writes, while a columnar database can be used for reporting and analytics.
+\end{exampleblock}
+
+CQRS is suitable when the system has significantly different read and write requirements.
+\end{frame}
+
+\subsection{Event Sourcing}
+\begin{frame}{Event Sourcing}
+\kw{Event sourcing} stores state-changing events instead of storing only the final state.
+
+\begin{block}{Order Example}
+\ttfamily OrderCreated \quad PaymentConfirmed \quad OrderPacked \quad OrderShipped \quad OrderDelivered
+\end{block}
+
+\begin{itemize}
+  \smallitem
+  \item Provides a complete change history.
+  \item Makes auditing easier.
+  \item Allows the system state to be reconstructed at a past point in time.
+  \item Fits systems that require traceability.
+\end{itemize}
+\end{frame}
+
+\subsection{Microservices}
+\begin{frame}{Microservices}
+In a microservices architecture, each service may manage its own database.
+
+\begin{exampleblock}{Example}
+\begin{itemize}
+  \smallitem
+  \item The user service uses PostgreSQL.
+  \item The product service uses MongoDB.
+  \item The cache service uses Redis.
+  \item The analytics service uses BigQuery.
+\end{itemize}
+\end{exampleblock}
+
+This helps each service choose the database that best fits its business responsibility.
+\end{frame}
+
+\section{Comparison and DBMS Selection Process}
+\subsection{Comparison Table}
+
+\begin{frame}{Quick Comparison of Database Types}
+\scriptsize
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabularx}{1.08\textwidth}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.19\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}>{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Database Type} & \textbf{Main Data Form} & \textbf{Suitable For} & \textbf{Examples} \\
+\midrule
+Relational database & Tables, rows, columns & Transactions, structured data, JOINs & MySQL, PostgreSQL \\
+Document database & JSON, BSON & Flexible data, changing schema & MongoDB \\
+Key-value store & Key-value pairs & Cache, sessions, extremely fast access & Redis \\
+Time-series database & Time-based data & IoT, logs, metrics, sensors & InfluxDB \\
+Columnar database & Column-based storage & BI, OLAP, data warehouses & BigQuery, Snowflake \\
+Graph database & Nodes and edges & Complex relationships, social networks, fraud detection & Neo4j \\
+\bottomrule
+\end{tabularx}
+\end{adjustbox}
+\end{frame}
+
+\subsection{Five-Step Selection Process}
+\begin{frame}{DBMS Selection Process}
+A five-step process can be used:
+\begin{enumerate}
+  \smallitem
+  \item Identify the nature of the data.
+  \item Identify the query pattern.
+  \item Identify consistency requirements.
+  \item Identify scalability requirements.
+  \item Identify operational capability.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Step 1: Identify the Nature of the Data}
+Questions to answer:
+\begin{itemize}
+  \smallitem
+  \item Does the data have a fixed structure?
+  \item Is the data tabular?
+  \item Is the data in JSON format?
+  \item Is the data time-dependent?
+  \item Does the data contain many complex relationships?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Step 2: Identify the Query Pattern}
+Questions to answer:
+\begin{itemize}
+  \smallitem
+  \item Are many table JOINs needed?
+  \item Is fast key-based querying required?
+  \item Is large-scale data analysis required?
+  \item Are multi-level relationship queries required?
+  \item Is a real-time dashboard required?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Step 3: Identify Consistency Requirements}
+Questions to answer:
+\begin{itemize}
+  \smallitem
+  \item Does the system require ACID transactions?
+  \item Can the system accept eventual consistency?
+  \item Would temporary data inconsistency cause serious consequences?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Step 4: Identify Scalability Requirements}
+Questions to answer:
+\begin{itemize}
+  \smallitem
+  \item Does the system need vertical or horizontal scaling?
+  \item Is the data growing rapidly?
+  \item Can the number of users increase suddenly?
+  \item Is multi-region deployment required?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Step 5: Identify Operational Capability}
+Questions to answer:
+\begin{itemize}
+  \smallitem
+  \item Does the team have database administration experience?
+  \item Is there a dedicated DBA?
+  \item Is automatic backup required?
+  \item Is integrated monitoring required?
+  \item Should a managed database be used?
+\end{itemize}
+\end{frame}
+
+\section{DBMS Selection Scenarios}
+\subsection{Student Management System}
+
+\begin{frame}{Scenario 1: Student Management System}
+\begin{block}{Characteristics}
+\begin{itemize}
+  \smallitem
+  \item Data has a clear structure.
+  \item There are multiple tables such as students, classes, courses, and grades.
+  \item Data JOINs are required.
+  \item Data integrity must be ensured.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Suitable Choice}
+PostgreSQL or MySQL.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Scenario 1: Reasoning}
+PostgreSQL or MySQL is suitable because:
+\begin{itemize}
+  \smallitem
+  \item They fit relational data.
+  \item They support SQL.
+  \item They support primary keys and foreign keys.
+  \item They make reporting easier.
+\end{itemize}
+\end{frame}
+
+\subsection{Social Network Application}
+\begin{frame}{Scenario 2: Social Network Application}
+\begin{block}{Characteristics}
+\begin{itemize}
+  \smallitem
+  \item User data can be flexible.
+  \item The system contains posts, comments, and interactions.
+  \item There are friendship and following relationships.
+  \item Large-scale expansion is required.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Possible Combined Choice}
+MongoDB for content; Redis for cache; a graph database for friendship relationships; a columnar database for analytics.
+\end{exampleblock}
+\end{frame}
+
+\subsection{IoT Cold-Storage Temperature Monitoring}
+\begin{frame}{Scenario 3: IoT Cold-Storage Temperature Monitoring}
+\begin{block}{Characteristics}
+\begin{itemize}
+  \smallitem
+  \item Data is continuously written over time.
+  \item Each record has a timestamp.
+  \item A real-time dashboard is needed.
+  \item Historical data storage and aggregation are required.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Suitable Choice}
+InfluxDB or Amazon Timestream.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}{Scenario 3: Reasoning}
+InfluxDB or Amazon Timestream is suitable because:
+\begin{itemize}
+  \smallitem
+  \item They are optimized for time-series data.
+  \item They support retention policies.
+  \item They support time-based data analysis.
+  \item They fit real-time monitoring dashboards.
+\end{itemize}
+\end{frame}
+
+\subsection{E-Commerce System}
+\begin{frame}{Scenario 4: E-Commerce System}
+\begin{block}{Characteristics}
+\begin{itemize}
+  \smallitem
+  \item Orders require high consistency.
+  \item Product information can be flexible.
+  \item Cache is needed to improve speed.
+  \item Revenue analytics is required.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Combined Choice}
+PostgreSQL for orders; MongoDB for product catalogs; Redis for cache; BigQuery or Snowflake for analytics.
+\end{exampleblock}
+\end{frame}
+
+\section{Implementation Notes and Summary}
+
+\begin{frame}{Implementation Notes}
+When deploying a database system, pay attention to:
+\begin{itemize}
+  \smallitem
+  \item Designing backups from the beginning.
+  \item Having a disaster recovery plan.
+  \item Monitoring query performance.
+  \item Monitoring replication errors.
+  \item Designing schemas that can evolve.
+  \item Avoiding premature optimization before understanding the workload.
+  \item Not choosing a database only because it is trendy.
+  \item Prioritizing simple solutions if the problem is not yet too complex.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Lesson Summary}
+In this lesson, we learned that:
+\begin{itemize}
+  \smallitem
+  \item DBMS selection is an important architectural decision.
+  \item RDBMSs fit structured data and strong consistency requirements.
+  \item Document databases fit flexible JSON-like data.
+  \item Key-value stores fit caching and extremely fast access.
+  \item Time-series databases fit time-based data.
+  \item Columnar databases fit large-scale analytics.
+  \item Graph databases fit data with many complex relationships.
+  \item Managed databases reduce operational burden.
+  \item Large systems may use multiple database types.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion}
+\begin{block}{No single database type fits every problem}
+A good choice must be based on data characteristics, query patterns, consistency requirements, performance, scalability, operational capability, cost, and the system's long-term direction.
+\end{block}
+
+\vspace{2mm}
+In modern systems, combining multiple database types is common. The key is to use each database type according to its strengths.
+\end{frame}
+
+\begin{frame}{Keywords}
+\small
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item DBMS
+  \item Relational Database
+  \item Document Database
+  \item Key-Value Store
+  \item Time-Series Database
+  \item Columnar Database
+  \item Graph Database
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Managed Database
+  \item ACID
+  \item Eventual Consistency
+  \item Scalability
+  \item Vertical Scaling
+  \item Horizontal Scaling
+  \item Backup
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+  \smallitem
+  \item Polyglot Persistence
+  \item CQRS
+  \item Event Sourcing
+  \item Microservices
+  \item Failover
+  \item Workload
+  \item Monitoring
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Questions and Exercises}
+
+\begin{frame}[allowframebreaks]{Review Questions}
+\small
+\begin{enumerate}
+  \smallitem
+  \item Why should we not choose a DBMS only because it is popular?
+  \item Distinguish vertical scaling from horizontal scaling.
+  \item Which database type is suitable for a banking system? Why?
+  \item When should a document database be used?
+  \item In what situations is Redis commonly used?
+  \item What type of data is suitable for a time-series database?
+  \item How is a columnar database different from a row-oriented database?
+  \item What types of problems are suitable for graph databases?
+  \item What advantages does a managed database provide?
+  \item What is polyglot persistence?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Short Review Quiz}
+\small
+\textbf{Question 1.} When choosing a DBMS, which factor should be considered first?
+\begin{enumerate}
+  \qoption{A}{The provider's logo}
+  \qoption{B}{The nature of the data and how the system queries it}
+  \qoption{C}{Which database is most popular on social media}
+  \qoption{D}{The programming language of the user interface}
+\end{enumerate}
+
+\textbf{Question 2.} Which database type is usually preferred for a banking system?
+\begin{enumerate}
+  \qoption{A}{Relational database}
+  \qoption{B}{Key-value store}
+  \qoption{C}{Graph database}
+  \qoption{D}{Time-series database}
+\end{enumerate}
+
+\textbf{Question 3.} If data has a flexible JSON structure and the schema changes frequently, what is a suitable choice?
+\begin{enumerate}
+  \qoption{A}{Document database}
+  \qoption{B}{Columnar database}
+  \qoption{C}{Time-series database}
+  \qoption{D}{Key-value store}
+\end{enumerate}
+
+\textbf{Question 4.} Which situation is Redis most suitable for?
+\begin{enumerate}
+  \qoption{A}{Complex JOIN queries across many tables}
+  \qoption{B}{Cache, sessions, or very fast key-based access}
+  \qoption{C}{Historical analysis over billions of rows}
+  \qoption{D}{Modeling multi-level social relationships}
+\end{enumerate}
+
+\textbf{Question 5.} IoT sensor data continuously sent with timestamps should prioritize which database type?
+\begin{enumerate}
+  \qoption{A}{Graph database}
+  \qoption{B}{Time-series database}
+  \qoption{C}{Document database}
+  \qoption{D}{Relational database}
+\end{enumerate}
+
+\textbf{Question 6.} What need is a columnar database most suitable for?
+\begin{enumerate}
+  \qoption{A}{Storing login sessions}
+  \qoption{B}{Analyzing, aggregating, and reporting large-scale data}
+  \qoption{C}{Storing friendship relationships in a social network}
+  \qoption{D}{Managing ACID banking transactions}
+\end{enumerate}
+
+\textbf{Question 7.} What is the main strength of graph databases?
+\begin{enumerate}
+  \qoption{A}{Querying and analyzing complex relationships among objects}
+  \qoption{B}{Storing large image files}
+  \qoption{C}{Completely replacing the operating system}
+  \qoption{D}{Only storing fixed tabular data}
+\end{enumerate}
+
+\textbf{Question 8.} What operational work can a managed database reduce for the technical team?
+\begin{enumerate}
+  \qoption{A}{Designing the user interface}
+  \qoption{B}{Writing all business logic}
+  \qoption{C}{Backups, monitoring, version upgrades, and failover}
+  \qoption{D}{Eliminating the need for data security}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Application Exercises}
+\small
+\textbf{Exercise 1.} A startup is building an online order management application. The system includes customer management, product management, order management, payment, revenue reporting, and product search. Propose a suitable database type for each function.
+
+\vspace{3mm}
+\textbf{Exercise 2.} A logistics company wants to store truck location data in real time. Each truck sends GPS data every 10 seconds. Answer the following:
+\begin{itemize}
+  \smallitem
+  \item What database type should be used?
+  \item Why?
+  \item Should a traditional RDBMS be used as the only database?
+  \item What additional tool is needed for a real-time dashboard?
+\end{itemize}
+
+\vspace{3mm}
+\textbf{Exercise 3.} A social networking system needs to store user profiles, posts, comments, friendship relationships, friend recommendations, and view statistics. Propose a data storage architecture that uses multiple database types.
+\end{frame}
+
+\begin{frame}{Additional Multiple-Choice Questions}
+\small
+\textbf{Question 1.} Which database type is most suitable for clearly structured data that requires complex JOINs?
+\begin{enumerate}
+  \qoption{A}{Key-value store}
+  \qoption{B}{Relational database}
+  \qoption{C}{Time-series database}
+  \qoption{D}{Graph database}
+\end{enumerate}
+
+\textbf{Question 2.} What is Redis commonly used for?
+\begin{enumerate}
+  \qoption{A}{Large-scale data analysis}
+  \qoption{B}{Storing complex social relationships}
+  \qoption{C}{Cache and sessions}
+  \qoption{D}{Column-based data storage}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Additional Multiple-Choice Questions}
+\small
+\textbf{Question 3.} Sensor data over time is most suitable for which database type?
+\begin{enumerate}
+  \qoption{A}{Time-series database}
+  \qoption{B}{Graph database}
+  \qoption{C}{Document database}
+  \qoption{D}{Relational database}
+\end{enumerate}
+
+\textbf{Question 4.} MongoDB is a popular example of which database type?
+\begin{enumerate}
+  \qoption{A}{Columnar database}
+  \qoption{B}{Document database}
+  \qoption{C}{Key-value store}
+  \qoption{D}{Time-series database}
+\end{enumerate}
+
+\textbf{Question 5.} Graph databases are most suitable for which problem?
+\begin{enumerate}
+  \qoption{A}{Storing user sessions}
+  \qoption{B}{Analyzing complex relationships}
+  \qoption{C}{Computing total monthly revenue}
+  \qoption{D}{Storing sensor logs}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\centering
+\Huge Thank you!\\
+\vspace{4mm}
+\Large Questions and Discussion
+\end{frame}
+
+\end{document}
