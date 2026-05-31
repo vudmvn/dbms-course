@@ -88,17 +88,10 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 ## Sách tham khảo
 
-<p class="book-cover">
-  <img src="assets/images/database-systems-14th-cover.jpg" alt="Bìa sách Database Systems: Design, Implementation, and Management, 14th Edition">
-</p>
-
-- **Database Systems: Design, Implementation, & Management, 14th Edition** - Carlos Coronel, Steven Morris. Cengage, 2023. ISBN-13: 9780357673034. [Thông tin sách](https://www.cengageasia.com/title/default/detail?isbn=9780357673034)
-
-<p class="book-cover">
-  <img src="assets/images/database-systems-pragmatic-approach-3rd-cover.jpg" alt="Bìa sách Database Systems: A Pragmatic Approach, 3rd edition">
-</p>
-
-- **Database Systems: A Pragmatic Approach, 3rd edition** - Elvis C. Foster, Shripad Godbole. CRC Press / Taylor & Francis, 2022. ISBN-13: 9781032202020. [Thông tin sách](https://www.routledge.com/Database-Systems-A-Pragmatic-Approach-3rd-edition/Foster-Godbole/p/book/9781032202020)
+| Bìa sách | Tài liệu | Tác giả | Nhà xuất bản | ISBN | Liên kết |
+|---|---|---|---|---|---|
+| <img src="assets/images/database-systems-14th-cover.jpg" alt="Bìa sách Database Systems: Design, Implementation, and Management, 14th Edition" width="90"> | **Database Systems: Design, Implementation, & Management, 14th Edition** | Carlos Coronel, Steven Morris | Cengage, 2023 | 9780357673034 | [Thông tin sách](https://www.cengageasia.com/title/default/detail?isbn=9780357673034) |
+| <img src="assets/images/database-systems-pragmatic-approach-3rd-cover.jpg" alt="Bìa sách Database Systems: A Pragmatic Approach, 3rd edition" width="90"> | **Database Systems: A Pragmatic Approach, 3rd edition** | Elvis C. Foster, Shripad Godbole | CRC Press / Taylor & Francis, 2022 | 9781032202020 | [Thông tin sách](https://www.routledge.com/Database-Systems-A-Pragmatic-Approach-3rd-edition/Foster-Godbole/p/book/9781032202020) |
 
 ## DBMS Basic
 
@@ -125,6 +118,11 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Kết nối MySQL trong VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
 | Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
+## Tham khảo
+
+- GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
+- GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
+
 </section>
 
 <section id="content-en" class="language-panel" lang="en" hidden markdown="1">
@@ -137,17 +135,10 @@ Learning materials for database management systems and MySQL.
 
 ## Reference Books
 
-<p class="book-cover">
-  <img src="assets/images/database-systems-14th-cover.jpg" alt="Cover of Database Systems: Design, Implementation, and Management, 14th Edition">
-</p>
-
-- **Database Systems: Design, Implementation, & Management, 14th Edition** - Carlos Coronel, Steven Morris. Cengage, 2023. ISBN-13: 9780357673034. [Book information](https://www.cengageasia.com/title/default/detail?isbn=9780357673034)
-
-<p class="book-cover">
-  <img src="assets/images/database-systems-pragmatic-approach-3rd-cover.jpg" alt="Cover of Database Systems: A Pragmatic Approach, 3rd edition">
-</p>
-
-- **Database Systems: A Pragmatic Approach, 3rd edition** - Elvis C. Foster, Shripad Godbole. CRC Press / Taylor & Francis, 2022. ISBN-13: 9781032202020. [Book information](https://www.routledge.com/Database-Systems-A-Pragmatic-Approach-3rd-edition/Foster-Godbole/p/book/9781032202020)
+| Cover | Reference | Authors | Publisher | ISBN | Link |
+|---|---|---|---|---|---|
+| <img src="assets/images/database-systems-14th-cover.jpg" alt="Cover of Database Systems: Design, Implementation, and Management, 14th Edition" width="90"> | **Database Systems: Design, Implementation, & Management, 14th Edition** | Carlos Coronel, Steven Morris | Cengage, 2023 | 9780357673034 | [Book information](https://www.cengageasia.com/title/default/detail?isbn=9780357673034) |
+| <img src="assets/images/database-systems-pragmatic-approach-3rd-cover.jpg" alt="Cover of Database Systems: A Pragmatic Approach, 3rd edition" width="90"> | **Database Systems: A Pragmatic Approach, 3rd edition** | Elvis C. Foster, Shripad Godbole | CRC Press / Taylor & Francis, 2022 | 9781032202020 | [Book information](https://www.routledge.com/Database-Systems-A-Pragmatic-Approach-3rd-edition/Foster-Godbole/p/book/9781032202020) |
 
 ## DBMS Basic
 
@@ -173,6 +164,11 @@ Learning materials for database management systems and MySQL.
 | Connect to MySQL with Command Options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
 | Connect to MySQL in VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
 | Start and Stop MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
+
+## References
+
+- GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
+- GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
 
 </section>
 
