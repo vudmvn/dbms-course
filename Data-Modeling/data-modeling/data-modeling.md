@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "Mô hình hóa dữ liệu trong DBMS"
+permalink: /Data-Modeling/data-modeling/
 ---
 
 # Mô hình hóa dữ liệu trong DBMS

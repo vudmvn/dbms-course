@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "Giới thiệu ER Model trong DBMS"
+permalink: /Data-Modeling/er-model/
 ---
 
 # Giới thiệu ER Model trong DBMS
@@ -38,7 +39,7 @@ ER Model giúp trả lời các câu hỏi:
 Biểu diễn đồ họa của ER Model được gọi là **Entity-Relationship Diagram**, viết tắt là **ERD**.
 
 <p align="center">
-  <img src="../images/introduction-to-er-model.png" alt="Introduction to ER Model" width="650">
+  <img src="images/introduction-to-er-model.png" alt="Introduction to ER Model" width="650">
 </p>
 
 <p align="center"><em>Hình 1. Tổng quan về ER Model.</em></p>
@@ -107,7 +108,7 @@ ER Model gồm ba thành phần cốt lõi:
 | Relationship | Mối liên kết giữa các entity | Hình thoi |
 
 <p align="center">
-  <img src="../images/components-of-er-diagram.png" alt="Components of ER Diagram" width="650">
+  <img src="images/components-of-er-diagram.png" alt="Components of ER Diagram" width="650">
 </p>
 
 <p align="center"><em>Hình 2. Các thành phần cơ bản trong ER Diagram.</em></p>
@@ -196,7 +197,7 @@ Ví dụ:
 Một công ty lưu thông tin người phụ thuộc của nhân viên. `Employee` là strong entity, còn `Dependent` là weak entity vì người phụ thuộc không thể tồn tại độc lập nếu không gắn với một nhân viên cụ thể.
 
 <p align="center">
-  <img src="../images/strong-weak-entity.png" alt="Strong Entity and Weak Entity" width="650">
+  <img src="images/strong-weak-entity.png" alt="Strong Entity and Weak Entity" width="650">
 </p>
 
 <p align="center"><em>Hình 3. Strong Entity và Weak Entity.</em></p>
@@ -244,7 +245,7 @@ Ví dụ với entity `Student`, các attribute có thể gồm:
 Trong ER Diagram, attribute thường được biểu diễn bằng **hình oval**.
 
 <p align="center">
-  <img src="../images/attribute.png" alt="Attribute in ER Model" width="550">
+  <img src="images/attribute.png" alt="Attribute in ER Model" width="550">
 </p>
 
 ---
