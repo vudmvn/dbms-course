@@ -111,8 +111,8 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Mô hình hóa dữ liệu trong DBMS | [Markdown](Data%20Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
-| Giới thiệu ER Model trong DBMS | [Markdown](Data%20Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
+| Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
 
 ## MySQL
 
@@ -166,8 +166,8 @@ Learning materials for database management systems and MySQL.
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Data Modeling in DBMS | [Markdown](Data%20Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
-| Introduction to ER Model in DBMS | [Markdown](Data%20Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
+| Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
 
 ## MySQL
 
