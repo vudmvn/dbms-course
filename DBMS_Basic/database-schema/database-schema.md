@@ -105,17 +105,17 @@ D. Một loại ngôn ngữ lập trình thay thế SQL
 
 **Câu 2.** Schema thường mô tả thành phần nào?
 
-A. Bảng, cột, khóa, quan hệ và ràng buộc  
-B. Màu nền của giao diện  
-C. Tốc độ quạt CPU  
+A. Màu nền của giao diện  
+B. Tốc độ quạt CPU  
+C. Bảng, cột, khóa, quan hệ và ràng buộc  
 D. Độ sáng màn hình  
 
 **Câu 3.** Vai trò quan trọng của schema là gì?
 
-A. Giúp dữ liệu được tổ chức nhất quán và dễ quản lý  
+A. Thay thế hoàn toàn DBMS  
 B. Xóa dữ liệu sau mỗi lần truy vấn  
 C. Làm cho database không thể mở rộng  
-D. Thay thế hoàn toàn DBMS  
+D. Giúp dữ liệu được tổ chức nhất quán và dễ quản lý  
 
 ---
 
@@ -366,24 +366,24 @@ D. Tốc độ mạng
 
 **Câu 2.** Logical schema thường định nghĩa điều gì?
 
-A. Bảng, cột, khóa chính, khóa ngoại và ràng buộc  
-B. Sector vật lý trên ổ cứng  
+A. Sector vật lý trên ổ cứng  
+B. Bảng, cột, khóa chính, khóa ngoại và ràng buộc  
 C. Hình nền máy tính  
 D. Thiết bị chuột và bàn phím  
 
 **Câu 3.** Physical schema tập trung vào điều gì?
 
-A. Cách dữ liệu thực sự được lưu trữ và truy xuất  
-B. Cách người dùng chọn màu chữ  
-C. Cách tạo slide trình chiếu  
+A. Cách người dùng chọn màu chữ  
+B. Cách tạo slide trình chiếu  
+C. Cách dữ liệu thực sự được lưu trữ và truy xuất  
 D. Cách viết email  
 
 **Câu 4.** View schema dùng để làm gì?
 
-A. Hiển thị dữ liệu phù hợp với từng người dùng hoặc ứng dụng  
+A. Tắt máy chủ database  
 B. Xóa dữ liệu vật lý  
 C. Thay thế toàn bộ DBMS  
-D. Tắt máy chủ database  
+D. Hiển thị dữ liệu phù hợp với từng người dùng hoặc ứng dụng  
 
 ---
 
@@ -769,23 +769,23 @@ Schema có thể kết hợp với view, quyền truy cập và phân quyền đ
 
 **Câu 1.** Star schema thường phù hợp nhất với hệ thống nào?
 
-A. Data warehouse và phân tích dữ liệu  
-B. Ứng dụng không lưu dữ liệu  
-C. Trình phát nhạc  
+A. Ứng dụng không lưu dữ liệu  
+B. Trình phát nhạc  
+C. Data warehouse và phân tích dữ liệu  
 D. Trình chỉnh sửa ảnh  
 
 **Câu 2.** Snowflake schema khác star schema ở điểm nào?
 
-A. Dimension table được chuẩn hóa thành nhiều bảng liên quan  
-B. Không có fact table  
-C. Không dùng cho phân tích dữ liệu  
-D. Chỉ dùng cho file text  
+A. Không có fact table  
+B. Không dùng cho phân tích dữ liệu  
+C. Chỉ dùng cho file text  
+D. Dimension table được chuẩn hóa thành nhiều bảng liên quan  
 
 **Câu 3.** Một lợi ích của database schema là gì?
 
-A. Đảm bảo tính nhất quán và dễ bảo trì dữ liệu  
-B. Xóa toàn bộ database sau mỗi truy vấn  
-C. Làm hệ thống không thể mở rộng  
+A. Làm hệ thống không thể mở rộng  
+B. Đảm bảo tính nhất quán và dễ bảo trì dữ liệu  
+C. Xóa toàn bộ database sau mỗi truy vấn  
 D. Không cho phép tạo bảng mới  
 
 ---
@@ -843,22 +843,22 @@ S003, Le Van C, Information Systems
 
 **Câu 1.** Database instance là gì?
 
-A. Dữ liệu thực tế trong database tại một thời điểm  
-B. Bản thiết kế cấu trúc database  
-C. Một loại index  
-D. Một loại hệ điều hành  
+A. Bản thiết kế cấu trúc database  
+B. Một loại index  
+C. Một loại hệ điều hành  
+D. Dữ liệu thực tế trong database tại một thời điểm  
 
 **Câu 2.** Database schema thường có tính chất nào?
 
-A. Tương đối tĩnh, ít thay đổi  
-B. Thay đổi sau mỗi truy vấn SELECT  
-C. Không liên quan đến cấu trúc dữ liệu  
+A. Thay đổi sau mỗi truy vấn SELECT  
+B. Không liên quan đến cấu trúc dữ liệu  
+C. Tương đối tĩnh, ít thay đổi  
 D. Chỉ tồn tại trong file ảnh  
 
 **Câu 3.** Database instance thay đổi khi nào?
 
-A. Khi có insert, update hoặc delete dữ liệu  
-B. Khi đổi màu màn hình  
+A. Khi đổi màu màn hình  
+B. Khi có insert, update hoặc delete dữ liệu  
 C. Khi mở trình duyệt  
 D. Khi tắt loa máy tính  
 
@@ -879,8 +879,8 @@ D. Một phần mềm chỉnh sửa video
 
 **Câu 2.** Conceptual schema thường được thiết kế bằng công cụ nào?
 
-A. ER diagram  
-B. Paint  
+A. Paint  
+B. ER diagram  
 C. Trình phát nhạc  
 D. File âm thanh  
 
@@ -888,19 +888,19 @@ D. File âm thanh
 
 **Câu 3.** Physical schema liên quan đến yếu tố nào?
 
-A. File, index, partition, storage block  
-B. Chỉ giao diện người dùng  
-C. Chỉ tên sinh viên  
+A. Chỉ giao diện người dùng  
+B. Chỉ tên sinh viên  
+C. File, index, partition, storage block  
 D. Chỉ nội dung email  
 
 ---
 
 **Câu 4.** View schema giúp gì?
 
-A. Hiển thị phần dữ liệu phù hợp cho từng nhóm người dùng  
+A. Thay thế mọi bảng bằng ảnh  
 B. Xóa toàn bộ database  
 C. Tắt DBMS  
-D. Thay thế mọi bảng bằng ảnh  
+D. Hiển thị phần dữ liệu phù hợp cho từng nhóm người dùng  
 
 ---
 
@@ -915,8 +915,8 @@ D. Snowflake Schema
 
 **Câu 6.** Mô hình nào cho phép quan hệ many-to-many linh hoạt hơn hierarchical model?
 
-A. Network Model  
-B. Flat Model  
+A. Flat Model  
+B. Network Model  
 C. Spreadsheet  
 D. Single table model  
 
@@ -924,19 +924,19 @@ D. Single table model
 
 **Câu 7.** Relational model lưu dữ liệu chủ yếu dưới dạng nào?
 
-A. Bảng  
-B. Ảnh  
-C. Âm thanh  
+A. Ảnh  
+B. Âm thanh  
+C. Bảng  
 D. Video  
 
 ---
 
 **Câu 8.** Star schema thường có gì ở trung tâm?
 
-A. Fact table  
-B. User interface  
-C. Operating system  
-D. Email server  
+A. User interface  
+B. Operating system  
+C. Email server  
+D. Fact table  
 
 ---
 
@@ -1076,38 +1076,38 @@ Cho bảng `Students(student_id, full_name, major_id)`. Hãy nêu:
 ### Quiz: Khái niệm Database Schema
 
 - **Câu 1.** B
-- **Câu 2.** A
-- **Câu 3.** A
+- **Câu 2.** C
+- **Câu 3.** D
 
 ### Quiz: Các loại Database Schema
 
 - **Câu 1.** A
-- **Câu 2.** A
-- **Câu 3.** A
-- **Câu 4.** A
+- **Câu 2.** B
+- **Câu 3.** C
+- **Câu 4.** D
 
 ### Quiz: Schema Design và lợi ích
 
-- **Câu 1.** A
-- **Câu 2.** A
-- **Câu 3.** A
+- **Câu 1.** C
+- **Câu 2.** D
+- **Câu 3.** B
 
 ### Quiz: Schema và Instance
 
-- **Câu 1.** A
-- **Câu 2.** A
-- **Câu 3.** A
+- **Câu 1.** D
+- **Câu 2.** C
+- **Câu 3.** B
 
 ### Câu hỏi ôn tập - Trắc nghiệm
 
 - **Câu 1.** A
-- **Câu 2.** A
-- **Câu 3.** A
-- **Câu 4.** A
+- **Câu 2.** B
+- **Câu 3.** C
+- **Câu 4.** D
 - **Câu 5.** A
-- **Câu 6.** A
-- **Câu 7.** A
-- **Câu 8.** A
+- **Câu 6.** B
+- **Câu 7.** C
+- **Câu 8.** D
 - **Câu 9.** A
 - **Câu 10.** A
 
