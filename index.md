@@ -97,15 +97,15 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Giới thiệu cơ sở dữ liệu | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf)<br>[EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Có slides song ngữ |
+| Giới thiệu cơ sở dữ liệu | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf) / [EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Có slides song ngữ |
 | Giới thiệu DBMS | [Markdown](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md) | <span class="missing">—</span> | |
 | Nhu cầu sử dụng DBMS | [Markdown](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md) | <span class="missing">—</span> | |
-| Kiến trúc DBMS | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf)<br>[EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Có slides song ngữ |
+| Kiến trúc DBMS | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf) / [EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Có slides song ngữ |
 | Trừu tượng hóa dữ liệu | [Markdown](DBMS_Basic/data-abstraction/data-abstraction.md) | <span class="missing">—</span> | |
-| Độc lập dữ liệu | [Markdown](DBMS_Basic/data-independence/data-independence.md) | [VI](DBMS_Basic/data-independence/data_independence_beamer_pdflatex.pdf)<br>[EN](DBMS_Basic/data-independence/data_independence_beamer_english_pdflatex.pdf) | Có slides song ngữ |
+| Độc lập dữ liệu | [Markdown](DBMS_Basic/data-independence/data-independence.md) | [VI](DBMS_Basic/data-independence/data_independence_beamer_pdflatex.pdf) / [EN](DBMS_Basic/data-independence/data_independence_beamer_english_pdflatex.pdf) | Có slides song ngữ |
 | Độc lập vật lý và độc lập logic | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | |
 | Lược đồ cơ sở dữ liệu | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
-| Cách lựa chọn DBMS phù hợp | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Có slides song ngữ |
+| Cách lựa chọn DBMS phù hợp | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf) / [EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Có slides song ngữ |
 
 ## Data Modeling
 
@@ -153,15 +153,15 @@ Learning materials for database management systems and MySQL.
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Introduction to Databases | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf)<br>[EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Bilingual slides |
+| Introduction to Databases | [Markdown](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md) | [VI](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi_beamer.pdf) / [EN](DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_en_beamer.pdf) | Bilingual slides |
 | Introduction to DBMS | [Markdown](DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md) | <span class="missing">—</span> | |
 | Why Use a DBMS? | [Markdown](DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md) | <span class="missing">—</span> | |
-| DBMS Architecture | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf)<br>[EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Bilingual slides |
+| DBMS Architecture | [Markdown](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md) | [VI](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.pdf) / [EN](DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_en.pdf) | Bilingual slides |
 | Data Abstraction | [Markdown](DBMS_Basic/data-abstraction/data-abstraction.md) | <span class="missing">—</span> | |
-| Data Independence | [Markdown](DBMS_Basic/data-independence/data-independence.md) | [VI](DBMS_Basic/data-independence/data_independence_beamer_pdflatex.pdf)<br>[EN](DBMS_Basic/data-independence/data_independence_beamer_english_pdflatex.pdf) | Bilingual slides |
+| Data Independence | [Markdown](DBMS_Basic/data-independence/data-independence.md) | [VI](DBMS_Basic/data-independence/data_independence_beamer_pdflatex.pdf) / [EN](DBMS_Basic/data-independence/data_independence_beamer_english_pdflatex.pdf) | Bilingual slides |
 | Physical and Logical Independence | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | |
 | Database Schema | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
-| How to Choose the Right DBMS | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf)<br>[EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Bilingual slides |
+| How to Choose the Right DBMS | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf) / [EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Bilingual slides |
 
 ## Data Modeling
 
