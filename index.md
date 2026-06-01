@@ -123,6 +123,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Cài đặt MySQL Workbench trên Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
 | Kết nối MySQL bằng command options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
 | Kết nối MySQL trong VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
+| MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
@@ -178,6 +179,7 @@ Learning materials for database management systems and MySQL.
 | Install MySQL Workbench on Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
 | Connect to MySQL with Command Options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
 | Connect to MySQL in VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
+| MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Start and Stop MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 ## References

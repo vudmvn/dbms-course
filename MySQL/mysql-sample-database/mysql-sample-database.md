@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "MySQL Sample Database: classicmodels"
+permalink: /MySQL/mysql-sample-database/
 ---
 
 # MySQL Sample Database: `classicmodels`
