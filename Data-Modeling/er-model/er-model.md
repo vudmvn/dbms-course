@@ -529,6 +529,12 @@ Person 1 -- 1 Passport
   <img src="images/one-to-one.webp" alt="One-to-One Relationship" width="650">
 </p>
 
+<p align="center">
+  <img src="images/one-to-one-set-representation.webp" alt="Set Representation of One-to-One Relationship" width="650">
+</p>
+
+<p align="center"><em>Set representation của One-to-One Relationship.</em></p>
+
 ---
 
 ### 12.2. One-to-Many Relationship
@@ -549,6 +555,12 @@ Department 1 -- M Doctor
   <img src="images/one-to-many.webp" alt="One-to-Many Relationship" width="650">
 </p>
 
+<p align="center">
+  <img src="images/one-to-many-set-representation.webp" alt="Set Representation of One-to-Many Relationship" width="650">
+</p>
+
+<p align="center"><em>Set representation của One-to-Many Relationship.</em></p>
+
 ---
 
 ### 12.3. Many-to-One Relationship
@@ -568,6 +580,12 @@ Surgery M -- 1 Surgeon
 <p align="center">
   <img src="images/many-to-one.webp" alt="Many-to-One Relationship" width="650">
 </p>
+
+<p align="center">
+  <img src="images/many-to-one-set-representation.webp" alt="Set Representation of Many-to-One Relationship" width="650">
+</p>
+
+<p align="center"><em>Set representation của Many-to-One Relationship.</em></p>
 
 ---
 
@@ -599,6 +617,12 @@ Enrollments(student_id, course_id, semester, grade)
 <p align="center">
   <img src="images/many-to-many.webp" alt="Many-to-Many Relationship" width="650">
 </p>
+
+<p align="center">
+  <img src="images/many-to-many-set-representation.webp" alt="Set Representation of Many-to-Many Relationship" width="650">
+</p>
+
+<p align="center"><em>Set representation của Many-to-Many Relationship.</em></p>
 
 ---
 
@@ -672,8 +696,10 @@ Một số môn học có thể chưa có sinh viên nào đăng ký. Khi đó e
 Trong ER Diagram, partial participation thường được biểu diễn bằng **đường đơn**.
 
 <p align="center">
-  <img src="images/partial-participation.webp" alt="Partial Participation trong ER Model" width="650">
+  <img src="images/participation-set-representation.webp" alt="Set Representation of Participation Constraint" width="650">
 </p>
+
+<p align="center"><em>Set representation minh họa Total Participation và Partial Participation.</em></p>
 
 ---
 
@@ -713,10 +739,6 @@ Ví dụ với hệ thống quản lý sinh viên:
 
 Biểu diễn entity bằng **hình chữ nhật**.
 
-<p align="center">
-  <img src="images/er-diagram-steps-entity.webp" alt="Bước xác định entity khi vẽ ER Diagram" width="650">
-</p>
-
 ---
 
 ### Bước 2: Xác định Relationship
@@ -730,10 +752,6 @@ Ví dụ:
 - `Department` quản lý `Lecturer`.
 
 Biểu diễn relationship bằng **hình thoi**.
-
-<p align="center">
-  <img src="images/er-diagram-steps-relationship.webp" alt="Bước xác định relationship khi vẽ ER Diagram" width="650">
-</p>
 
 ---
 
@@ -749,10 +767,6 @@ Ví dụ entity `Student` có thể có:
 - `email`
 - `phone_number`
 
-<p align="center">
-  <img src="images/er-diagram-steps-attribute.webp" alt="Bước thêm attribute khi vẽ ER Diagram" width="650">
-</p>
-
 ---
 
 ### Bước 4: Xác định Primary Key
@@ -767,9 +781,6 @@ Ví dụ:
 
 Trong ER Diagram, key attribute thường được gạch chân.
 
-<p align="center">
-  <img src="images/er-diagram-steps-key.webp" alt="Bước xác định primary key khi vẽ ER Diagram" width="650">
-</p>
 
 ---
 

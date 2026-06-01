@@ -1,0 +1,1455 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Compile with XeLaTeX
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\graphicspath{{images/}{./}{/mnt/data/images/}}
+\hypersetup{unicode=true}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,72,160}
+\definecolor{codestr}{RGB}{150,60,30}
+\definecolor{accent}{RGB}{0,90,150}
+\definecolor{placeholderbg}{RGB}{245,248,252}
+\definecolor{placeholderline}{RGB}{90,120,150}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  keepspaces=true,
+  language=SQL
+}
+
+\newcommand{\keyword}[1]{\textcolor{accent}{\textbf{#1}}}
+\newcommand{\kw}[1]{\keyword{#1}}
+\newcommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\qoption}[2]{\item[#1.] #2}
+
+% Image placeholder: if the image exists, it is inserted; otherwise a box is shown.
+% To insert real images later, place PNG files into the images/ folder with the exact filenames.
+\newcommand{\imageplaceholder}[2]{%
+\IfFileExists{#1}{\includegraphics[width=0.78\textwidth,height=0.58\textheight,keepaspectratio]{#1}}{%
+\IfFileExists{images/#1}{\includegraphics[width=0.78\textwidth,height=0.58\textheight,keepaspectratio]{images/#1}}{%
+\fcolorbox{placeholderline}{placeholderbg}{\parbox[c][0.42\textheight][c]{0.78\textwidth}{\centering\Large Illustration not found\\[2mm]\normalsize #2\\[2mm]\scriptsize Check file: \texttt{images/\detokenize{#1}}}}}}}
+
+\title[ER Model in DBMS]{Introduction to the ER Model in DBMS}
+\subtitle{Entity, Attribute, Relationship, Degree, Cardinality, and Participation Constraint}
+\author{Lecture Material}
+\institute{Course: Databases}
+\date{Updated: 02/04/2026}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \centering
+    \vfill
+    {\Huge \insertsection}\par
+    \vfill
+  \end{frame}
+}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Learning Objectives}
+\small
+After completing this lecture, learners will be able to:
+\begin{enumerate}
+\smallitem
+  \item Explain the concept of the \kw{Entity-Relationship Model} in database design.
+  \item Describe the role of the \kw{ER Model} and \kw{ER Diagram}.
+  \item Distinguish the main components: \kw{entity}, \kw{attribute}, and \kw{relationship}.
+  \item Identify \kw{strong entities} and \kw{weak entities}.
+  \item Distinguish attribute types: simple, key, composite, multivalued, and derived.
+  \item Explain \kw{degree}, \kw{cardinality}, and \kw{participation constraint}.
+  \item Apply the basic process for drawing an ER Diagram for a practical problem.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lecture Outline}
+\small
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{enumerate}
+\smallitem
+  \item Overview of the ER Model
+  \item Role in database design
+  \item Components of the ER Model
+  \item Entity, strong entity, and weak entity
+  \item Attribute and attribute types
+\end{enumerate}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\smallitem
+  \item Relationship and degree
+  \item Cardinality
+  \item Participation constraint
+  \item How to draw an ER Diagram
+  \item Examples, questions, and exercises
+\end{enumerate}
+\end{column}
+\end{columns}
+\end{frame}
+
+%================================================
+\section{Overview of the ER Model}
+
+%------------------------------------------------
+\begin{frame}{What is the ER Model?}
+\small
+The \kw{Entity-Relationship Model}, or \kw{ER Model}, is a conceptual model used to design databases.
+
+\vspace{2mm}
+This model represents the logical structure of a database through:
+\begin{itemize}
+\smallitem
+  \item The \kw{entities} whose data must be stored.
+  \item The \kw{attributes} that describe those entities.
+  \item The \kw{relationships} among entities.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{What Questions Does the ER Model Answer?}
+\small
+The ER Model helps designers answer:
+\begin{itemize}
+\smallitem
+  \item What objects does the system need to store?
+  \item What information does each object have?
+  \item How are the objects related to one another?
+  \item What constraints should be represented in the data model?
+\end{itemize}
+
+\begin{block}{ER Diagram}
+The graphical representation of the ER Model is called an \kw{Entity-Relationship Diagram}, abbreviated as \kw{ERD}.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Overview of the ER Model}
+\centering
+\imageplaceholder{introduction-to-er-model.png}{Overview of the Entity-Relationship Model}
+
+\vspace{2mm}
+{\small Figure 1. Overview of the ER Model.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Role of the ER Model in Database Design}
+\small
+The database design process usually involves three stages:
+\begin{enumerate}
+\smallitem
+  \item \kw{Requirements gathering}: asking users, customers, or stakeholders about system functions and data requirements.
+  \item \kw{Conceptual or logical design}: using the ER Model to describe entities, attributes, and relationships.
+  \item \kw{Physical design}: defining tables, keys, indexes, views, and implementation details for a specific DBMS.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Why Are ER Diagrams Useful?}
+\small
+ER Diagrams are useful because they:
+\begin{itemize}
+\smallitem
+  \item Represent data and data relationships visually.
+  \item Can be converted into relational tables.
+  \item Model real-world objects.
+  \item Do not require viewers to deeply understand a specific DBMS.
+  \item Make complex systems easier to understand.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 1: Overview of the ER Model}
+\small
+\textbf{Question 1.} What is the ER Model mainly used for?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Designing the conceptual model of a database}
+  \qoption{B}{Increasing the CPU speed of a server}
+  \qoption{C}{Designing user interfaces}
+  \qoption{D}{Compressing image data}
+\end{enumerate}
+
+\textbf{Question 2.} What is an ER Diagram?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{A data backup tool}
+  \qoption{B}{A graphical representation of the ER Model}
+  \qoption{C}{A database operating system}
+  \qoption{D}{A web programming language}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 1: Overview of the ER Model (cont.)}
+\small
+\textbf{Question 3.} In which design step is the ER Model most commonly used?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Network card configuration}
+  \qoption{B}{Source code compilation}
+  \qoption{C}{Conceptual or logical design}
+  \qoption{D}{Deleting old data}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Main Components of the ER Model}
+
+%------------------------------------------------
+\begin{frame}{Three Core Components}
+\small
+The ER Model consists of three core components:
+\vspace{2mm}
+
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.22\textwidth} X p{0.28\textwidth}}
+\toprule
+Component & Meaning & Common ERD Symbol \\
+\midrule
+Entity & An object or concept whose data must be stored & Rectangle \\
+Attribute & A property that describes an entity & Oval \\
+Relationship & A connection between entities & Diamond \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Components of an ER Diagram}
+\centering
+\imageplaceholder{components-of-er-diagram.png}{Basic components of an ER Diagram}
+
+\vspace{2mm}
+{\small Figure 2. Entity, Attribute, and Relationship in an ER Diagram.}
+\end{frame}
+
+%================================================
+\section{Entity in the ER Model}
+
+%------------------------------------------------
+\begin{frame}{What is an Entity?}
+\small
+An \kw{Entity} is an object, thing, concept, or event in the real world about which the system needs to store information.
+
+\vspace{2mm}
+Examples:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Employee}
+  \item \texttt{Company}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\smallitem
+  \item \texttt{Product}
+  \item \texttt{Reservation}
+  \item \texttt{Device}
+  \item \texttt{Document}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{2mm}
+In a relational database, an entity is usually converted into a \kw{table}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entity Type, Entity Instance, and Entity Set}
+\small
+\begin{block}{Entity Type}
+Describes the general structure of one type of entity, for example: \texttt{Student(student\_id, full\_name, date\_of\_birth, email)}.
+\end{block}
+
+\begin{block}{Entity Instance}
+A specific object belonging to an entity type, for example: \texttt{S001, Nguyen An, 2005-01-15, an@example.com}.
+\end{block}
+
+\begin{block}{Entity Set}
+The collection of all entities of the same entity type, for example all students in a university.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Reminder about Entity Sets}
+\small
+An ER Diagram usually represents an \kw{entity type} or an \kw{entity set}, not each specific data row.
+
+\vspace{2mm}
+\begin{exampleblock}{Example}
+An ERD represents the structure \texttt{Student}; it does not draw each specific student such as S001, S002, or S003.
+\end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Entity Set}
+\centering
+\imageplaceholder{entity-set.png}{Entity type, entity instance, and entity set}
+
+\vspace{2mm}
+{\small Figure 3. Entity type, entity instance, and entity set.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Strong Entity}
+\small
+A \kw{Strong Entity} is an entity type that can be uniquely identified by its own attributes.
+
+\vspace{2mm}
+Characteristics:
+\begin{itemize}
+\smallitem
+  \item It has a \kw{key attribute} or \kw{primary key}.
+  \item It does not depend on another entity for identification.
+  \item It is usually represented by a \kw{single rectangle} in an ER Diagram.
+\end{itemize}
+
+\begin{exampleblock}{Example}
+\texttt{Student} has \texttt{student\_id}; \texttt{Employee} has \texttt{employee\_id}; \texttt{Product} has \texttt{product\_id}.
+\end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Weak Entity}
+\small
+A \kw{Weak Entity} is an entity type that cannot be uniquely identified by its own attributes alone.
+
+\vspace{2mm}
+A Weak Entity must depend on a \kw{Strong Entity} for identification.
+\begin{itemize}
+\smallitem
+  \item It does not have a sufficiently strong key of its own.
+  \item It depends on an identifying strong entity.
+  \item It usually has \kw{total participation} in its relationship with the strong entity.
+  \item It is represented by a \kw{double rectangle}.
+  \item Its identifying relationship is usually represented by a \kw{double diamond}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Example of a Weak Entity}
+\small
+A company stores information about employees' dependents.
+
+\vspace{2mm}
+\begin{itemize}
+\smallitem
+  \item \texttt{Employee} is a strong entity.
+  \item \texttt{Dependent} is a weak entity.
+  \item \texttt{Dependent} cannot exist independently without being linked to a specific employee.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Strong Entity and Weak Entity}
+\centering
+\imageplaceholder{strong-weak-entity.png}{Strong Entity and Weak Entity}
+
+\vspace{2mm}
+{\small Figure 4. Strong Entity and Weak Entity.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 2: Entity}
+\small
+\textbf{Question 4.} What is an entity in the ER Model?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{A numeric data type}
+  \qoption{B}{An index type}
+  \qoption{C}{An SQL statement}
+  \qoption{D}{A real-world object or concept whose data must be stored}
+\end{enumerate}
+
+\textbf{Question 5.} Which of the following is usually an example of a strong entity?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{A secondary phone number with no owner}
+  \qoption{B}{A temporary log row with no identifier}
+  \qoption{C}{\texttt{Student} with a unique \texttt{student\_id}}
+  \qoption{D}{An attribute derived from date of birth}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 2: Entity (cont.)}
+\small
+\textbf{Question 6.} Which characteristic belongs to a Weak Entity?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{It is always a multivalued attribute}
+  \qoption{B}{It depends on a strong entity for identification}
+  \qoption{C}{It cannot appear in an ER Diagram}
+  \qoption{D}{It is always represented by a single oval}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Attribute in the ER Model}
+
+%------------------------------------------------
+\begin{frame}{What is an Attribute?}
+\small
+An \kw{Attribute} is a property used to describe an entity.
+
+\vspace{2mm}
+For example, the entity \texttt{Student} may have attributes such as:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No}
+  \item \texttt{Name}
+  \item \texttt{DOB}
+  \item \texttt{Age}
+  \item \texttt{Address}
+  \item \texttt{Mobile\_No}
+\end{itemize}
+
+In an ER Diagram, an attribute is usually represented by an \kw{oval}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Attribute}
+\centering
+\imageplaceholder{attribute.png}{Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Types of Attributes}
+\small
+Common attribute types include:
+\begin{enumerate}
+\smallitem
+  \item \kw{Simple Attribute}
+  \item \kw{Key Attribute}
+  \item \kw{Composite Attribute}
+  \item \kw{Multivalued Attribute}
+  \item \kw{Derived Attribute}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Simple Attribute}
+\small
+A \kw{Simple Attribute} cannot be divided into smaller attributes with independent meaning.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Age}
+  \item \texttt{Gender}
+  \item \texttt{Roll\_No}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Simple Attribute}
+\centering
+\imageplaceholder{simple-attribute.png}{Simple Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Key Attribute}
+\small
+A \kw{Key Attribute} is used to uniquely identify each entity in an entity set.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No} uniquely identifies each student.
+  \item \texttt{Employee\_ID} uniquely identifies each employee.
+  \item \texttt{Product\_ID} uniquely identifies each product.
+\end{itemize}
+
+In an ER Diagram, a key attribute is represented by an underlined oval.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Key Attribute}
+\centering
+\imageplaceholder{key-attribute.png}{Key Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Composite Attribute}
+\small
+A \kw{Composite Attribute} can be divided into smaller attributes.
+
+\vspace{2mm}
+For example, \texttt{Address} may consist of:
+\begin{itemize}
+\smallitem
+  \item \texttt{Street}
+  \item \texttt{City}
+  \item \texttt{State}
+  \item \texttt{Country}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Composite Attribute}
+\centering
+\imageplaceholder{composite-attribute.png}{Composite Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Multivalued Attribute}
+\small
+A \kw{Multivalued Attribute} can have more than one value for a single entity.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item A student may have several phone numbers.
+  \item An employee may have several skills.
+  \item A product may have several colors.
+\end{itemize}
+
+In an ER Diagram, a multivalued attribute is represented by a double oval.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Multivalued Attribute}
+\centering
+\imageplaceholder{multivalued-attribute.png}{Multivalued Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Derived Attribute}
+\small
+A \kw{Derived Attribute} can be derived from another attribute.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Age} can be derived from \texttt{DOB}.
+  \item \texttt{Total\_Amount} can be calculated from quantity and unit price.
+  \item \texttt{Years\_of\_Service} can be calculated from the starting date.
+\end{itemize}
+
+In an ER Diagram, a derived attribute is represented by a dashed oval.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Derived Attribute}
+\centering
+\imageplaceholder{derived-attribute.png}{Derived Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 3: Attribute}
+\small
+\textbf{Question 7.} What is an attribute used for in the ER Model?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Deleting the whole database}
+  \qoption{B}{Increasing disk capacity}
+  \qoption{C}{Describing a property of an entity}
+  \qoption{D}{Replacing the operating system}
+\end{enumerate}
+
+\textbf{Question 8.} \texttt{Roll\_No} uniquely identifies a student. What type of attribute is it?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Composite Attribute}
+  \qoption{B}{Multivalued Attribute}
+  \qoption{C}{Derived Attribute}
+  \qoption{D}{Key Attribute}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 3: Attribute (cont.)}
+\small
+\textbf{Question 9.} \texttt{Address} consisting of \texttt{Street}, \texttt{City}, \texttt{State}, and \texttt{Country} is an example of which attribute type?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Composite Attribute}
+  \qoption{B}{Derived Attribute}
+  \qoption{C}{Multivalued Attribute}
+  \qoption{D}{Weak Attribute}
+\end{enumerate}
+
+\textbf{Question 10.} \texttt{Age} calculated from \texttt{DOB} is an example of which attribute type?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Key Attribute}
+  \qoption{B}{Derived Attribute}
+  \qoption{C}{Composite Attribute}
+  \qoption{D}{Multivalued Attribute}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Relationship and Degree}
+
+%------------------------------------------------
+\begin{frame}{Relationship in the ER Model}
+\small
+A \kw{Relationship} describes a connection between entities.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} \kw{enrolls in} \texttt{Course}.
+  \item \texttt{Employee} \kw{works for} \texttt{Department}.
+  \item \texttt{Customer} \kw{places} \texttt{Order}.
+  \item \texttt{Doctor} \kw{performs} \texttt{Surgery}.
+\end{itemize}
+
+In an ER Diagram, a relationship is usually represented by a diamond and connected to entities by lines.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Relationship Type and Relationship Set}
+\small
+\begin{block}{Relationship Type}
+Describes the type of association between entity types. Example: \texttt{Student -- Enrolled in -- Course}.
+\end{block}
+
+\begin{block}{Relationship Set}
+The set of relationships of the same type, for example S1 enrolled in C2, S2 enrolled in C1, and S3 enrolled in C3.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Relationship Set}
+\centering
+\imageplaceholder{relationship-set.png}{Relationship type and relationship set}
+
+\vspace{2mm}
+{\small Figure 5. Relationship type and relationship set.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Degree of a Relationship Set}
+\small
+The \kw{Degree} of a relationship set is the number of different entity sets participating in the relationship set.
+
+\vspace{2mm}
+There are four common forms:
+\begin{enumerate}
+\smallitem
+  \item \kw{Unary / Recursive Relationship}: one participating entity set.
+  \item \kw{Binary Relationship}: two participating entity sets.
+  \item \kw{Ternary Relationship}: three participating entity sets.
+  \item \kw{N-ary Relationship}: n participating entity sets.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Examples of Degree}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.28\textwidth} X}
+\toprule
+Degree Type & Example \\
+\midrule
+Unary / Recursive & One employee manages another employee \\
+Binary & A student enrolls in a course \\
+Ternary & A supplier supplies a part to a project \\
+N-ary & A relationship involving more than three entity sets \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Unary / Recursive Relationship}
+\centering
+\imageplaceholder{recursive-relationship.png}{Unary or Recursive Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Binary Relationship}
+\centering
+\imageplaceholder{binary-relationship.png}{Binary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Ternary Relationship}
+\centering
+\imageplaceholder{ternary-relationship.png}{Ternary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: N-ary Relationship}
+\centering
+\imageplaceholder{n-ary-relationship.png}{N-ary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 4: Relationship and Degree}
+\small
+\textbf{Question 11.} What does a relationship represent in the ER Model?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{A font type}
+  \qoption{B}{A connection between entities}
+  \qoption{C}{A CPU performance metric}
+  \qoption{D}{An image data type}
+\end{enumerate}
+
+\textbf{Question 12.} What is a relationship involving two entity sets called?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Unary Relationship}
+  \qoption{B}{Ternary Relationship}
+  \qoption{C}{Binary Relationship}
+  \qoption{D}{N-ary Relationship}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 4: Relationship and Degree (cont.)}
+\small
+\textbf{Question 13.} A relationship in which one employee manages another employee is an example of which degree?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Ternary Relationship}
+  \qoption{B}{Binary Relationship}
+  \qoption{C}{N-ary Relationship}
+  \qoption{D}{Unary / Recursive Relationship}
+\end{enumerate}
+
+\textbf{Question 14.} What does the degree of a relationship set indicate?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{The number of entity sets participating in the relationship set}
+  \qoption{B}{The number of records in the database}
+  \qoption{C}{The number of columns in a table}
+  \qoption{D}{The number of indexes created}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Cardinality in the ER Model}
+
+%------------------------------------------------
+\begin{frame}{What is Cardinality?}
+\small
+\kw{Cardinality} indicates the maximum number of times an entity in an entity set can participate in a relationship set.
+
+\vspace{2mm}
+Cardinality helps answer:
+\begin{itemize}
+\smallitem
+  \item How many other entities can one entity be associated with?
+  \item Is the relationship one-to-one, one-to-many, or many-to-many?
+  \item When converting to relational tables, do we need foreign keys or an intermediate table?
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{One-to-One Relationship}
+\small
+A \kw{one-to-one} relationship occurs when each entity in each entity set participates at most once in the relationship.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item One person has only one passport.
+  \item One passport belongs to only one person.
+\end{itemize}
+
+\begin{center}
+\texttt{Person 1 -- 1 Passport}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: One-to-One}
+\centering
+\imageplaceholder{one-to-one.png}{One-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set Representation: One-to-One}
+\centering
+\imageplaceholder{one-to-one-set-representation.png}{Set Representation of a One-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{One-to-Many Relationship}
+\small
+A \kw{one-to-many} relationship occurs when one entity on the first side can be associated with multiple entities on the second side.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item One department has many doctors.
+  \item One customer has many orders.
+  \item One class has many students.
+\end{itemize}
+
+\begin{center}
+\texttt{Department 1 -- M Doctor}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: One-to-Many}
+\centering
+\imageplaceholder{one-to-many.png}{One-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set Representation: One-to-Many}
+\centering
+\imageplaceholder{one-to-many-set-representation.png}{Set Representation of a One-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Many-to-One Relationship}
+\small
+A \kw{many-to-one} relationship is the reverse direction of one-to-many.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item Many surgeries can be performed by one surgeon.
+  \item Many orders belong to one customer.
+  \item Many employees belong to one department.
+\end{itemize}
+
+\begin{center}
+\texttt{Surgery M -- 1 Surgeon}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Many-to-One}
+\centering
+\imageplaceholder{many-to-one.png}{Many-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set Representation: Many-to-One}
+\centering
+\imageplaceholder{many-to-one-set-representation.png}{Set Representation of a Many-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Many-to-Many Relationship}
+\small
+A \kw{many-to-many} relationship occurs when entities on both sides can participate multiple times in the relationship.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item A student studies many courses.
+  \item A course has many students.
+  \item An employee works on many projects.
+  \item A project has many employees.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Intermediate Table for Many-to-Many}
+\small
+When converting to the relational model, a many-to-many relationship usually requires an intermediate table.
+
+\begin{verbatim}
+Students(student_id, full_name)
+Courses(course_id, course_name)
+Enrollments(student_id, course_id, semester, grade)
+\end{verbatim}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Many-to-Many}
+\centering
+\imageplaceholder{many-to-many.png}{Many-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set Representation: Many-to-Many}
+\centering
+\imageplaceholder{many-to-many-set-representation.png}{Set Representation of a Many-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 5: Cardinality}
+\small
+\textbf{Question 15.} What does cardinality indicate in the ER Model?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{The maximum number of times an entity can participate in a relationship set}
+  \qoption{B}{The color of a rectangle in an ERD}
+  \qoption{C}{The number of backup files}
+  \qoption{D}{The SQL query speed}
+\end{enumerate}
+
+\textbf{Question 16.} One person has one passport, and one passport belongs to one person. What is this relationship?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-Many}
+  \qoption{B}{Many-to-One}
+  \qoption{C}{One-to-One}
+  \qoption{D}{Many-to-Many}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 5: Cardinality (cont.)}
+\small
+\textbf{Question 17.} One customer has many orders. What relationship type is this?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-One}
+  \qoption{B}{Many-to-Many}
+  \qoption{C}{Many-to-One}
+  \qoption{D}{One-to-Many}
+\end{enumerate}
+
+\textbf{Question 18.} If a student can take many courses and a course can have many students, what is the usual relationship type?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-One}
+  \qoption{B}{Many-to-Many}
+  \qoption{C}{One-to-Many}
+  \qoption{D}{Recursive}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Participation Constraint}
+
+%------------------------------------------------
+\begin{frame}{What is Participation Constraint?}
+\small
+A \kw{Participation Constraint} describes whether an entity in an entity set is required to participate in a relationship.
+
+\vspace{2mm}
+There are two main types:
+\begin{enumerate}
+\smallitem
+  \item \kw{Total Participation}
+  \item \kw{Partial Participation}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Total Participation}
+\small
+\kw{Total Participation} means that every entity in the entity set must participate in the relationship.
+
+\vspace{2mm}
+Example: if the system requires every student to enroll in at least one course, then the entity set \texttt{Student} has total participation in the relationship \texttt{Enrolled in}.
+
+\vspace{2mm}
+In an ER Diagram, total participation is usually represented by a \kw{double line}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Total Participation}
+\centering
+\imageplaceholder{total-participation.png}{Total Participation in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Partial Participation}
+\small
+\kw{Partial Participation} means that an entity in the entity set may or may not participate in the relationship.
+
+\vspace{2mm}
+Example: some courses may not have any enrolled students yet. In that case, the entity set \texttt{Course} has partial participation in the relationship \texttt{Enrolled in}.
+
+\vspace{2mm}
+In an ER Diagram, partial participation is usually represented by a \kw{single line}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set Representation: Participation Constraint}
+\centering
+\imageplaceholder{participation-set-representation.png}{Set Representation of Participation Constraint}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 6: Participation Constraint}
+\small
+\textbf{Question 19.} What does Total Participation mean?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{An entity never participates in a relationship}
+  \qoption{B}{Only one entity participates in a relationship}
+  \qoption{C}{All entities in the entity set must participate in the relationship}
+  \qoption{D}{The relationship is removed from the ERD}
+\end{enumerate}
+
+\textbf{Question 20.} What does Partial Participation mean?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{An entity may or may not participate in a relationship}
+  \qoption{B}{An entity must participate in a relationship}
+  \qoption{C}{An entity is always a weak entity}
+  \qoption{D}{An entity always has many primary keys}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{How to Draw an ER Diagram}
+
+%------------------------------------------------
+\begin{frame}{Process for Drawing an ER Diagram}
+\small
+An ER Diagram can be drawn in six steps:
+\begin{enumerate}
+\smallitem
+  \item Identify entities.
+  \item Identify relationships.
+  \item Add attributes.
+  \item Define primary keys.
+  \item Remove redundancies.
+  \item Review for clarity.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Step 1: Identify Entities}
+\small
+Identify all important entities in the system.
+
+\vspace{2mm}
+For example, in a student management system:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Lecturer}
+  \item \texttt{Class}
+  \item \texttt{Department}
+\end{itemize}
+
+Represent entities using rectangles.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Step 2: Identify Relationships}
+\small
+Identify relationships among entities.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} enrolls in \texttt{Course}.
+  \item \texttt{Lecturer} teaches \texttt{Class}.
+  \item \texttt{Department} manages \texttt{Lecturer}.
+\end{itemize}
+
+Represent relationships using diamonds.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Step 3: Add Attributes}
+\small
+Attach attributes to entities using ovals.
+
+\vspace{2mm}
+For example, the entity \texttt{Student} may have:
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id}
+  \item \texttt{full\_name}
+  \item \texttt{date\_of\_birth}
+  \item \texttt{email}
+  \item \texttt{phone\_number}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Step 4: Define Primary Keys}
+\small
+For each entity, identify the attribute that uniquely identifies it.
+
+\vspace{2mm}
+Examples:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}: \texttt{student\_id}
+  \item \texttt{Course}: \texttt{course\_id}
+  \item \texttt{Lecturer}: \texttt{lecturer\_id}
+\end{itemize}
+
+In an ER Diagram, key attributes are usually underlined.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Steps 5 and 6: Finalize the ER Diagram}
+\small
+\begin{block}{Step 5: Remove Redundancies}
+Remove unnecessary entities, duplicate relationships, repeated attributes, and relationships without business meaning.
+\end{block}
+
+\begin{block}{Step 6: Review for Clarity}
+Check whether the diagram is easy to understand, can be converted into relational tables, and correctly reflects the system requirements.
+\end{block}
+\end{frame}
+
+%================================================
+\section{Worked Example: Course Registration System}
+
+%------------------------------------------------
+\begin{frame}{Example Problem}
+\small
+Consider a university course registration system.
+
+\vspace{2mm}
+We need to identify:
+\begin{itemize}
+\smallitem
+  \item Entities.
+  \item Attributes.
+  \item Relationships.
+  \item Cardinalities.
+  \item How to convert the ER model into relational tables.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Main Entities}
+\small
+Main entities:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Lecturer}
+  \item \texttt{Department}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Attributes of the Entities}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Student}
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id}
+  \item \texttt{full\_name}
+  \item \texttt{email}
+  \item \texttt{date\_of\_birth}
+\end{itemize}
+
+\textbf{Course}
+\begin{itemize}
+\smallitem
+  \item \texttt{course\_id}
+  \item \texttt{course\_name}
+  \item \texttt{credits}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Lecturer}
+\begin{itemize}
+\smallitem
+  \item \texttt{lecturer\_id}
+  \item \texttt{full\_name}
+  \item \texttt{email}
+\end{itemize}
+
+\textbf{Department}
+\begin{itemize}
+\smallitem
+  \item \texttt{department\_id}
+  \item \texttt{department\_name}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Main Relationships}
+\small
+Main relationships:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} \kw{enrolls in} \texttt{Course}.
+  \item \texttt{Lecturer} \kw{teaches} \texttt{Course}.
+  \item \texttt{Department} \kw{offers} \texttt{Course}.
+  \item \texttt{Department} \kw{manages} \texttt{Lecturer}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Cardinality in the Example}
+\small
+Some cardinalities:
+\begin{itemize}
+\smallitem
+  \item A student can enroll in many courses.
+  \item A course can have many enrolled students.
+  \item A lecturer can teach many courses.
+  \item A course may be taught by one or more lecturers depending on the rules.
+  \item A department can manage many lecturers.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Converting to Relational Tables}
+\small
+The ER model can be converted into the following tables:
+\begin{verbatim}
+Students(student_id, full_name, email, date_of_birth)
+Courses(course_id, course_name, credits)
+Lecturers(lecturer_id, full_name, email)
+Departments(department_id, department_name)
+Enrollments(student_id, course_id, semester, grade)
+Teaches(lecturer_id, course_id, semester)
+\end{verbatim}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Interpreting Intermediate Tables}
+\small
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id} is the primary key of \texttt{Students}.
+  \item \texttt{course\_id} is the primary key of \texttt{Courses}.
+  \item \texttt{lecturer\_id} is the primary key of \texttt{Lecturers}.
+  \item \texttt{department\_id} is the primary key of \texttt{Departments}.
+  \item \texttt{Enrollments} is an intermediate table for the many-to-many relationship between \texttt{Student} and \texttt{Course}.
+  \item \texttt{Teaches} links \texttt{Lecturer} and \texttt{Course}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz 7: Drawing an ERD}
+\small
+\textbf{Question 21.} When drawing an ER Diagram, what is usually the first step?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Choosing the background color of the diagram}
+  \qoption{B}{Creating indexes for tables}
+  \qoption{C}{Deleting all relationships}
+  \qoption{D}{Identifying the important entities}
+\end{enumerate}
+
+\textbf{Question 22.} In an ER Diagram, what symbol usually represents a relationship?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Oval}
+  \qoption{B}{Rectangle}
+  \qoption{C}{Dashed line}
+  \qoption{D}{Diamond}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Questions and Exercises}
+
+%------------------------------------------------
+\begin{frame}[allowframebreaks]{Short-Answer Review Questions}
+\small
+\begin{enumerate}
+\smallitem
+  \item What is the ER Model? Why is it considered a conceptual model in database design?
+  \item Distinguish entity, attribute, and relationship.
+  \item Distinguish strong entity and weak entity. Give an example.
+  \item Present the common attribute types in the ER Model.
+  \item What is the degree of a relationship set? Give examples of unary, binary, and ternary relationships.
+  \item What is cardinality? Why is it important when converting an ER Model into a relational model?
+  \item Distinguish total participation and partial participation.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Exercise 1: University System}
+\small
+A university needs to build a system for managing students, courses, lecturers, and departments.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Identify the main entities.
+  \item List some attributes for each entity.
+  \item Identify relationships among the entities.
+  \item Determine the cardinality for each relationship.
+  \item Convert the ER model into a list of relational tables.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Exercise 2: Online Store}
+\small
+An online store needs to manage customers, products, orders, and payments.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Identify the main entities and attributes.
+  \item Identify relationships among \texttt{Customer}, \texttt{Order}, \texttt{Product}, and \texttt{Payment}.
+  \item Determine which relationships are one-to-many and which are many-to-many.
+  \item Propose intermediate tables if necessary.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Exercise 3: Employees and Dependents}
+\small
+A company wants to store information about employees and their dependents.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Identify the strong entity and weak entity.
+  \item Explain why one entity is a weak entity.
+  \item Identify the identifying relationship.
+  \item Suggest how to convert the model into relational tables.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Exercise 4: Hospital System}
+\small
+A hospital needs to manage patients, doctors, departments, surgeries, and medicines.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Identify at least five entities.
+  \item Identify at least five relationships.
+  \item Classify some relationships by degree and cardinality.
+  \item Indicate which relationships may require intermediate tables.
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Summary and Keywords}
+
+%------------------------------------------------
+\begin{frame}{Lesson Summary}
+\small
+\begin{itemize}
+\smallitem
+  \item The ER Model is a conceptual model used for database design.
+  \item An ER Diagram is the graphical representation of the ER Model.
+  \item The three main components of the ER Model are entity, attribute, and relationship.
+  \item An entity is an object or concept whose data must be stored.
+  \item A strong entity has its own identifier; a weak entity depends on a strong entity.
+  \item Attributes describe entities and include simple, key, composite, multivalued, and derived attributes.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lesson Summary (cont.)}
+\small
+\begin{itemize}
+\smallitem
+  \item Relationships represent connections between entities.
+  \item Degree indicates the number of entity sets participating in a relationship.
+  \item Cardinality indicates the maximum number of times an entity can participate in a relationship.
+  \item Participation constraints indicate whether participation is mandatory or optional.
+  \item The ERD drawing process includes identifying entities, relationships, attributes, primary keys, removing redundancies, and reviewing clarity.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Key Terms}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Entity-Relationship Model
+  \item ER Model
+  \item Entity-Relationship Diagram
+  \item ERD
+  \item Entity
+  \item Entity Type
+  \item Entity Set
+  \item Entity Instance
+  \item Strong Entity
+  \item Weak Entity
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Attribute
+  \item Simple Attribute
+  \item Key Attribute
+  \item Composite Attribute
+  \item Multivalued Attribute
+  \item Derived Attribute
+  \item Relationship
+  \item Relationship Type
+  \item Relationship Set
+  \item Degree
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Unary Relationship
+  \item Binary Relationship
+  \item Ternary Relationship
+  \item N-ary Relationship
+  \item Cardinality
+  \item One-to-One
+  \item One-to-Many
+  \item Many-to-Many
+  \item Participation Constraint
+  \item Total/Partial Participation
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\centering
+\Huge Thank you!\\[0.5cm]
+\Large Questions and Discussion
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1457 @@
+
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Compile with XeLaTeX
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\graphicspath{{images/}{./}{/mnt/data/images/}}
+\hypersetup{unicode=true}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,72,160}
+\definecolor{codestr}{RGB}{150,60,30}
+\definecolor{accent}{RGB}{0,90,150}
+\definecolor{placeholderbg}{RGB}{245,248,252}
+\definecolor{placeholderline}{RGB}{90,120,150}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  keepspaces=true,
+  language=SQL
+}
+
+\newcommand{\keyword}[1]{\textcolor{accent}{\textbf{#1}}}
+\newcommand{\kw}[1]{\keyword{#1}}
+\newcommand{\tightlist}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}}
+\newcommand{\qoption}[2]{\item[#1.] #2}
+
+% Image placeholder: if the image exists, it is inserted; otherwise a box is shown.
+% To insert real images later, place PNG files into the images/ folder with the exact filenames.
+\newcommand{\imageplaceholder}[2]{%
+\IfFileExists{#1}{\includegraphics[width=0.78\textwidth,height=0.58\textheight,keepaspectratio]{#1}}{%
+\IfFileExists{images/#1}{\includegraphics[width=0.78\textwidth,height=0.58\textheight,keepaspectratio]{images/#1}}{%
+\fcolorbox{placeholderline}{placeholderbg}{\parbox[c][0.42\textheight][c]{0.78\textwidth}{\centering\Large Chưa tìm thấy ảnh minh họa\\[2mm]\normalsize #2\\[2mm]\scriptsize Kiểm tra file: \texttt{images/\detokenize{#1}}}}}}}
+
+\title[ER Model trong DBMS]{Giới thiệu ER Model trong DBMS}
+\subtitle{Entity, Attribute, Relationship, Degree, Cardinality và Participation Constraint}
+\author{Tài liệu bài giảng}
+\institute{Môn học: Cơ sở dữ liệu}
+\date{Cập nhật: 02/04/2026}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \centering
+    \vfill
+    {\Huge \insertsection}\par
+    \vfill
+  \end{frame}
+}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mục tiêu bài giảng}
+\small
+Sau khi hoàn thành bài học này, người học có thể:
+\begin{enumerate}
+\smallitem
+  \item Giải thích khái niệm \kw{Entity-Relationship Model} trong thiết kế cơ sở dữ liệu.
+  \item Trình bày vai trò của \kw{ER Model} và \kw{ER Diagram}.
+  \item Phân biệt các thành phần chính: \kw{entity}, \kw{attribute} và \kw{relationship}.
+  \item Nhận biết \kw{strong entity} và \kw{weak entity}.
+  \item Phân biệt các loại attribute: simple, key, composite, multivalued và derived.
+  \item Giải thích \kw{degree}, \kw{cardinality} và \kw{participation constraint}.
+  \item Vận dụng quy trình cơ bản để vẽ ER Diagram cho một bài toán thực tế.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Cấu trúc bài giảng}
+\small
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{enumerate}
+\smallitem
+  \item Tổng quan ER Model
+  \item Vai trò trong thiết kế CSDL
+  \item Thành phần ER Model
+  \item Entity, strong entity và weak entity
+  \item Attribute và các loại attribute
+\end{enumerate}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{enumerate}
+\setcounter{enumi}{5}
+\smallitem
+  \item Relationship và degree
+  \item Cardinality
+  \item Participation constraint
+  \item Cách vẽ ER Diagram
+  \item Ví dụ, câu hỏi và bài tập
+\end{enumerate}
+\end{column}
+\end{columns}
+\end{frame}
+
+%================================================
+\section{Tổng quan ER Model}
+
+%------------------------------------------------
+\begin{frame}{ER Model là gì?}
+\small
+\kw{Entity-Relationship Model}, hay \kw{ER Model}, là mô hình khái niệm dùng để thiết kế cơ sở dữ liệu.
+
+\vspace{2mm}
+Mô hình này biểu diễn cấu trúc logic của cơ sở dữ liệu thông qua:
+\begin{itemize}
+\smallitem
+  \item Các \kw{thực thể} cần lưu trữ dữ liệu.
+  \item Các \kw{thuộc tính} mô tả thực thể.
+  \item Các \kw{mối quan hệ} giữa các thực thể.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{ER Model giúp trả lời những câu hỏi nào?}
+\small
+ER Model giúp người thiết kế trả lời:
+\begin{itemize}
+\smallitem
+  \item Hệ thống cần lưu trữ những đối tượng nào?
+  \item Mỗi đối tượng có những thông tin gì?
+  \item Các đối tượng liên hệ với nhau như thế nào?
+  \item Những ràng buộc nào cần được thể hiện trong mô hình dữ liệu?
+\end{itemize}
+
+\begin{block}{ER Diagram}
+Biểu diễn đồ họa của ER Model được gọi là \kw{Entity-Relationship Diagram}, viết tắt là \kw{ERD}.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Tổng quan ER Model}
+\centering
+\imageplaceholder{introduction-to-er-model.png}{Tổng quan Entity-Relationship Model}
+
+\vspace{2mm}
+{\small Hình 1. Tổng quan về ER Model.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Vai trò của ER Model trong thiết kế CSDL}
+\small
+Quá trình thiết kế cơ sở dữ liệu thường gồm ba giai đoạn:
+\begin{enumerate}
+\smallitem
+  \item \kw{Thu thập yêu cầu}: hỏi người dùng, khách hàng hoặc stakeholder về chức năng và dữ liệu cần quản lý.
+  \item \kw{Thiết kế khái niệm hoặc logic}: ER Model mô tả entity, attribute và relationship.
+  \item \kw{Thiết kế vật lý}: xác định bảng, khóa, chỉ mục, view và chi tiết triển khai trên DBMS cụ thể.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Vì sao ER Diagram hữu ích?}
+\small
+ER Diagram hữu ích vì:
+\begin{itemize}
+\smallitem
+  \item Biểu diễn dữ liệu và quan hệ dữ liệu bằng hình ảnh.
+  \item Dễ chuyển đổi sang các bảng quan hệ.
+  \item Mô hình hóa được đối tượng trong thế giới thực.
+  \item Không yêu cầu người xem phải hiểu sâu về DBMS cụ thể.
+  \item Giúp hệ thống phức tạp trở nên dễ hiểu hơn.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 1: Tổng quan ER Model}
+\small
+\textbf{Câu 1.} ER Model chủ yếu được dùng để làm gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Thiết kế mô hình khái niệm của cơ sở dữ liệu}
+  \qoption{B}{Tăng tốc CPU của máy chủ}
+  \qoption{C}{Thiết kế giao diện người dùng}
+  \qoption{D}{Nén dữ liệu ảnh}
+\end{enumerate}
+
+\textbf{Câu 2.} ER Diagram là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Một công cụ sao lưu dữ liệu}
+  \qoption{B}{Biểu diễn đồ họa của ER Model}
+  \qoption{C}{Một hệ điều hành cơ sở dữ liệu}
+  \qoption{D}{Một ngôn ngữ lập trình web}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 1: Tổng quan ER Model (tiếp)}
+\small
+\textbf{Câu 3.} ER Model thường được dùng nhiều nhất ở bước nào trong thiết kế cơ sở dữ liệu?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Cấu hình card mạng}
+  \qoption{B}{Biên dịch mã nguồn}
+  \qoption{C}{Thiết kế khái niệm hoặc logic}
+  \qoption{D}{Xóa dữ liệu cũ}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Các thành phần chính của ER Model}
+
+%------------------------------------------------
+\begin{frame}{Ba thành phần cốt lõi}
+\small
+ER Model gồm ba thành phần cốt lõi:
+\vspace{2mm}
+
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.22\textwidth} X p{0.28\textwidth}}
+\toprule
+Thành phần & Ý nghĩa & Ký hiệu thường dùng trong ERD \\
+\midrule
+Entity & Đối tượng hoặc khái niệm cần lưu trữ dữ liệu & Hình chữ nhật \\
+Attribute & Thuộc tính mô tả entity & Hình oval \\
+Relationship & Mối liên kết giữa các entity & Hình thoi \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Components of ER Diagram}
+\centering
+\imageplaceholder{components-of-er-diagram.png}{Các thành phần cơ bản trong ER Diagram}
+
+\vspace{2mm}
+{\small Hình 2. Entity, Attribute và Relationship trong ER Diagram.}
+\end{frame}
+
+%================================================
+\section{Entity trong ER Model}
+
+%------------------------------------------------
+\begin{frame}{Entity là gì?}
+\small
+\kw{Entity} là một đối tượng, sự vật, khái niệm hoặc sự kiện trong thế giới thực mà hệ thống cần lưu trữ thông tin.
+
+\vspace{2mm}
+Ví dụ:
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Employee}
+  \item \texttt{Company}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{itemize}
+\smallitem
+  \item \texttt{Product}
+  \item \texttt{Reservation}
+  \item \texttt{Device}
+  \item \texttt{Document}
+\end{itemize}
+\end{column}
+\end{columns}
+
+\vspace{2mm}
+Trong cơ sở dữ liệu quan hệ, entity thường được chuyển thành \kw{bảng}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entity Type, Entity Instance và Entity Set}
+\small
+\begin{block}{Entity Type}
+Mô tả cấu trúc chung của một loại entity, ví dụ: \texttt{Student(student\_id, full\_name, date\_of\_birth, email)}.
+\end{block}
+
+\begin{block}{Entity Instance}
+Một đối tượng cụ thể thuộc entity type, ví dụ: \texttt{S001, Nguyen An, 2005-01-15, an@example.com}.
+\end{block}
+
+\begin{block}{Entity Set}
+Tập hợp tất cả các entity cùng một entity type, ví dụ tập hợp tất cả sinh viên trong trường.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ghi nhớ về Entity Set}
+\small
+ER Diagram thường biểu diễn \kw{entity type} hoặc \kw{entity set}, không biểu diễn từng dòng dữ liệu cụ thể.
+
+\vspace{2mm}
+\begin{exampleblock}{Ví dụ}
+ERD biểu diễn cấu trúc \texttt{Student}, chứ không vẽ từng sinh viên cụ thể như S001, S002, S003.
+\end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Entity Set}
+\centering
+\imageplaceholder{entity-set.png}{Entity type, entity instance và entity set}
+
+\vspace{2mm}
+{\small Hình 3. Entity type, entity instance và entity set.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Strong Entity}
+\small
+\kw{Strong Entity} là loại entity có thể được định danh duy nhất bằng chính thuộc tính của nó.
+
+\vspace{2mm}
+Đặc điểm:
+\begin{itemize}
+\smallitem
+  \item Có \kw{key attribute} hoặc \kw{primary key}.
+  \item Không phụ thuộc vào entity khác để xác định danh tính.
+  \item Thường được biểu diễn bằng \kw{hình chữ nhật đơn} trong ER Diagram.
+\end{itemize}
+
+\begin{exampleblock}{Ví dụ}
+\texttt{Student} có \texttt{student\_id}; \texttt{Employee} có \texttt{employee\_id}; \texttt{Product} có \texttt{product\_id}.
+\end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Weak Entity}
+\small
+\kw{Weak Entity} là loại entity không thể được định danh duy nhất chỉ bằng thuộc tính của chính nó.
+
+\vspace{2mm}
+Weak Entity cần phụ thuộc vào một \kw{Strong Entity} để được xác định.
+\begin{itemize}
+\smallitem
+  \item Không có khóa riêng đủ mạnh để định danh duy nhất.
+  \item Phụ thuộc vào một identifying strong entity.
+  \item Thường có \kw{total participation} trong quan hệ với strong entity.
+  \item Được biểu diễn bằng \kw{hình chữ nhật kép}.
+  \item Quan hệ định danh thường được biểu diễn bằng \kw{hình thoi kép}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ví dụ Weak Entity}
+\small
+Một công ty lưu thông tin người phụ thuộc của nhân viên.
+
+\vspace{2mm}
+\begin{itemize}
+\smallitem
+  \item \texttt{Employee} là strong entity.
+  \item \texttt{Dependent} là weak entity.
+  \item \texttt{Dependent} không thể tồn tại độc lập nếu không gắn với một nhân viên cụ thể.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Strong Entity và Weak Entity}
+\centering
+\imageplaceholder{strong-weak-entity.png}{Strong Entity và Weak Entity}
+
+\vspace{2mm}
+{\small Hình 4. Strong Entity và Weak Entity.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 2: Entity}
+\small
+\textbf{Câu 4.} Entity trong ER Model là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Một kiểu dữ liệu số}
+  \qoption{B}{Một loại chỉ mục}
+  \qoption{C}{Một câu lệnh SQL}
+  \qoption{D}{Một đối tượng hoặc khái niệm trong thế giới thực cần lưu trữ thông tin}
+\end{enumerate}
+
+\textbf{Câu 5.} Entity nào sau đây thường là ví dụ của strong entity?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Một số điện thoại phụ không có chủ sở hữu}
+  \qoption{B}{Một dòng log tạm thời không có định danh}
+  \qoption{C}{\texttt{Student} có \texttt{student\_id} định danh duy nhất}
+  \qoption{D}{Một thuộc tính được suy ra từ ngày sinh}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 2: Entity (tiếp)}
+\small
+\textbf{Câu 6.} Weak Entity có đặc điểm nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Luôn là một thuộc tính đa trị}
+  \qoption{B}{Phụ thuộc vào strong entity để được định danh}
+  \qoption{C}{Không thể xuất hiện trong ER Diagram}
+  \qoption{D}{Luôn được biểu diễn bằng hình oval đơn}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Attribute trong ER Model}
+
+%------------------------------------------------
+\begin{frame}{Attribute là gì?}
+\small
+\kw{Attribute} là thuộc tính dùng để mô tả entity.
+
+\vspace{2mm}
+Ví dụ với entity \texttt{Student}, các attribute có thể gồm:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No}
+  \item \texttt{Name}
+  \item \texttt{DOB}
+  \item \texttt{Age}
+  \item \texttt{Address}
+  \item \texttt{Mobile\_No}
+\end{itemize}
+
+Trong ER Diagram, attribute thường được biểu diễn bằng \kw{hình oval}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Attribute}
+\centering
+\imageplaceholder{attribute.png}{Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Các loại Attribute}
+\small
+Các loại attribute thường gặp:
+\begin{enumerate}
+\smallitem
+  \item \kw{Simple Attribute}
+  \item \kw{Key Attribute}
+  \item \kw{Composite Attribute}
+  \item \kw{Multivalued Attribute}
+  \item \kw{Derived Attribute}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Simple Attribute}
+\small
+\kw{Simple Attribute} là thuộc tính không thể chia nhỏ hơn thành các thuộc tính có ý nghĩa độc lập.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Age}
+  \item \texttt{Gender}
+  \item \texttt{Roll\_No}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Simple Attribute}
+\centering
+\imageplaceholder{simple-attribute.png}{Simple Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Key Attribute}
+\small
+\kw{Key Attribute} là thuộc tính dùng để định danh duy nhất mỗi entity trong entity set.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No} định danh duy nhất mỗi sinh viên.
+  \item \texttt{Employee\_ID} định danh duy nhất mỗi nhân viên.
+  \item \texttt{Product\_ID} định danh duy nhất mỗi sản phẩm.
+\end{itemize}
+
+Trong ER Diagram, key attribute được biểu diễn bằng oval có \kw{gạch chân}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Key Attribute}
+\centering
+\imageplaceholder{key-attribute.png}{Key Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Composite Attribute}
+\small
+\kw{Composite Attribute} là thuộc tính có thể được chia thành nhiều thuộc tính nhỏ hơn.
+
+\vspace{2mm}
+Ví dụ, \texttt{Address} có thể gồm:
+\begin{itemize}
+\smallitem
+  \item \texttt{Street}
+  \item \texttt{City}
+  \item \texttt{State}
+  \item \texttt{Country}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Composite Attribute}
+\centering
+\imageplaceholder{composite-attribute.png}{Composite Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Multivalued Attribute}
+\small
+\kw{Multivalued Attribute} là thuộc tính có thể có nhiều giá trị đối với một entity.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item Một sinh viên có thể có nhiều số điện thoại.
+  \item Một nhân viên có thể có nhiều kỹ năng.
+  \item Một sản phẩm có thể có nhiều màu sắc.
+\end{itemize}
+
+Trong ER Diagram, multivalued attribute được biểu diễn bằng \kw{oval kép}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Multivalued Attribute}
+\centering
+\imageplaceholder{multivalued-attribute.png}{Multivalued Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Derived Attribute}
+\small
+\kw{Derived Attribute} là thuộc tính có thể được suy ra từ thuộc tính khác.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Age} có thể được suy ra từ \texttt{DOB}.
+  \item \texttt{Total\_Amount} có thể được tính từ số lượng và đơn giá.
+  \item \texttt{Years\_of\_Service} có thể được tính từ ngày bắt đầu làm việc.
+\end{itemize}
+
+Trong ER Diagram, derived attribute được biểu diễn bằng \kw{oval nét đứt}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Derived Attribute}
+\centering
+\imageplaceholder{derived-attribute.png}{Derived Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 3: Attribute}
+\small
+\textbf{Câu 7.} Attribute trong ER Model dùng để làm gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Xóa toàn bộ cơ sở dữ liệu}
+  \qoption{B}{Tăng kích thước ổ cứng}
+  \qoption{C}{Mô tả thuộc tính của entity}
+  \qoption{D}{Thay thế hệ điều hành}
+\end{enumerate}
+
+\textbf{Câu 8.} \texttt{Roll\_No} dùng để định danh duy nhất sinh viên là loại attribute nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Composite Attribute}
+  \qoption{B}{Multivalued Attribute}
+  \qoption{C}{Derived Attribute}
+  \qoption{D}{Key Attribute}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 3: Attribute (tiếp)}
+\small
+\textbf{Câu 9.} \texttt{Address} gồm \texttt{Street}, \texttt{City}, \texttt{State}, \texttt{Country} là ví dụ của loại attribute nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Composite Attribute}
+  \qoption{B}{Derived Attribute}
+  \qoption{C}{Multivalued Attribute}
+  \qoption{D}{Weak Attribute}
+\end{enumerate}
+
+\textbf{Câu 10.} \texttt{Age} được tính từ \texttt{DOB} là ví dụ của loại attribute nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Key Attribute}
+  \qoption{B}{Derived Attribute}
+  \qoption{C}{Composite Attribute}
+  \qoption{D}{Multivalued Attribute}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Relationship và Degree}
+
+%------------------------------------------------
+\begin{frame}{Relationship trong ER Model}
+\small
+\kw{Relationship} mô tả mối liên kết giữa các entity.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} \kw{enrolls in} \texttt{Course}.
+  \item \texttt{Employee} \kw{works for} \texttt{Department}.
+  \item \texttt{Customer} \kw{places} \texttt{Order}.
+  \item \texttt{Doctor} \kw{performs} \texttt{Surgery}.
+\end{itemize}
+
+Trong ER Diagram, relationship thường được biểu diễn bằng \kw{hình thoi} và nối với entity bằng các đường liên kết.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Relationship Type và Relationship Set}
+\small
+\begin{block}{Relationship Type}
+Mô tả loại quan hệ giữa các entity type. Ví dụ: \texttt{Student -- Enrolled in -- Course}.
+\end{block}
+
+\begin{block}{Relationship Set}
+Tập hợp các relationship cùng loại, ví dụ S1 đăng ký C2, S2 đăng ký C1, S3 đăng ký C3.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Relationship Set}
+\centering
+\imageplaceholder{relationship-set.png}{Relationship type và relationship set}
+
+\vspace{2mm}
+{\small Hình 5. Relationship type và relationship set.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Degree of Relationship Set}
+\small
+\kw{Degree} của relationship set là số lượng entity set khác nhau tham gia vào relationship set.
+
+\vspace{2mm}
+Có bốn dạng phổ biến:
+\begin{enumerate}
+\smallitem
+  \item \kw{Unary / Recursive Relationship}: một entity set tham gia.
+  \item \kw{Binary Relationship}: hai entity set tham gia.
+  \item \kw{Ternary Relationship}: ba entity set tham gia.
+  \item \kw{N-ary Relationship}: n entity set tham gia.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ví dụ về Degree}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.28\textwidth} X}
+\toprule
+Loại degree & Ví dụ \\
+\midrule
+Unary / Recursive & Một nhân viên quản lý một nhân viên khác \\
+Binary & Sinh viên đăng ký môn học \\
+Ternary & Nhà cung cấp cung cấp linh kiện cho dự án \\
+N-ary & Quan hệ có nhiều hơn ba entity set tham gia \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Unary / Recursive Relationship}
+\centering
+\imageplaceholder{recursive-relationship.png}{Unary hoặc Recursive Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Binary Relationship}
+\centering
+\imageplaceholder{binary-relationship.png}{Binary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Ternary Relationship}
+\centering
+\imageplaceholder{ternary-relationship.png}{Ternary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: N-ary Relationship}
+\centering
+\imageplaceholder{n-ary-relationship.png}{N-ary Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 4: Relationship và Degree}
+\small
+\textbf{Câu 11.} Relationship trong ER Model biểu diễn điều gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Một loại font chữ}
+  \qoption{B}{Mối liên kết giữa các entity}
+  \qoption{C}{Một chỉ số hiệu năng CPU}
+  \qoption{D}{Một kiểu dữ liệu hình ảnh}
+\end{enumerate}
+
+\textbf{Câu 12.} Relationship có hai entity set tham gia được gọi là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Unary Relationship}
+  \qoption{B}{Ternary Relationship}
+  \qoption{C}{Binary Relationship}
+  \qoption{D}{N-ary Relationship}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 4: Relationship và Degree (tiếp)}
+\small
+\textbf{Câu 13.} Quan hệ một nhân viên quản lý một nhân viên khác là ví dụ của loại degree nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Ternary Relationship}
+  \qoption{B}{Binary Relationship}
+  \qoption{C}{N-ary Relationship}
+  \qoption{D}{Unary / Recursive Relationship}
+\end{enumerate}
+
+\textbf{Câu 14.} Degree của relationship set cho biết điều gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Số lượng entity set tham gia vào relationship set}
+  \qoption{B}{Số lượng bản ghi trong database}
+  \qoption{C}{Số lượng cột trong một bảng}
+  \qoption{D}{Số lượng index được tạo ra}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Cardinality trong ER Model}
+
+%------------------------------------------------
+\begin{frame}{Cardinality là gì?}
+\small
+\kw{Cardinality} cho biết số lần tối đa mà một entity trong một entity set có thể tham gia vào một relationship set.
+
+\vspace{2mm}
+Cardinality giúp trả lời:
+\begin{itemize}
+\smallitem
+  \item Một entity có thể liên kết với bao nhiêu entity khác?
+  \item Quan hệ giữa hai entity là một-một, một-nhiều hay nhiều-nhiều?
+  \item Khi chuyển sang bảng quan hệ, cần đặt khóa ngoại hoặc bảng trung gian như thế nào?
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{One-to-One Relationship}
+\small
+Quan hệ \kw{one-to-one} xảy ra khi mỗi entity trong mỗi entity set chỉ tham gia tối đa một lần trong relationship.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item Một người chỉ có một hộ chiếu.
+  \item Một hộ chiếu chỉ thuộc về một người.
+\end{itemize}
+
+\begin{center}
+\texttt{Person 1 -- 1 Passport}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: One-to-One}
+\centering
+\imageplaceholder{one-to-one.png}{One-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set representation: One-to-One}
+\centering
+\imageplaceholder{one-to-one-set-representation.png}{Set Representation of One-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{One-to-Many Relationship}
+\small
+Quan hệ \kw{one-to-many} xảy ra khi một entity ở bên thứ nhất có thể liên kết với nhiều entity ở bên thứ hai.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item Một khoa có nhiều giảng viên.
+  \item Một khách hàng có nhiều đơn hàng.
+  \item Một lớp học có nhiều sinh viên.
+\end{itemize}
+
+\begin{center}
+\texttt{Department 1 -- M Doctor}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: One-to-Many}
+\centering
+\imageplaceholder{one-to-many.png}{One-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set representation: One-to-Many}
+\centering
+\imageplaceholder{one-to-many-set-representation.png}{Set Representation of One-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Many-to-One Relationship}
+\small
+Quan hệ \kw{many-to-one} là chiều ngược lại của one-to-many.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item Nhiều ca phẫu thuật có thể do một bác sĩ thực hiện.
+  \item Nhiều đơn hàng thuộc về một khách hàng.
+  \item Nhiều nhân viên thuộc về một phòng ban.
+\end{itemize}
+
+\begin{center}
+\texttt{Surgery M -- 1 Surgeon}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Many-to-One}
+\centering
+\imageplaceholder{many-to-one.png}{Many-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set representation: Many-to-One}
+\centering
+\imageplaceholder{many-to-one-set-representation.png}{Set Representation of Many-to-One Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Many-to-Many Relationship}
+\small
+Quan hệ \kw{many-to-many} xảy ra khi entity ở cả hai bên đều có thể tham gia nhiều lần trong relationship.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item Một sinh viên học nhiều môn học.
+  \item Một môn học có nhiều sinh viên.
+  \item Một nhân viên làm nhiều dự án.
+  \item Một dự án có nhiều nhân viên.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Bảng trung gian cho Many-to-Many}
+\small
+Khi chuyển sang mô hình quan hệ, many-to-many thường cần một bảng trung gian.
+
+\begin{verbatim}
+Students(student_id, full_name)
+Courses(course_id, course_name)
+Enrollments(student_id, course_id, semester, grade)
+\end{verbatim}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Many-to-Many}
+\centering
+\imageplaceholder{many-to-many.png}{Many-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set representation: Many-to-Many}
+\centering
+\imageplaceholder{many-to-many-set-representation.png}{Set Representation of Many-to-Many Relationship}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 5: Cardinality}
+\small
+\textbf{Câu 15.} Cardinality trong ER Model cho biết điều gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Số lần tối đa một entity có thể tham gia vào relationship set}
+  \qoption{B}{Màu sắc của hình chữ nhật trong ERD}
+  \qoption{C}{Số lượng file backup}
+  \qoption{D}{Tốc độ truy vấn SQL}
+\end{enumerate}
+
+\textbf{Câu 16.} Một người có một hộ chiếu và một hộ chiếu thuộc về một người là quan hệ gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-Many}
+  \qoption{B}{Many-to-One}
+  \qoption{C}{One-to-One}
+  \qoption{D}{Many-to-Many}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 5: Cardinality (tiếp)}
+\small
+\textbf{Câu 17.} Một khách hàng có nhiều đơn hàng là ví dụ của quan hệ gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-One}
+  \qoption{B}{Many-to-Many}
+  \qoption{C}{Many-to-One}
+  \qoption{D}{One-to-Many}
+\end{enumerate}
+
+\textbf{Câu 18.} Quan hệ sinh viên và môn học thường là quan hệ gì nếu một sinh viên học nhiều môn và một môn có nhiều sinh viên?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{One-to-One}
+  \qoption{B}{Many-to-Many}
+  \qoption{C}{One-to-Many}
+  \qoption{D}{Recursive}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Participation Constraint}
+
+%------------------------------------------------
+\begin{frame}{Participation Constraint là gì?}
+\small
+\kw{Participation Constraint} là ràng buộc mô tả việc entity trong một entity set có bắt buộc phải tham gia vào relationship hay không.
+
+\vspace{2mm}
+Có hai loại chính:
+\begin{enumerate}
+\smallitem
+  \item \kw{Total Participation}
+  \item \kw{Partial Participation}
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Total Participation}
+\small
+\kw{Total Participation} nghĩa là mọi entity trong entity set đều phải tham gia vào relationship.
+
+\vspace{2mm}
+Ví dụ: nếu hệ thống quy định mỗi sinh viên bắt buộc phải đăng ký ít nhất một môn học, thì entity set \texttt{Student} có total participation trong relationship \texttt{Enrolled in}.
+
+\vspace{2mm}
+Trong ER Diagram, total participation thường được biểu diễn bằng \kw{đường đôi}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Total Participation}
+\centering
+\imageplaceholder{total-participation.png}{Total Participation trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Partial Participation}
+\small
+\kw{Partial Participation} nghĩa là entity trong entity set có thể tham gia hoặc không tham gia vào relationship.
+
+\vspace{2mm}
+Ví dụ: một số môn học có thể chưa có sinh viên nào đăng ký. Khi đó entity set \texttt{Course} có partial participation trong relationship \texttt{Enrolled in}.
+
+\vspace{2mm}
+Trong ER Diagram, partial participation thường được biểu diễn bằng \kw{đường đơn}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Set representation: Participation Constraint}
+\centering
+\imageplaceholder{participation-set-representation.png}{Set Representation of Participation Constraint}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 6: Participation Constraint}
+\small
+\textbf{Câu 19.} Total Participation có nghĩa là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Entity không bao giờ tham gia relationship}
+  \qoption{B}{Chỉ một entity được tham gia relationship}
+  \qoption{C}{Tất cả entity trong entity set bắt buộc tham gia relationship}
+  \qoption{D}{Relationship bị xóa khỏi ERD}
+\end{enumerate}
+
+\textbf{Câu 20.} Partial Participation có nghĩa là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Entity có thể tham gia hoặc không tham gia relationship}
+  \qoption{B}{Entity bắt buộc phải tham gia relationship}
+  \qoption{C}{Entity luôn là weak entity}
+  \qoption{D}{Entity luôn có nhiều khóa chính}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Cách vẽ ER Diagram}
+
+%------------------------------------------------
+\begin{frame}{Quy trình vẽ ER Diagram}
+\small
+Có thể vẽ ER Diagram theo sáu bước:
+\begin{enumerate}
+\smallitem
+  \item Xác định entity.
+  \item Xác định relationship.
+  \item Thêm attribute.
+  \item Xác định primary key.
+  \item Loại bỏ dư thừa.
+  \item Kiểm tra độ rõ ràng.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bước 1: Xác định Entity}
+\small
+Xác định tất cả các entity quan trọng trong hệ thống.
+
+\vspace{2mm}
+Ví dụ với hệ thống quản lý sinh viên:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Lecturer}
+  \item \texttt{Class}
+  \item \texttt{Department}
+\end{itemize}
+
+Biểu diễn entity bằng \kw{hình chữ nhật}.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bước 2: Xác định Relationship}
+\small
+Xác định quan hệ giữa các entity.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} đăng ký \texttt{Course}.
+  \item \texttt{Lecturer} dạy \texttt{Class}.
+  \item \texttt{Department} quản lý \texttt{Lecturer}.
+\end{itemize}
+
+Biểu diễn relationship bằng \kw{hình thoi}.
+\end{frame}
+
+
+%------------------------------------------------
+\begin{frame}{Bước 3: Thêm Attribute}
+\small
+Gắn các attribute vào entity bằng các hình oval.
+
+\vspace{2mm}
+Ví dụ entity \texttt{Student} có thể có:
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id}
+  \item \texttt{full\_name}
+  \item \texttt{date\_of\_birth}
+  \item \texttt{email}
+  \item \texttt{phone\_number}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bước 4: Xác định Primary Key}
+\small
+Với mỗi entity, xác định thuộc tính dùng để định danh duy nhất.
+
+\vspace{2mm}
+Ví dụ:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}: \texttt{student\_id}
+  \item \texttt{Course}: \texttt{course\_id}
+  \item \texttt{Lecturer}: \texttt{lecturer\_id}
+\end{itemize}
+
+Trong ER Diagram, key attribute thường được gạch chân.
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}{Bước 5 và 6: Hoàn thiện ER Diagram}
+\small
+\begin{block}{Bước 5: Loại bỏ dư thừa}
+Loại bỏ entity không cần thiết, relationship trùng lặp, attribute bị lặp và quan hệ không có ý nghĩa nghiệp vụ.
+\end{block}
+
+\begin{block}{Bước 6: Kiểm tra độ rõ ràng}
+Kiểm tra sơ đồ có dễ hiểu không, có thể chuyển sang bảng quan hệ không, có phản ánh đúng yêu cầu hệ thống không.
+\end{block}
+\end{frame}
+
+%================================================
+\section{Ví dụ tổng hợp: Hệ thống đăng ký học phần}
+
+%------------------------------------------------
+\begin{frame}{Bài toán ví dụ}
+\small
+Xét hệ thống đăng ký học phần của trường đại học.
+
+\vspace{2mm}
+Ta cần xác định:
+\begin{itemize}
+\smallitem
+  \item Entity.
+  \item Attribute.
+  \item Relationship.
+  \item Cardinality.
+  \item Cách chuyển sang bảng quan hệ.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entity chính}
+\small
+Các entity chính:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student}
+  \item \texttt{Course}
+  \item \texttt{Lecturer}
+  \item \texttt{Department}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Attribute của các entity}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\textbf{Student}
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id}
+  \item \texttt{full\_name}
+  \item \texttt{email}
+  \item \texttt{date\_of\_birth}
+\end{itemize}
+
+\textbf{Course}
+\begin{itemize}
+\smallitem
+  \item \texttt{course\_id}
+  \item \texttt{course\_name}
+  \item \texttt{credits}
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Lecturer}
+\begin{itemize}
+\smallitem
+  \item \texttt{lecturer\_id}
+  \item \texttt{full\_name}
+  \item \texttt{email}
+\end{itemize}
+
+\textbf{Department}
+\begin{itemize}
+\smallitem
+  \item \texttt{department\_id}
+  \item \texttt{department\_name}
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Relationship chính}
+\small
+Các relationship chính:
+\begin{itemize}
+\smallitem
+  \item \texttt{Student} \kw{enrolls in} \texttt{Course}.
+  \item \texttt{Lecturer} \kw{teaches} \texttt{Course}.
+  \item \texttt{Department} \kw{offers} \texttt{Course}.
+  \item \texttt{Department} \kw{manages} \texttt{Lecturer}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Cardinality trong ví dụ}
+\small
+Một số cardinality:
+\begin{itemize}
+\smallitem
+  \item Một sinh viên có thể đăng ký nhiều học phần.
+  \item Một học phần có thể có nhiều sinh viên đăng ký.
+  \item Một giảng viên có thể dạy nhiều học phần.
+  \item Một học phần có thể do một hoặc nhiều giảng viên phụ trách tùy quy định.
+  \item Một khoa có thể quản lý nhiều giảng viên.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Chuyển sang bảng quan hệ}
+\small
+Có thể chuyển thành các bảng:
+\begin{verbatim}
+Students(student_id, full_name, email, date_of_birth)
+Courses(course_id, course_name, credits)
+Lecturers(lecturer_id, full_name, email)
+Departments(department_id, department_name)
+Enrollments(student_id, course_id, semester, grade)
+Teaches(lecturer_id, course_id, semester)
+\end{verbatim}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Diễn giải bảng trung gian}
+\small
+\begin{itemize}
+\smallitem
+  \item \texttt{student\_id} là khóa chính của \texttt{Students}.
+  \item \texttt{course\_id} là khóa chính của \texttt{Courses}.
+  \item \texttt{lecturer\_id} là khóa chính của \texttt{Lecturers}.
+  \item \texttt{department\_id} là khóa chính của \texttt{Departments}.
+  \item \texttt{Enrollments} là bảng trung gian cho quan hệ nhiều-nhiều giữa \texttt{Student} và \texttt{Course}.
+  \item \texttt{Teaches} là bảng liên kết giữa \texttt{Lecturer} và \texttt{Course}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh 7: Quy trình vẽ ERD}
+\small
+\textbf{Câu 21.} Khi vẽ ER Diagram, bước đầu tiên thường là gì?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Chọn màu nền cho sơ đồ}
+  \qoption{B}{Tạo index cho bảng}
+  \qoption{C}{Xóa toàn bộ relationship}
+  \qoption{D}{Xác định các entity quan trọng}
+\end{enumerate}
+
+\textbf{Câu 22.} Trong ER Diagram, relationship thường được biểu diễn bằng ký hiệu nào?
+\begin{enumerate}
+\tightlist
+  \qoption{A}{Hình oval}
+  \qoption{B}{Hình chữ nhật}
+  \qoption{C}{Đường nét đứt}
+  \qoption{D}{Hình thoi}
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Câu hỏi và bài tập}
+
+%------------------------------------------------
+\begin{frame}[allowframebreaks]{Câu hỏi tự luận ngắn}
+\small
+\begin{enumerate}
+\smallitem
+  \item ER Model là gì? Vì sao ER Model được xem là mô hình khái niệm trong thiết kế cơ sở dữ liệu?
+  \item Phân biệt entity, attribute và relationship.
+  \item Phân biệt strong entity và weak entity. Cho ví dụ.
+  \item Trình bày bốn loại attribute thường gặp trong ER Model.
+  \item Degree của relationship set là gì? Cho ví dụ unary, binary và ternary relationship.
+  \item Cardinality là gì? Vì sao cardinality quan trọng khi chuyển ER Model sang mô hình quan hệ?
+  \item Phân biệt total participation và partial participation.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập 1: Hệ thống trường đại học}
+\small
+Một trường đại học cần xây dựng hệ thống quản lý sinh viên, học phần, giảng viên và khoa.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Xác định các entity chính.
+  \item Liệt kê một số attribute cho từng entity.
+  \item Xác định relationship giữa các entity.
+  \item Xác định cardinality cho từng relationship.
+  \item Chuyển mô hình ER sang danh sách bảng quan hệ.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập 2: Cửa hàng online}
+\small
+Một cửa hàng online cần quản lý khách hàng, sản phẩm, đơn hàng và thanh toán.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Xác định entity và attribute chính.
+  \item Xác định relationship giữa \texttt{Customer}, \texttt{Order}, \texttt{Product} và \texttt{Payment}.
+  \item Xác định relationship nào là one-to-many, relationship nào là many-to-many.
+  \item Đề xuất bảng trung gian nếu cần.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập 3: Nhân viên và người phụ thuộc}
+\small
+Một công ty muốn lưu thông tin nhân viên và người phụ thuộc của nhân viên.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Xác định strong entity và weak entity.
+  \item Giải thích vì sao một entity là weak entity.
+  \item Xác định identifying relationship.
+  \item Gợi ý cách chuyển sang bảng quan hệ.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập 4: Hệ thống bệnh viện}
+\small
+Một bệnh viện cần quản lý bệnh nhân, bác sĩ, khoa, ca phẫu thuật và thuốc.
+
+\vspace{2mm}
+\begin{enumerate}
+\smallitem
+  \item Xác định ít nhất 5 entity.
+  \item Xác định ít nhất 5 relationship.
+  \item Phân loại một số relationship theo degree và cardinality.
+  \item Chỉ ra relationship nào có thể cần bảng trung gian.
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Tóm tắt và từ khóa}
+
+%------------------------------------------------
+\begin{frame}{Tóm tắt bài học}
+\small
+\begin{itemize}
+\smallitem
+  \item ER Model là mô hình khái niệm dùng để thiết kế cơ sở dữ liệu.
+  \item ER Diagram là biểu diễn đồ họa của ER Model.
+  \item Ba thành phần chính của ER Model là entity, attribute và relationship.
+  \item Entity là đối tượng hoặc khái niệm cần lưu trữ dữ liệu.
+  \item Strong entity có khóa định danh riêng; weak entity phụ thuộc vào strong entity.
+  \item Attribute mô tả entity và có nhiều loại như simple, key, composite, multivalued và derived attribute.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Tóm tắt bài học (tiếp)}
+\small
+\begin{itemize}
+\smallitem
+  \item Relationship biểu diễn mối liên kết giữa các entity.
+  \item Degree cho biết số entity set tham gia vào relationship.
+  \item Cardinality cho biết số lần tối đa entity có thể tham gia vào relationship.
+  \item Participation constraint cho biết entity tham gia bắt buộc hay tùy chọn vào relationship.
+  \item Quy trình vẽ ER Diagram gồm xác định entity, relationship, attribute, khóa chính, loại bỏ dư thừa và kiểm tra độ rõ ràng.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Từ khóa chính}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Entity-Relationship Model
+  \item ER Model
+  \item Entity-Relationship Diagram
+  \item ERD
+  \item Entity
+  \item Entity Type
+  \item Entity Set
+  \item Entity Instance
+  \item Strong Entity
+  \item Weak Entity
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Attribute
+  \item Simple Attribute
+  \item Key Attribute
+  \item Composite Attribute
+  \item Multivalued Attribute
+  \item Derived Attribute
+  \item Relationship
+  \item Relationship Type
+  \item Relationship Set
+  \item Degree
+\end{itemize}
+\end{column}
+\begin{column}{0.33\textwidth}
+\begin{itemize}
+\smallitem
+  \item Unary Relationship
+  \item Binary Relationship
+  \item Ternary Relationship
+  \item N-ary Relationship
+  \item Cardinality
+  \item One-to-One
+  \item One-to-Many
+  \item Many-to-Many
+  \item Participation Constraint
+  \item Total/Partial Participation
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\centering
+\Huge Cảm ơn!\\[0.5cm]
+\Large Câu hỏi và thảo luận
+\end{frame}
+
+\end{document}

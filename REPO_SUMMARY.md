@@ -59,6 +59,8 @@ Important Jekyll settings:
   - Lesson images are stored in each lesson's `images/` folder.
   - `Data-Modeling/er-model/images/` contains the ER diagram illustrations used
     by the ER model lesson.
+  - `Data-Modeling/er-model/` includes Vietnamese/English Beamer source `.tex`
+    files and generated PDF slides for the ER model lesson.
   - Prefer folder names without spaces. The old folder name `Data Modeling` was
     renamed to `Data-Modeling` to avoid awkward URL encoding and link issues.
 
@@ -110,6 +112,10 @@ Current homepage sections:
 - Data Modeling
   - `Data-Modeling/data-modeling/data-modeling.md`
   - `Data-Modeling/er-model/er-model.md`
+    - Slides: `er-model-vi.pdf`
+    - Slides: `er-model-en.pdf`
+    - Source: `er-model-vi.tex`
+    - Source: `er-model-en.tex`
 
 - MySQL
   - `MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md`
@@ -118,6 +124,7 @@ Current homepage sections:
   - `MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md`
   - `MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md`
   - `MySQL/mysql-sample-database/mysql-sample-database.md`
+  - `MySQL/load-sample-database/load-sample-database.md`
   - `MySQL/start-stop-MySQL/start-stop-MySQL.md`
 
 ## Deployment Flow
@@ -144,8 +151,8 @@ git diff -- <paths>
 ```
 
 2. Stage only intended files. Do not stage `TEMP_MARKDOWN_INPUT.md` unless
-   explicitly requested. Do not stage intermediate `.webp` files if the lesson
-   uses converted `.png` files.
+   explicitly requested. For ER model lessons, keep `.webp` files for Markdown
+   pages and matching `.png` files for LaTeX/PDF builds when both are referenced.
 
 ```powershell
 git add -- <intended-files>
@@ -196,6 +203,9 @@ Workflow trigger paths:
 - 2026-06-01: Expanded `Data-Modeling/er-model/` with ER diagram illustrations
   for entities, attributes, relationships, cardinality, participation, and ER
   diagram construction steps.
+- 2026-06-01: Added Vietnamese and English ER model Beamer slides/PDFs, linked
+  them from `index.md`, and refreshed ER cardinality/participation images to
+  match the GeeksforGeeks source page.
 - 2026-06-01: Added `MySQL/mysql-sample-database/` with the classicmodels
   sample database lesson and local ER diagram image.
 - 2026-05-31: Added `Data-Modeling/` lessons and renamed the folder from
@@ -207,8 +217,7 @@ Workflow trigger paths:
 - 2026-05-28: Added this repository summary file.
 - 2026-05-28: Updated `index.md` with a Vietnamese/English language switcher.
 - 2026-05-27: Deployment rules note says the latest deploy activation was on this date.
-- Current git status during review showed `TEMP_MARKDOWN_INPUT.md` and several
-  intermediate ER model image files as untracked.
+- Current git status during review showed `TEMP_MARKDOWN_INPUT.md` as untracked.
 
 ## Maintenance Notes
 

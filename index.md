@@ -105,6 +105,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Độc lập dữ liệu | [Markdown](DBMS_Basic/data-independence/data-independence.md) | [VI](DBMS_Basic/data-independence/data_independence_beamer_pdflatex.pdf) / [EN](DBMS_Basic/data-independence/data_independence_beamer_english_pdflatex.pdf) | Có slides song ngữ |
 | Lược đồ cơ sở dữ liệu | [Markdown](DBMS_Basic/database-schema/database-schema.md) | <span class="missing">—</span> | |
 | Cách lựa chọn DBMS phù hợp | [Markdown](DBMS_Basic/choose-right-dbms/choose-right-dbms.md) | [VI](DBMS_Basic/choose-right-dbms/choose-right-dbms-vi.pdf) / [EN](DBMS_Basic/choose-right-dbms/choose-right-dbms-en.pdf) | Có slides song ngữ |
+
 <!-- | Độc lập vật lý và độc lập logic | [Markdown](DBMS_Basic/physical-logical-independence/physical-logical-independence.md) | <span class="missing">—</span> | | -->
 
 ## Data Modeling
@@ -112,7 +113,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
 | Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
-| Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
+| Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
 
 ## MySQL
 
@@ -123,9 +124,9 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Cài đặt MySQL Workbench trên Windows | [Markdown](MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
 | Kết nối MySQL bằng command options | [Markdown](MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
 | Kết nối MySQL trong VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
+| Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Nạp MySQL sample database vào server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
-| Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
 
@@ -169,7 +170,7 @@ Learning materials for database management systems and MySQL.
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
 | Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
-| Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | <span class="missing">—</span> | |
+| Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
 
 ## MySQL
 
