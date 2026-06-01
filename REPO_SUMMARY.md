@@ -50,11 +50,15 @@ Important Jekyll settings:
   - Each lesson generally lives in its own folder.
   - Some lessons include generated/source formats such as `.html`, `.tex`, and `.pdf`
     in addition to the publishable `.md` file.
+  - `DBMS_Basic/data-independence/` includes bilingual Beamer source `.tex`
+    files and generated Vietnamese/English PDF slides.
 
 - `Data-Modeling/`
   - Data modeling lessons.
   - Current lessons include `data-modeling` and `er-model`.
   - Lesson images are stored in each lesson's `images/` folder.
+  - `Data-Modeling/er-model/images/` contains the ER diagram illustrations used
+    by the ER model lesson.
   - Prefer folder names without spaces. The old folder name `Data Modeling` was
     renamed to `Data-Modeling` to avoid awkward URL encoding and link issues.
 
@@ -97,6 +101,8 @@ Current homepage sections:
   - `DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md`
   - `DBMS_Basic/data-abstraction/data-abstraction.md`
   - `DBMS_Basic/data-independence/data-independence.md`
+    - Slides: `data_independence_beamer_pdflatex.pdf`
+    - Slides: `data_independence_beamer_english_pdflatex.pdf`
   - `DBMS_Basic/physical-logical-independence/physical-logical-independence.md`
   - `DBMS_Basic/database-schema/database-schema.md`
   - `DBMS_Basic/choose-right-dbms/choose-right-dbms.md`
@@ -185,6 +191,11 @@ Workflow trigger paths:
 
 ## Update Notes
 
+- 2026-06-01: Added bilingual PDF slides and Beamer source files for
+  `DBMS_Basic/data-independence/`, and linked the slides from `index.md`.
+- 2026-06-01: Expanded `Data-Modeling/er-model/` with ER diagram illustrations
+  for entities, attributes, relationships, cardinality, participation, and ER
+  diagram construction steps.
 - 2026-06-01: Added `MySQL/mysql-sample-database/` with the classicmodels
   sample database lesson and local ER diagram image.
 - 2026-05-31: Added `Data-Modeling/` lessons and renamed the folder from

@@ -1,0 +1,657 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% =========================
+% English Beamer Lecture
+% =========================
+% pdflatex-compatible setup
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{cmap}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{keywordblue}{RGB}{0,70,140}
+\definecolor{commentgray}{RGB}{90,90,90}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{keywordblue}\bfseries,
+  commentstyle=\color{commentgray},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framerule=0.2pt,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\title[Data Independence in DBMS]{Lecture: Data Independence in DBMS}
+\subtitle{Physical and logical independence in database systems}
+\author{Prepared for a DBMS lecture}
+\date{\today}
+
+\AtBeginSection[]{
+  \begin{frame}{Section Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Table of Contents}
+\begin{columns}[T,totalwidth=\textwidth]
+  \column{0.48\textwidth}
+  \tableofcontents[sections={1-4},hideallsubsections]
+  \column{0.48\textwidth}
+  \tableofcontents[sections={5-8},hideallsubsections]
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Learning Objectives}
+After completing this lecture, students should be able to:
+\begin{enumerate}
+  \item Explain the concept of \textbf{data independence} in DBMS.
+  \item Describe the three-level DBMS architecture: \textbf{Internal Level}, \textbf{Conceptual Level}, and \textbf{View Level}.
+  \item Distinguish between \textbf{Physical Data Independence} and \textbf{Logical Data Independence}.
+  \item Analyze practical examples of each type of data independence.
+  \item Explain why data independence reduces maintenance effort and supports long-term system evolution.
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Concept of Data Independence}
+
+%------------------------------------------------
+\begin{frame}{What Is Data Independence?}
+\begin{block}{Definition}
+\textbf{Data independence} is the ability to change the schema at one level of a database architecture without affecting the schema at the next higher level.
+\end{block}
+
+\vspace{0.3cm}
+In simpler terms:
+\begin{itemize}
+  \item The internal storage or organization of data may change.
+  \item Users and application programs can still access data as before.
+  \item Application code does not need major changes after internal database optimizations.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Introductory Example}
+Suppose a sales system frequently searches orders by customer ID.
+
+\vspace{0.3cm}
+The database administrator creates an index to speed up the query:
+\begin{itemize}
+  \item The internal access path changes.
+  \item Users still use the same application interface.
+  \item The application still uses the same SQL query.
+\end{itemize}
+
+\begin{alertblock}{Key Idea}
+The DBMS hides internal database changes from users and application programs.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Why Is Data Independence Important?}
+\begin{columns}[T]
+\column{0.33\textwidth}
+\begin{block}{Lower Maintenance}
+Developers do not need to update applications after every small database change.
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Greater Flexibility}
+The database can be reorganized or optimized internally with limited impact on users.
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Long-Term Evolution}
+The database can be extended as business requirements change without breaking existing systems.
+\end{block}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz: Concept of Data Independence}
+\textbf{Question 1.} What is data independence in DBMS?
+\begin{enumerate}[A.]
+  \item The ability to change a schema at one level without affecting the next higher level
+  \item The ability to delete all data from the system
+  \item The ability to change the user interface color
+  \item The ability to replace SQL with HTML
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz: Role of Data Independence}
+\textbf{Question 2.} Why does data independence reduce maintenance effort?
+\begin{enumerate}[A.]
+  \item Developers do not need to modify applications after every small database change
+  \item Users must manage disk storage themselves
+  \item The database can never be changed
+  \item A DBMS no longer needs a schema
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 3.} How does data independence support long-term development?
+\begin{enumerate}[A.]
+  \item It allows the database to be updated and extended with less risk of breaking existing systems
+  \item It requires the whole application to be rewritten every year
+  \item It prevents all changes to data structure
+  \item It works only with text files
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Three-Level DBMS Architecture}
+
+%------------------------------------------------
+\begin{frame}{Three-Level DBMS Architecture}
+To understand data independence, we need to understand the three levels of DBMS architecture:
+
+\vspace{0.4cm}
+\begin{center}
+\Large
+\textbf{View Level}\\[0.2cm]
+$\uparrow$\\[0.2cm]
+\textbf{Conceptual Level}\\[0.2cm]
+$\uparrow$\\[0.2cm]
+\textbf{Internal Level}
+\end{center}
+
+\vspace{0.2cm}
+\begin{alertblock}{Main Idea}
+Each level hides details of the lower level to reduce dependency between applications and physical data storage.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Internal Level}
+\begin{block}{Definition}
+The \textbf{Internal Level} describes how data is physically stored in the system.
+\end{block}
+
+It includes:
+\begin{itemize}
+  \item Storage files.
+  \item Indexes.
+  \item Disk space allocation.
+  \item Data compression.
+  \item Data access methods.
+  \item Internal storage structures.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Conceptual Level}
+\begin{block}{Definition}
+The \textbf{Conceptual Level} describes the logical structure of the database.
+\end{block}
+
+It includes:
+\begin{itemize}
+  \item Tables and fields.
+  \item Attributes.
+  \item Relationships among tables.
+  \item Primary keys and foreign keys.
+  \item Integrity constraints.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{View Level}
+\begin{block}{Definition}
+The \textbf{View Level} describes how users and applications see the data.
+\end{block}
+
+Examples:
+\begin{itemize}
+  \item Students can view only their own grades.
+  \item Lecturers can view students in their assigned classes.
+  \item The academic office can view academic records.
+  \item The finance office can view tuition-related data.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Three Levels and Data Independence}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Level} & \textbf{Main Concern} & \textbf{Typical Users} \\
+\midrule
+View & User-specific data views & End users, applications \\
+Conceptual & Logical database design & Designers, developers \\
+Internal & Physical storage details & DBA, DBMS engine \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+\begin{alertblock}{Important}
+Data independence is achieved by separating these levels and maintaining mappings among them.
+\end{alertblock}
+\end{frame}
+
+%================================================
+\section{Two Types of Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Two Types of Data Independence}
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}lXX}
+\toprule
+Type & Changes Occur At & Should Not Affect \\
+\midrule
+Physical Data Independence & Internal Level & Conceptual Level and application programs \\
+Logical Data Independence & Conceptual Level & View Level and application programs \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.3cm}
+\begin{block}{Observation}
+Physical data independence is usually easier to achieve than logical data independence.
+\end{block}
+\end{frame}
+
+%================================================
+\section{Physical Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Physical Data Independence: Definition}
+\begin{block}{Definition}
+\textbf{Physical Data Independence} is the ability to change how data is physically stored without affecting the logical schema or user applications.
+\end{block}
+
+\vspace{0.3cm}
+It is related to changes at the \textbf{Internal Level}.
+
+\vspace{0.3cm}
+\begin{alertblock}{Main Focus}
+Physical data independence focuses on storage, performance, indexing, and access paths.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Examples of Physical Changes}
+The following changes are examples of physical data independence:
+\begin{itemize}
+  \item Moving database files from one disk to another.
+  \item Migrating from HDD to SSD.
+  \item Creating indexes to speed up queries.
+  \item Compressing data files to save storage space.
+  \item Changing access paths or data access methods.
+  \item Changing the internal file organization.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{SQL Example: Creating an Index}
+Assume the system frequently searches orders by \texttt{customer\_id}. The DBA creates an index:
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE INDEX idx_orders_customer
+ON Orders(customer_id);
+\end{lstlisting}
+
+The application can still use the same query:
+
+\begin{lstlisting}[style=sqlstyle]
+SELECT *
+FROM Orders
+WHERE customer_id = 101;
+\end{lstlisting}
+
+The logical schema of \texttt{Orders} does not change.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Benefits of Physical Data Independence}
+\begin{itemize}
+  \item Allows backend optimization without changing user applications.
+  \item Improves query performance through indexes and better access paths.
+  \item Supports storage and hardware upgrades.
+  \item Reduces the need to modify application programs.
+  \item Improves long-term maintainability.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz: Physical Data Independence}
+\textbf{Question 1.} What is Physical Data Independence?
+\begin{enumerate}[A.]
+  \item The ability to change physical storage without affecting the logical schema or application
+  \item The ability to change the user interface
+  \item The ability to delete the whole database
+  \item The ability to rename a course
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 2.} Which example illustrates Physical Data Independence?
+\begin{enumerate}[A.]
+  \item Creating an index to improve query speed without changing the application
+  \item Adding an email field to a user form
+  \item Changing the website color
+  \item Removing a button from the interface
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Logical Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Logical Data Independence: Definition}
+\begin{block}{Definition}
+\textbf{Logical Data Independence} is the ability to change the logical schema, that is, the structure and relationships of data, without affecting views or application programs.
+\end{block}
+
+\vspace{0.3cm}
+It is related to changes at the \textbf{Conceptual Level}.
+
+\vspace{0.3cm}
+\begin{alertblock}{Main Focus}
+Logical data independence focuses on tables, attributes, relationships, and views.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Examples of Logical Changes}
+The following changes are examples of logical data independence:
+\begin{itemize}
+  \item Adding a new column to a table.
+  \item Removing an unused column.
+  \item Creating a new relationship between tables.
+  \item Splitting one table into several tables.
+  \item Merging multiple tables.
+  \item Creating a view to simplify data access.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{SQL Example: Adding a Column}
+Suppose the \texttt{Employees} table initially contains:
+
+\begin{lstlisting}[style=sqlstyle]
+employee_id, full_name, department
+\end{lstlisting}
+
+The company wants to store employee email addresses:
+
+\begin{lstlisting}[style=sqlstyle]
+ALTER TABLE Employees
+ADD email VARCHAR(100);
+\end{lstlisting}
+
+If old applications use only \texttt{employee\_id}, \texttt{full\_name}, and \texttt{department}, they can continue to work.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Role of Views}
+When the logical schema changes, a view can help preserve a stable data interface for applications.
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE VIEW EmployeeBasicView AS
+SELECT employee_id, full_name, department
+FROM Employees;
+\end{lstlisting}
+
+Old applications can query \texttt{EmployeeBasicView} without knowing that \texttt{Employees} now contains an extra column.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Benefits of Logical Data Independence}
+\begin{itemize}
+  \item Makes application code easier to maintain.
+  \item Supports system updates as business requirements evolve.
+  \item Reduces the need to rewrite old queries.
+  \item Allows the database schema to evolve more flexibly.
+  \item Supports multiple views for different user groups.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quick Quiz: Logical Data Independence}
+\textbf{Question 1.} What is Logical Data Independence?
+\begin{enumerate}[A.]
+  \item The ability to change the logical schema without affecting views or application programs
+  \item The ability to change the physical file location
+  \item The ability to move data from HDD to SSD
+  \item The ability to change the operating system
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 2.} Which example illustrates Logical Data Independence?
+\begin{enumerate}[A.]
+  \item Adding an \texttt{email} column to \texttt{Employees} while old applications still work
+  \item Creating an index on disk
+  \item Moving data to an SSD
+  \item Compressing a physical data file
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Comparison and Integrated Examples}
+
+%------------------------------------------------
+\begin{frame}{Physical vs. Logical Data Independence}
+\scriptsize
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Criterion} & \textbf{Physical Data Independence} & \textbf{Logical Data Independence} \\
+\midrule
+Main focus & Physical data storage & Logical data structure \\
+Related level & Internal Schema & Conceptual Schema \\
+Typical changes & Files, indexes, disks, compression, access paths & Tables, columns, relationships, views \\
+Impact on applications & Should not affect application programs & Harder to avoid application impact \\
+Main goal & Improve performance and storage & Evolve database design \\
+Difficulty & Usually easier & Usually harder \\
+Example & Moving files or adding an index & Adding or removing a column \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Integrated Example: Sales System}
+Consider a sales management system.
+
+\vspace{0.2cm}
+\textbf{Physical Data Independence:} The DBA creates an index on \texttt{customer\_id} in \texttt{Orders}.
+\begin{lstlisting}[style=sqlstyle]
+CREATE INDEX idx_customer_id
+ON Orders(customer_id);
+\end{lstlisting}
+
+The old query still works:
+\begin{lstlisting}[style=sqlstyle]
+SELECT *
+FROM Orders
+WHERE customer_id = 1001;
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Integrated Example: Logical Change}
+\textbf{Logical Data Independence:} The company wants to store customer email addresses.
+
+\begin{lstlisting}[style=sqlstyle]
+ALTER TABLE Customers
+ADD email VARCHAR(100);
+\end{lstlisting}
+
+Old reports that use only \texttt{customer\_id} and \texttt{customer\_name} can still work.
+
+\vspace{0.2cm}
+A view can preserve the old structure:
+\begin{lstlisting}[style=sqlstyle]
+CREATE VIEW CustomerBasicView AS
+SELECT customer_id, customer_name
+FROM Customers;
+\end{lstlisting}
+\end{frame}
+
+%================================================
+\section{Review Questions and Exercises}
+
+%------------------------------------------------
+\begin{frame}{Review Questions: Multiple Choice I}
+\textbf{Question 1.} What is data independence?
+\begin{enumerate}[A.]
+  \item The ability to change a schema at one level without affecting the next higher level
+  \item The ability to delete data without control
+  \item The ability to change the interface color
+  \item The ability to replace a database with an image file
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 2.} How many main types of data independence are there?
+\begin{enumerate}[A.]
+  \item 1
+  \item 2
+  \item 3
+  \item 4
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Review Questions: Multiple Choice II}
+\textbf{Question 3.} Physical Data Independence is mainly related to which level?
+\begin{enumerate}[A.]
+  \item Internal Level
+  \item View Level
+  \item User Interface
+  \item Application Screen
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 4.} Logical Data Independence is mainly related to which level?
+\begin{enumerate}[A.]
+  \item Internal Level
+  \item Conceptual Level
+  \item Disk Level
+  \item Hardware Level
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Review Questions: Multiple Choice III}
+\textbf{Question 5.} Which example illustrates Physical Data Independence?
+\begin{enumerate}[A.]
+  \item Creating a new index without changing the application
+  \item Adding an email field to the user interface
+  \item Changing the website color
+  \item Removing a button from the screen
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Question 6.} Which example illustrates Logical Data Independence?
+\begin{enumerate}[A.]
+  \item Adding a new column to a table while old applications still work
+  \item Moving data to an SSD
+  \item Creating a physical file
+  \item Changing the disk block size
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Short-Answer Questions}
+\begin{enumerate}
+  \item Explain the concept of data independence in DBMS.
+  \item Distinguish between Physical Data Independence and Logical Data Independence.
+  \item Why can Physical Data Independence improve performance without affecting applications?
+  \item Why is Logical Data Independence usually harder to achieve than Physical Data Independence?
+  \item Explain the role of views in supporting Logical Data Independence.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Applied Exercises}
+\begin{enumerate}
+  \item A DBA moves data from HDD to SSD and creates an index to speed up queries. The application does not change. Identify the type of data independence and explain.
+  \item An HR system adds an \texttt{email} column to \texttt{Employees}. Old reports still show only employee ID, name, and department. Identify the type of data independence and explain.
+  \item A sales system changes the structure of \texttt{Customers}, but old applications still need \texttt{customer\_id} and \texttt{customer\_name}. Propose a view-based solution.
+  \item Give one student management system example for each type of data independence.
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Summary}
+
+%------------------------------------------------
+\begin{frame}{Lesson Summary}
+\begin{itemize}
+  \item Data independence allows schema changes at one level without affecting the next higher level.
+  \item DBMS architecture usually has three levels: Internal, Conceptual, and View.
+  \item Physical Data Independence allows changes in physical storage without affecting the logical schema or applications.
+  \item Logical Data Independence allows changes in the logical schema without affecting views or applications.
+  \item Physical Data Independence is usually easier to achieve than Logical Data Independence.
+  \item Views can help hide logical schema changes and keep applications stable.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Key Terms}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{itemize}
+  \item Data Independence
+  \item Physical Data Independence
+  \item Logical Data Independence
+  \item DBMS
+  \item Internal Level
+  \item Conceptual Level
+  \item View Level
+\end{itemize}
+
+\column{0.48\textwidth}
+\begin{itemize}
+  \item Internal Schema
+  \item Conceptual Schema
+  \item View
+  \item Index
+  \item Schema
+  \item Database Administrator
+  \item Application Program
+\end{itemize}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Closing Thought}
+\begin{block}{Core Message}
+Data independence is one of the key reasons why DBMSs are more powerful and maintainable than direct file-based data management.
+\end{block}
+
+\vspace{0.4cm}
+A well-designed database system separates:
+\begin{itemize}
+  \item how data is physically stored,
+  \item how data is logically organized,
+  \item and how users or applications see the data.
+\end{itemize}
+\end{frame}
+
+\end{document}

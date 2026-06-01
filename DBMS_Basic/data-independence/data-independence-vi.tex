@@ -1,0 +1,754 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% =========================
+% Vietnamese Beamer Lecture
+% =========================
+% pdflatex-compatible Vietnamese setup
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage{lmodern}
+\usepackage{cmap}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{keywordblue}{RGB}{0,70,140}
+\definecolor{commentgray}{RGB}{90,90,90}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{keywordblue}\bfseries,
+  commentstyle=\color{commentgray},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framerule=0.2pt,
+  breaklines=true,
+  showstringspaces=false,
+  columns=fullflexible
+}
+
+\title[Data Independence trong DBMS]{Bài giảng: Data Independence trong DBMS}
+\subtitle{Độc lập dữ liệu trong hệ quản trị cơ sở dữ liệu}
+\author{Biên soạn cho bài giảng DBMS}
+\date{\today}
+
+\AtBeginSection[]{
+  \begin{frame}{Nội dung phần học}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mục lục}
+\begin{columns}[T,totalwidth=\textwidth]
+  \column{0.48\textwidth}
+  \tableofcontents[sections={1-4},hideallsubsections]
+  \column{0.48\textwidth}
+  \tableofcontents[sections={5-8},hideallsubsections]
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mục tiêu bài giảng}
+Sau khi hoàn thành bài học này, người học có thể:
+\begin{enumerate}
+  \item Giải thích khái niệm \textbf{data independence} trong DBMS.
+  \item Mô tả kiến trúc ba mức của DBMS: \textbf{Internal Level}, \textbf{Conceptual Level}, \textbf{View Level}.
+  \item Phân biệt \textbf{Physical Data Independence} và \textbf{Logical Data Independence}.
+  \item Phân tích ví dụ thực tế tương ứng với từng loại độc lập dữ liệu.
+  \item Giải thích vai trò của data independence trong bảo trì và phát triển hệ thống.
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Khái niệm Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Data Independence là gì?}
+\begin{block}{Định nghĩa}
+\textbf{Data Independence} hay \textbf{độc lập dữ liệu} là khả năng thay đổi schema ở một mức trong kiến trúc cơ sở dữ liệu mà không ảnh hưởng đến schema ở mức cao hơn kế tiếp.
+\end{block}
+
+\vspace{0.3cm}
+Nói cách khác:
+\begin{itemize}
+  \item Cách lưu trữ hoặc tổ chức dữ liệu bên trong có thể thay đổi.
+  \item Người dùng và chương trình ứng dụng vẫn truy cập dữ liệu như trước.
+  \item Mã ứng dụng không cần thay đổi đáng kể sau các tối ưu nội bộ.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ví dụ mở đầu}
+Giả sử một hệ thống bán hàng thường xuyên tìm đơn hàng theo mã khách hàng.
+
+\vspace{0.3cm}
+DBA tạo thêm chỉ mục để tăng tốc truy vấn:
+\begin{itemize}
+  \item Cách lưu trữ hoặc truy cập dữ liệu bên trong thay đổi.
+  \item Người dùng vẫn dùng cùng giao diện.
+  \item Ứng dụng vẫn dùng cùng câu lệnh SQL.
+\end{itemize}
+
+\begin{alertblock}{Ý nghĩa}
+Thay đổi bên trong database được DBMS che giấu khỏi ứng dụng và người dùng.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Vì sao Data Independence quan trọng?}
+\begin{columns}[T]
+\column{0.33\textwidth}
+\begin{block}{Giảm bảo trì}
+Developer không cần cập nhật ứng dụng sau mọi thay đổi nhỏ trong database.
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Tăng linh hoạt}
+Database có thể được tổ chức lại hoặc tối ưu nội bộ mà ít ảnh hưởng đến người dùng.
+\end{block}
+
+\column{0.33\textwidth}
+\begin{block}{Phát triển lâu dài}
+Database có thể mở rộng, cập nhật khi nghiệp vụ thay đổi mà không phá vỡ hệ thống hiện có.
+\end{block}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh: Khái niệm Data Independence}
+\textbf{Câu 1.} Data independence trong DBMS là gì?
+\begin{enumerate}[A.]
+  \item Khả năng thay đổi schema ở một mức mà không ảnh hưởng đến mức cao hơn kế tiếp
+  \item Khả năng xóa toàn bộ dữ liệu khỏi hệ thống
+  \item Khả năng thay đổi màu giao diện người dùng
+  \item Khả năng thay thế SQL bằng HTML
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz nhanh: Vai trò của Data Independence}
+\textbf{Câu 2.} Data independence giúp giảm bảo trì vì lý do nào?
+\begin{enumerate}[A.]
+  \item Developer không cần sửa ứng dụng sau mọi thay đổi nhỏ trong database
+  \item Người dùng phải tự quản lý ổ đĩa
+  \item Database không bao giờ được thay đổi
+  \item DBMS không còn cần schema
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Câu 3.} Data independence hỗ trợ phát triển lâu dài như thế nào?
+\begin{enumerate}[A.]
+  \item Cho phép database được cập nhật và mở rộng mà ít làm hỏng hệ thống hiện có
+  \item Bắt buộc viết lại toàn bộ ứng dụng mỗi năm
+  \item Không cho phép thay đổi cấu trúc dữ liệu
+  \item Chỉ dùng được với file văn bản
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Kiến trúc ba mức của DBMS}
+
+%------------------------------------------------
+\begin{frame}{Kiến trúc ba mức của DBMS}
+Để hiểu data independence, cần hiểu ba mức trong kiến trúc DBMS:
+
+\vspace{0.4cm}
+\begin{center}
+\Large
+\textbf{View Level}\\[0.2cm]
+$\uparrow$\\[0.2cm]
+\textbf{Conceptual Level}\\[0.2cm]
+$\uparrow$\\[0.2cm]
+\textbf{Internal Level}
+\end{center}
+
+\vspace{0.2cm}
+\begin{alertblock}{Ý tưởng chính}
+Mỗi mức che giấu chi tiết của mức thấp hơn để giảm sự phụ thuộc giữa ứng dụng và cách dữ liệu được lưu trữ.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Internal Level}
+\begin{block}{Khái niệm}
+\textbf{Internal Level} liên quan đến cách dữ liệu được lưu trữ vật lý trong hệ thống.
+\end{block}
+
+Mức này bao gồm:
+\begin{itemize}
+  \item File lưu trữ.
+  \item Chỉ mục.
+  \item Cách phân bổ không gian đĩa.
+  \item Nén dữ liệu.
+  \item Phương pháp truy cập dữ liệu.
+  \item Cấu trúc lưu trữ bên trong.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Conceptual Level}
+\begin{block}{Khái niệm}
+\textbf{Conceptual Level} mô tả cấu trúc logic của cơ sở dữ liệu.
+\end{block}
+
+Mức này bao gồm:
+\begin{itemize}
+  \item Bảng và trường dữ liệu.
+  \item Thuộc tính.
+  \item Quan hệ giữa các bảng.
+  \item Khóa chính và khóa ngoại.
+  \item Ràng buộc toàn vẹn.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{View Level}
+\begin{block}{Khái niệm}
+\textbf{View Level} mô tả cách người dùng và ứng dụng nhìn thấy dữ liệu.
+\end{block}
+
+Ví dụ trong hệ thống quản lý đào tạo:
+\begin{itemize}
+  \item Sinh viên chỉ xem điểm của chính mình.
+  \item Giảng viên xem danh sách sinh viên trong lớp phụ trách.
+  \item Phòng đào tạo xem toàn bộ dữ liệu học vụ.
+  \item Phòng tài chính xem dữ liệu học phí.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mối liên hệ giữa ba mức}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.25\textwidth}X}
+\toprule
+Mức & Vai trò chính \\
+\midrule
+View Level & Cách từng nhóm người dùng hoặc ứng dụng nhìn thấy dữ liệu. \\
+Conceptual Level & Mô hình logic tổng thể của database: bảng, cột, khóa, quan hệ. \\
+Internal Level & Cách dữ liệu được lưu trữ và truy cập vật lý bên trong hệ thống. \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.3cm}
+\begin{alertblock}{Ghi nhớ}
+Data independence xuất hiện khi thay đổi ở mức thấp không làm phá vỡ mức cao hơn.
+\end{alertblock}
+\end{frame}
+
+%================================================
+\section{Hai loại Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Hai loại Data Independence}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.33\textwidth}p{0.25\textwidth}X}
+\toprule
+Loại độc lập dữ liệu & Thay đổi ở mức nào? & Không nên ảnh hưởng đến mức nào? \\
+\midrule
+Physical Data Independence & Internal Level & Conceptual Level và application programs \\
+Logical Data Independence & Conceptual Level & View Level và application programs \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.4cm}
+\begin{block}{Cách hiểu nhanh}
+\begin{itemize}
+  \item \textbf{Physical}: thay đổi cách lưu trữ vật lý.
+  \item \textbf{Logical}: thay đổi cấu trúc logic của dữ liệu.
+\end{itemize}
+\end{block}
+\end{frame}
+
+%================================================
+\section{Physical Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Physical Data Independence: Khái niệm}
+\begin{block}{Định nghĩa}
+\textbf{Physical Data Independence} là khả năng thay đổi cách dữ liệu được lưu trữ vật lý mà không ảnh hưởng đến schema logic hoặc ứng dụng người dùng.
+\end{block}
+
+\vspace{0.3cm}
+Nó liên quan đến các thay đổi ở \textbf{Internal Level}.
+
+\vspace{0.3cm}
+\begin{alertblock}{Trọng tâm}
+Tối ưu phần bên dưới database mà không bắt ứng dụng phía trên phải thay đổi.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ví dụ thay đổi vật lý}
+Các thay đổi sau thuộc Physical Data Independence:
+\begin{itemize}
+  \item Chuyển dữ liệu từ ổ C: sang ổ D:.
+  \item Chuyển dữ liệu từ HDD sang SSD.
+  \item Tạo index để tăng tốc truy vấn.
+  \item Nén file dữ liệu để tiết kiệm dung lượng.
+  \item Thay đổi access path hoặc phương pháp truy cập dữ liệu.
+  \item Thay đổi cách tổ chức file lưu trữ.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ SQL: Tạo index}
+Giả sử hệ thống thường xuyên tìm đơn hàng theo \texttt{customer\_id}. DBA tạo index:
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE INDEX idx_orders_customer
+ON Orders(customer_id);
+\end{lstlisting}
+
+Ứng dụng vẫn có thể dùng truy vấn cũ:
+
+\begin{lstlisting}[style=sqlstyle]
+SELECT *
+FROM Orders
+WHERE customer_id = 101;
+\end{lstlisting}
+
+\begin{alertblock}{Nhận xét}
+Schema logic của bảng \texttt{Orders} không thay đổi.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lợi ích của Physical Data Independence}
+\begin{itemize}
+  \item Tối ưu backend mà không ảnh hưởng người dùng.
+  \item Cải thiện hiệu năng truy vấn.
+  \item Hỗ trợ nâng cấp phần cứng và lưu trữ.
+  \item Giảm nhu cầu thay đổi application programs.
+  \item Tăng khả năng bảo trì lâu dài.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{block}{Thông điệp chính}
+DBA có thể tối ưu hệ thống mà không làm gián đoạn ứng dụng đang chạy.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz: Physical Data Independence}
+\textbf{Câu 1.} Physical Data Independence là gì?
+\begin{enumerate}[A.]
+  \item Khả năng thay đổi cách lưu trữ vật lý mà không ảnh hưởng đến schema logic hoặc ứng dụng
+  \item Khả năng thay đổi giao diện người dùng
+  \item Khả năng xóa toàn bộ database
+  \item Khả năng thay đổi tên môn học
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz: Ví dụ và mục tiêu}
+\textbf{Câu 2.} Ví dụ nào là Physical Data Independence?
+\begin{enumerate}[A.]
+  \item Tạo index để tăng tốc truy vấn mà ứng dụng không cần thay đổi
+  \item Thêm trường email vào form nhập liệu
+  \item Đổi màu website
+  \item Xóa một chức năng khỏi giao diện
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Câu 3.} Physical Data Independence thường phục vụ mục tiêu nào?
+\begin{enumerate}[A.]
+  \item Tối ưu hiệu năng và lưu trữ
+  \item Thay đổi vai trò người dùng
+  \item Thiết kế logo hệ thống
+  \item Viết lại toàn bộ ứng dụng
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{Logical Data Independence}
+
+%------------------------------------------------
+\begin{frame}{Logical Data Independence: Khái niệm}
+\begin{block}{Định nghĩa}
+\textbf{Logical Data Independence} là khả năng thay đổi schema logic, tức là cấu trúc và quan hệ của dữ liệu, mà không ảnh hưởng đến view hoặc chương trình ứng dụng.
+\end{block}
+
+\vspace{0.3cm}
+Nó liên quan đến các thay đổi ở \textbf{Conceptual Level}.
+
+\vspace{0.3cm}
+\begin{alertblock}{Trọng tâm}
+Schema có thể phát triển theo nghiệp vụ mà vẫn giữ ổn định cho ứng dụng cũ.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Ví dụ thay đổi logic}
+Các thay đổi sau thuộc Logical Data Independence:
+\begin{itemize}
+  \item Thêm cột mới vào bảng.
+  \item Xóa cột không còn sử dụng.
+  \item Tạo quan hệ mới giữa hai bảng.
+  \item Tách một bảng thành nhiều bảng.
+  \item Gộp nhiều bảng.
+  \item Tạo view để đơn giản hóa truy cập.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ SQL: Thêm cột mới}
+Giả sử bảng \texttt{Employees} ban đầu có các cột:
+
+\begin{lstlisting}[style=sqlstyle]
+employee_id, full_name, department
+\end{lstlisting}
+
+Doanh nghiệp muốn lưu thêm email:
+
+\begin{lstlisting}[style=sqlstyle]
+ALTER TABLE Employees
+ADD email VARCHAR(100);
+\end{lstlisting}
+
+Nếu các ứng dụng cũ chỉ dùng \texttt{employee\_id}, \texttt{full\_name}, \texttt{department}, chúng vẫn có thể hoạt động bình thường.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Vai trò của View}
+Khi schema logic thay đổi, view có thể giúp giữ giao diện dữ liệu ổn định cho ứng dụng:
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE VIEW EmployeeBasicView AS
+SELECT employee_id, full_name, department
+FROM Employees;
+\end{lstlisting}
+
+\begin{block}{Ý nghĩa}
+Ứng dụng cũ truy vấn \texttt{EmployeeBasicView} mà không cần quan tâm bảng \texttt{Employees} đã có thêm cột \texttt{email}.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lợi ích của Logical Data Independence}
+\begin{itemize}
+  \item Dễ bảo trì mã ứng dụng hơn.
+  \item Hỗ trợ cập nhật hệ thống khi nghiệp vụ phát triển.
+  \item Giảm nhu cầu viết lại truy vấn cũ.
+  \item Cho phép schema phát triển linh hoạt.
+  \item Hỗ trợ nhiều view cho nhiều nhóm người dùng.
+\end{itemize}
+
+\vspace{0.3cm}
+\begin{alertblock}{Lưu ý}
+Logical Data Independence thường khó đạt được hơn Physical Data Independence vì schema logic gần với dữ liệu mà ứng dụng sử dụng.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz: Logical Data Independence}
+\textbf{Câu 1.} Logical Data Independence là gì?
+\begin{enumerate}[A.]
+  \item Khả năng thay đổi schema logic mà không ảnh hưởng đến view hoặc chương trình ứng dụng
+  \item Khả năng thay đổi vị trí file vật lý
+  \item Khả năng thay đổi ổ đĩa từ HDD sang SSD
+  \item Khả năng thay đổi hệ điều hành
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Quiz: Ví dụ và View}
+\textbf{Câu 2.} Ví dụ nào là Logical Data Independence?
+\begin{enumerate}[A.]
+  \item Thêm cột \texttt{email} vào bảng \texttt{Employees} mà ứng dụng cũ vẫn hoạt động
+  \item Tạo index trên ổ đĩa
+  \item Chuyển dữ liệu sang SSD
+  \item Nén file vật lý
+\end{enumerate}
+
+\vspace{0.2cm}
+\textbf{Câu 3.} View hỗ trợ Logical Data Independence bằng cách nào?
+\begin{enumerate}[A.]
+  \item Giữ giao diện dữ liệu ổn định cho ứng dụng khi schema logic thay đổi
+  \item Xóa toàn bộ dữ liệu cũ
+  \item Thay đổi phần cứng máy chủ
+  \item Không cho người dùng truy vấn database
+\end{enumerate}
+\end{frame}
+
+%================================================
+\section{So sánh và ví dụ tổng hợp}
+
+%------------------------------------------------
+\begin{frame}{So sánh Physical và Logical Data Independence}
+\scriptsize
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.22\textwidth}XX}
+\toprule
+Tiêu chí & Physical Data Independence & Logical Data Independence \\
+\midrule
+Trọng tâm & Cách dữ liệu được lưu trữ vật lý & Cấu trúc và tổ chức dữ liệu \\
+Mức liên quan & Internal Schema & Conceptual Schema \\
+Loại thay đổi & File, index, ổ đĩa, nén, access path & Bảng, cột, quan hệ, view \\
+Ảnh hưởng đến ứng dụng & Không nên ảnh hưởng đến application programs & Có thể khó hơn để tránh ảnh hưởng \\
+Mục tiêu & Tối ưu hiệu năng và lưu trữ & Phát triển thiết kế database \\
+Mức độ đạt được & Dễ hơn & Khó hơn \\
+Ví dụ & Di chuyển file dữ liệu hoặc thêm index & Thêm/xóa cột trong bảng \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ tổng hợp: Hệ thống quản lý bán hàng}
+\textbf{Physical Data Independence:} DBA tạo index trên cột \texttt{customer\_id} trong bảng \texttt{Orders}.
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE INDEX idx_customer_id
+ON Orders(customer_id);
+
+SELECT *
+FROM Orders
+WHERE customer_id = 1001;
+\end{lstlisting}
+
+\begin{block}{Nhận xét}
+Cách truy cập dữ liệu được tối ưu, nhưng schema logic và ứng dụng không đổi.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ tổng hợp: Thay đổi schema logic}
+\textbf{Logical Data Independence:} Doanh nghiệp muốn lưu thêm email của khách hàng.
+
+\begin{lstlisting}[style=sqlstyle]
+ALTER TABLE Customers
+ADD email VARCHAR(100);
+\end{lstlisting}
+
+Các báo cáo cũ chỉ dùng \texttt{customer\_id} và \texttt{customer\_name} vẫn hoạt động.
+
+\begin{lstlisting}[style=sqlstyle]
+CREATE VIEW CustomerBasicView AS
+SELECT customer_id, customer_name
+FROM Customers;
+\end{lstlisting}
+\end{frame}
+
+%================================================
+\section{Câu hỏi ôn tập và bài tập}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi trắc nghiệm ôn tập 1}
+\small
+\textbf{Câu 1.} Data independence là gì?
+\begin{enumerate}[A.]
+  \item Khả năng thay đổi schema ở một mức mà không ảnh hưởng đến mức cao hơn kế tiếp
+  \item Khả năng xóa dữ liệu không kiểm soát
+  \item Khả năng đổi màu giao diện
+  \item Khả năng thay thế database bằng file ảnh
+\end{enumerate}
+
+\textbf{Câu 2.} Có mấy loại data independence chính?
+\begin{enumerate}[A.]
+  \item 1
+  \item 2
+  \item 3
+  \item 4
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi trắc nghiệm ôn tập 2}
+\small
+\textbf{Câu 3.} Physical Data Independence liên quan chủ yếu đến mức nào?
+\begin{enumerate}[A.]
+  \item Internal Level
+  \item View Level
+  \item User Interface
+  \item Application Screen
+\end{enumerate}
+
+\textbf{Câu 4.} Logical Data Independence liên quan chủ yếu đến mức nào?
+\begin{enumerate}[A.]
+  \item Internal Level
+  \item Conceptual Level
+  \item Disk Level
+  \item Hardware Level
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi trắc nghiệm ôn tập 3}
+\small
+\textbf{Câu 5.} Ví dụ nào là Physical Data Independence?
+\begin{enumerate}[A.]
+  \item Tạo index mới mà không làm thay đổi ứng dụng
+  \item Thêm trường email vào giao diện
+  \item Đổi màu trang web
+  \item Xóa một nút trên màn hình
+\end{enumerate}
+
+\textbf{Câu 6.} Ví dụ nào là Logical Data Independence?
+\begin{enumerate}[A.]
+  \item Thêm cột mới vào bảng mà ứng dụng cũ vẫn hoạt động
+  \item Chuyển dữ liệu sang SSD
+  \item Tạo file vật lý mới
+  \item Thay đổi block size trên đĩa
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi trắc nghiệm ôn tập 4}
+\small
+\textbf{Câu 7.} Physical Data Independence chủ yếu dùng để làm gì?
+\begin{enumerate}[A.]
+  \item Tối ưu hiệu năng và lưu trữ
+  \item Thay đổi màu giao diện
+  \item Xóa dữ liệu người dùng
+  \item Thay thế DBMS
+\end{enumerate}
+
+\textbf{Câu 8.} Logical Data Independence thường khó hơn Physical Data Independence vì sao?
+\begin{enumerate}[A.]
+  \item Vì thay đổi logic thường gần với cấu trúc mà ứng dụng đang sử dụng
+  \item Vì thay đổi vật lý luôn làm hỏng ứng dụng
+  \item Vì view không liên quan đến dữ liệu
+  \item Vì logical schema không tồn tại
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi trắc nghiệm ôn tập 5}
+\small
+\textbf{Câu 9.} View có thể giúp gì cho Logical Data Independence?
+\begin{enumerate}[A.]
+  \item Giữ giao diện dữ liệu ổn định cho ứng dụng
+  \item Xóa database
+  \item Di chuyển file sang ổ cứng khác
+  \item Thay đổi RAM máy chủ
+\end{enumerate}
+
+\textbf{Câu 10.} Data independence giúp ứng dụng như thế nào?
+\begin{enumerate}[A.]
+  \item Giảm khả năng bị ảnh hưởng bởi thay đổi trong database
+  \item Bắt buộc viết lại ứng dụng sau mọi thay đổi
+  \item Không cho phép thay đổi schema
+  \item Xóa toàn bộ view
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi tự luận ngắn}
+\begin{enumerate}
+  \item Giải thích khái niệm data independence trong DBMS.
+  \item Phân biệt Physical Data Independence và Logical Data Independence.
+  \item Vì sao Physical Data Independence giúp tối ưu hiệu năng mà không ảnh hưởng đến ứng dụng?
+  \item Vì sao Logical Data Independence thường khó đạt được hơn Physical Data Independence?
+  \item Hãy giải thích vai trò của view trong việc hỗ trợ Logical Data Independence.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập vận dụng 1}
+Một DBA chuyển dữ liệu từ ổ HDD sang SSD và tạo thêm index để tăng tốc truy vấn. Ứng dụng không cần thay đổi.
+
+\vspace{0.4cm}
+\begin{block}{Yêu cầu}
+Hãy xác định đây là loại data independence nào và giải thích.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập vận dụng 2}
+Một hệ thống quản lý nhân sự thêm cột \texttt{email} vào bảng \texttt{Employees}. Các báo cáo cũ vẫn chỉ hiển thị mã nhân viên, tên và phòng ban.
+
+\vspace{0.4cm}
+\begin{block}{Yêu cầu}
+Hãy xác định đây là loại data independence nào và giải thích.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập vận dụng 3}
+Một hệ thống bán hàng muốn thay đổi cấu trúc bảng \texttt{Customers}, nhưng vẫn muốn ứng dụng cũ tiếp tục truy vấn \texttt{customer\_id} và \texttt{customer\_name}.
+
+\vspace{0.4cm}
+\begin{block}{Yêu cầu}
+Hãy đề xuất cách dùng view để giảm ảnh hưởng đến ứng dụng.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bài tập vận dụng 4}
+\begin{block}{Yêu cầu}
+Hãy cho một ví dụ trong hệ thống quản lý sinh viên minh họa cả:
+\begin{itemize}
+  \item Physical Data Independence.
+  \item Logical Data Independence.
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+Gợi ý: Có thể xét các thay đổi về index, lưu trữ, bảng \texttt{Students}, hoặc view cho từng nhóm người dùng.
+\end{frame}
+
+%================================================
+\section{Tóm tắt}
+
+%------------------------------------------------
+\begin{frame}{Tóm tắt bài học}
+\begin{itemize}
+  \item Data independence là khả năng thay đổi schema ở một mức mà không ảnh hưởng đến mức cao hơn kế tiếp.
+  \item DBMS thường có ba mức: Internal Level, Conceptual Level và View Level.
+  \item Physical Data Independence cho phép thay đổi cách lưu trữ vật lý mà không ảnh hưởng đến schema logic hoặc ứng dụng.
+  \item Logical Data Independence cho phép thay đổi schema logic mà không ảnh hưởng đến view hoặc chương trình ứng dụng.
+  \item Physical Data Independence thường dễ đạt được hơn Logical Data Independence.
+  \item View có thể giúp che giấu thay đổi ở schema logic và giữ ứng dụng ổn định.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Từ khóa chính}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{itemize}
+  \item Data Independence
+  \item Physical Data Independence
+  \item Logical Data Independence
+  \item DBMS
+  \item Internal Level
+  \item Conceptual Level
+  \item View Level
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{itemize}
+  \item Internal Schema
+  \item Conceptual Schema
+  \item View
+  \item Index
+  \item Schema
+  \item Database Administrator
+  \item Application Program
+\end{itemize}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Kết thúc bài học}
+\begin{center}
+\Huge Câu hỏi và thảo luận
+\end{center}
+\end{frame}
+
+\end{document}
