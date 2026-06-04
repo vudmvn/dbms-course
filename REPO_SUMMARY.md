@@ -1,6 +1,6 @@
 # Repository Summary
 
-Last reviewed: 2026-06-01
+Last reviewed: 2026-06-04
 
 This file is a quick map of the repository so future updates do not need to
 rescan the whole folder before making small changes.
@@ -29,7 +29,9 @@ Important Jekyll settings:
 - `baseurl`: `/dbms-course`
 - `markdown`: `kramdown`
 - `permalink`: `pretty`
-- Included published folders: `DBMS_Basic`, `Data-Modeling`, `MySQL`
+- Explicitly included folders: `DBMS_Basic`, `MySQL`
+- `Data-Modeling` is published as a normal top-level content folder and is also
+  covered by the Pages workflow trigger paths.
 - Excluded temporary/build files include `TEMP_MARKDOWN_INPUT.md`, `node_modules`,
   and common LaTeX/log output files.
 
@@ -55,7 +57,8 @@ Important Jekyll settings:
 
 - `Data-Modeling/`
   - Data modeling lessons.
-  - Current lessons include `data-modeling` and `er-model`.
+  - Current lessons include `data-modeling`, `er-model`, and
+    `lab-er-model-1.md`.
   - Lesson images are stored in each lesson's `images/` folder.
   - `Data-Modeling/er-model/images/` contains the ER diagram illustrations used
     by the ER model lesson.
@@ -98,16 +101,24 @@ Current homepage sections:
 
 - DBMS Basic
   - `DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md`
+    - Slides: `gioi_thieu_csdl_vi_beamer.pdf`
+    - Slides: `gioi_thieu_csdl_en_beamer.pdf`
   - `DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md`
   - `DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md`
   - `DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md`
+    - Slides: `kien_truc_dbms_vi.pdf`
+    - Slides: `kien_truc_dbms_en.pdf`
   - `DBMS_Basic/data-abstraction/data-abstraction.md`
   - `DBMS_Basic/data-independence/data-independence.md`
     - Slides: `data_independence_beamer_pdflatex.pdf`
     - Slides: `data_independence_beamer_english_pdflatex.pdf`
   - `DBMS_Basic/physical-logical-independence/physical-logical-independence.md`
+    - Present in the repo and linked in the English homepage table, but hidden
+      in the Vietnamese homepage table as of this review.
   - `DBMS_Basic/database-schema/database-schema.md`
   - `DBMS_Basic/choose-right-dbms/choose-right-dbms.md`
+    - Slides: `choose-right-dbms-vi.pdf`
+    - Slides: `choose-right-dbms-en.pdf`
 
 - Data Modeling
   - `Data-Modeling/data-modeling/data-modeling.md`
@@ -116,6 +127,12 @@ Current homepage sections:
     - Slides: `er-model-en.pdf`
     - Source: `er-model-vi.tex`
     - Source: `er-model-en.tex`
+
+- Labs
+  - `Data-Modeling/lab-er-model-1.md`
+    - Shown on the homepage as "Lab 1: ER model basics".
+    - Duration: 60m.
+    - Difficulty: Beginner.
 
 - MySQL
   - `MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md`
@@ -198,6 +215,10 @@ Workflow trigger paths:
 
 ## Update Notes
 
+- 2026-06-04: Added `Data-Modeling/lab-er-model-1.md` and a bilingual Labs
+  section in `index.md`.
+- 2026-06-04: Refreshed the repository summary against current `index.md`,
+  `_config.yml`, workflow paths, branch, and remotes.
 - 2026-06-01: Added bilingual PDF slides and Beamer source files for
   `DBMS_Basic/data-independence/`, and linked the slides from `index.md`.
 - 2026-06-01: Expanded `Data-Modeling/er-model/` with ER diagram illustrations
@@ -217,7 +238,7 @@ Workflow trigger paths:
 - 2026-05-28: Added this repository summary file.
 - 2026-05-28: Updated `index.md` with a Vietnamese/English language switcher.
 - 2026-05-27: Deployment rules note says the latest deploy activation was on this date.
-- Current git status during review showed `TEMP_MARKDOWN_INPUT.md` as untracked.
+- Current git status during review was clean before editing this file.
 
 ## Maintenance Notes
 
@@ -233,8 +254,9 @@ Workflow trigger paths:
   adjust image paths deliberately.
 - Markdown files do not need YAML front matter because `jekyll-optional-front-matter`
   is enabled.
-- If adding a new top-level publishable content folder, also add it to `_config.yml`
-  under `include` and update `.github/workflows/pages.yml` trigger paths.
+- If adding a new top-level publishable content folder, update
+  `.github/workflows/pages.yml` trigger paths. Add it to `_config.yml` under
+  `include` only when Jekyll needs explicit inclusion for that path.
 - Avoid relying on `TEMP_MARKDOWN_INPUT.md` for published content; it is excluded.
 - PowerShell currently prints a local profile warning about missing
   `D:\Anaconda\Scripts\conda.exe`; command results are still usable despite that

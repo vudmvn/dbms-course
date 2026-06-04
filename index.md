@@ -121,8 +121,6 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 |---|---|---:|---|
 | Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) | 60m | Beginner |
 
-**Mô tả ngắn:** Thực hành xây dựng ER model: thực thể, thuộc tính, khóa chính, mối quan hệ và chuyển sang mô hình quan hệ.
-
 ## MySQL
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
