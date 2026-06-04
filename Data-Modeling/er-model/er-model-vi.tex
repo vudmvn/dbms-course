@@ -481,12 +481,11 @@ Ví dụ:
   \item \texttt{Gender}
   \item \texttt{Roll\_No}
 \end{itemize}
-\end{frame}
 
-%------------------------------------------------
-\begin{frame}{Hình minh họa: Simple Attribute}
-\centering
-\imageplaceholder{simple-attribute.png}{Simple Attribute trong ER Model}
+\vspace{2mm}
+\begin{alertblock}{Lưu ý về hình minh họa}
+Nguồn tham khảo gốc không cung cấp hình minh họa riêng cho Simple Attribute. Trong ER Diagram, simple attribute vẫn được biểu diễn bằng oval đơn, tương tự các attribute thông thường như \texttt{Name}, \texttt{DOB} hoặc \texttt{Age}.
+\end{alertblock}
 \end{frame}
 
 %------------------------------------------------
@@ -531,7 +530,7 @@ Ví dụ, \texttt{Address} có thể gồm:
 %------------------------------------------------
 \begin{frame}{Hình minh họa: Composite Attribute}
 \centering
-\imageplaceholder{composite-attribute.png}{Composite Attribute trong ER Model}
+\imageplaceholder{simple-attribute.png}{Composite Attribute trong ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -554,7 +553,7 @@ Trong ER Diagram, multivalued attribute được biểu diễn bằng \kw{oval k
 %------------------------------------------------
 \begin{frame}{Hình minh họa: Multivalued Attribute}
 \centering
-\imageplaceholder{multivalued-attribute.png}{Multivalued Attribute trong ER Model}
+\imageplaceholder{composite-attribute.png}{Multivalued Attribute trong ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -577,7 +576,27 @@ Trong ER Diagram, derived attribute được biểu diễn bằng \kw{oval nét 
 %------------------------------------------------
 \begin{frame}{Hình minh họa: Derived Attribute}
 \centering
-\imageplaceholder{derived-attribute.png}{Derived Attribute trong ER Model}
+\imageplaceholder{multivalued-attribute.png}{Derived Attribute trong ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entity và các Attribute tổng hợp}
+\small
+Khi kết hợp các loại attribute trong một ER Diagram, entity \texttt{Student} có thể có:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No} là key attribute.
+  \item \texttt{Name} và \texttt{DOB} là simple attribute.
+  \item \texttt{Phone\_No} là multivalued attribute.
+  \item \texttt{Age} là derived attribute.
+  \item \texttt{Address} là composite attribute gồm \texttt{Street}, \texttt{City}, \texttt{State} và \texttt{Country}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Entity và các Attribute tổng hợp}
+\centering
+\imageplaceholder{derived-attribute.png}{Entity Student và các loại Attribute trong ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -658,12 +677,21 @@ Tập hợp các relationship cùng loại, ví dụ S1 đăng ký C2, S2 đăng
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{Hình minh họa: Relationship Set}
+\begin{frame}{Hình minh họa: Relationship Type}
 \centering
-\imageplaceholder{relationship-set.png}{Relationship type và relationship set}
+\imageplaceholder{relationship-set.png}{Relationship Type giữa Student và Course}
 
 \vspace{2mm}
-{\small Hình 5. Relationship type và relationship set.}
+{\small Hình 5a. Relationship type giữa Student và Course.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hình minh họa: Relationship Set}
+\centering
+\imageplaceholder{recursive-relationship.png}{Relationship set của loại Enrolled in}
+
+\vspace{2mm}
+{\small Hình 5b. Relationship set của loại Enrolled in.}
 \end{frame}
 
 %------------------------------------------------
@@ -700,13 +728,13 @@ N-ary & Quan hệ có nhiều hơn ba entity set tham gia \\
 %------------------------------------------------
 \begin{frame}{Hình minh họa: Unary / Recursive Relationship}
 \centering
-\imageplaceholder{recursive-relationship.png}{Unary hoặc Recursive Relationship}
+\imageplaceholder{binary-relationship.png}{Unary hoặc Recursive Relationship}
 \end{frame}
 
 %------------------------------------------------
 \begin{frame}{Hình minh họa: Binary Relationship}
 \centering
-\imageplaceholder{binary-relationship.png}{Binary Relationship}
+\imageplaceholder{relationship-set.png}{Binary Relationship}
 \end{frame}
 
 %------------------------------------------------

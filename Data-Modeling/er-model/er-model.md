@@ -268,9 +268,7 @@ Ví dụ:
 - `Gender`
 - `Roll_No`
 
-<p align="center">
-  <img src="images/simple-attribute.webp" alt="Simple Attribute trong ER Model" width="550">
-</p>
+Nguồn tham khảo gốc không cung cấp hình minh họa riêng cho **Simple Attribute**. Trong ER Diagram, simple attribute vẫn được biểu diễn bằng **oval đơn**, tương tự các attribute thông thường như `Name`, `DOB` hoặc `Age`.
 
 ---
 
@@ -304,7 +302,7 @@ Ví dụ, `Address` có thể gồm:
 - `Country`
 
 <p align="center">
-  <img src="images/composite-attribute.webp" alt="Composite Attribute trong ER Model" width="550">
+  <img src="images/simple-attribute.webp" alt="Composite Attribute trong ER Model" width="550">
 </p>
 
 ---
@@ -322,7 +320,7 @@ Ví dụ:
 Trong ER Diagram, multivalued attribute được biểu diễn bằng **oval kép**.
 
 <p align="center">
-  <img src="images/multivalued-attribute.webp" alt="Multivalued Attribute trong ER Model" width="550">
+  <img src="images/composite-attribute.webp" alt="Multivalued Attribute trong ER Model" width="550">
 </p>
 
 ---
@@ -340,7 +338,23 @@ Ví dụ:
 Trong ER Diagram, derived attribute được biểu diễn bằng **oval nét đứt**.
 
 <p align="center">
-  <img src="images/derived-attribute.webp" alt="Derived Attribute trong ER Model" width="550">
+  <img src="images/multivalued-attribute.webp" alt="Derived Attribute trong ER Model" width="550">
+</p>
+
+---
+
+### 8.5. Entity và các Attribute tổng hợp
+
+Khi kết hợp các loại attribute trong một ER Diagram, entity `Student` có thể có:
+
+- `Roll_No` là key attribute.
+- `Name` và `DOB` là simple attribute.
+- `Phone_No` là multivalued attribute.
+- `Age` là derived attribute.
+- `Address` là composite attribute gồm `Street`, `City`, `State` và `Country`.
+
+<p align="center">
+  <img src="images/derived-attribute.webp" alt="Entity Student và các loại Attribute trong ER Model" width="650">
 </p>
 
 ---
@@ -404,6 +418,12 @@ Student -- Enrolled in -- Course
 
 Ở đây, `Enrolled in` là relationship type.
 
+<p align="center">
+  <img src="images/relationship-set.webp" alt="Entity-Relationship Set trong ER Model" width="650">
+</p>
+
+<p align="center"><em>Hình 5a. Relationship type giữa Student và Course.</em></p>
+
 **Relationship Set** là tập hợp các relationship cùng loại.
 
 Ví dụ:
@@ -415,10 +435,10 @@ Ví dụ:
 Tất cả các quan hệ đăng ký này tạo thành một relationship set của loại `Enrolled in`.
 
 <p align="center">
-  <img src="images/relationship-set.webp" alt="Relationship set trong ER Model" width="650">
+  <img src="images/recursive-relationship.webp" alt="Relationship set trong ER Model" width="650">
 </p>
 
-<p align="center"><em>Hình 5. Relationship type và relationship set.</em></p>
+<p align="center"><em>Hình 5b. Relationship set của loại Enrolled in.</em></p>
 
 ---
 
@@ -443,13 +463,13 @@ Ví dụ:
 | N-ary | Quan hệ có nhiều hơn ba entity set tham gia |
 
 <p align="center">
-  <img src="images/recursive-relationship.webp" alt="Unary hoặc Recursive Relationship" width="550">
+  <img src="images/binary-relationship.webp" alt="Unary hoặc Recursive Relationship" width="550">
 </p>
 
 <p align="center"><em>Hình 6. Unary/Recursive Relationship.</em></p>
 
 <p align="center">
-  <img src="images/binary-relationship.webp" alt="Binary Relationship" width="550">
+  <img src="images/relationship-set.webp" alt="Binary Relationship" width="550">
 </p>
 
 <p align="center"><em>Hình 7. Binary Relationship.</em></p>

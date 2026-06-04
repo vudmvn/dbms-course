@@ -1,158 +1,88 @@
-# Bài giảng: MySQL Storage Engines
+---
+layout: page
+title: "MySQL Storage Engines"
+---
 
-## 1. Tóm tắt bài học
+# MySQL Storage Engines
 
-Trong bài học này, người học sẽ tìm hiểu về các **storage engine** khác nhau trong MySQL. Việc hiểu đặc điểm của từng storage engine là rất quan trọng vì nó giúp lựa chọn cơ chế lưu trữ phù hợp, từ đó cải thiện hiệu năng, độ tin cậy và khả năng quản lý dữ liệu của cơ sở dữ liệu.
+**Cập nhật lần cuối:** 04/06/2026
+
+**Nguồn tham khảo:**  
+- MySQL Tutorial: [MySQL Storage Engines](https://www.mysqltutorial.org/mysql-administration/mysql-storage-engines/)
+- MySQL Reference Manual: [Alternative Storage Engines](https://dev.mysql.com/doc/refman/8.4/en/storage-engines.html)
+- MySQL Reference Manual: [The InnoDB Storage Engine](https://dev.mysql.com/doc/refman/8.4/en/innodb-storage-engine.html)
 
 ---
 
-## 2. Mục tiêu học tập
+## 1. Mục tiêu bài giảng
 
 Sau khi hoàn thành bài học này, người học có thể:
 
 1. Giải thích được khái niệm **storage engine** trong MySQL.
-2. Liệt kê được các storage engine phổ biến trong MySQL.
-3. Sử dụng câu lệnh SQL để kiểm tra các storage engine có sẵn trên MySQL Server.
-4. Phân biệt được các đặc điểm chính của InnoDB, MyISAM, MEMORY, ARCHIVE, CSV, BLACKHOLE, MERGE và FEDERATED.
-5. Biết cách chỉ định storage engine khi tạo bảng.
-6. Lựa chọn storage engine phù hợp với từng tình huống sử dụng.
+2. Trình bày được vai trò của storage engine trong việc lưu trữ và xử lý dữ liệu bảng.
+3. Sử dụng được `SHOW ENGINES` và `information_schema.engines` để kiểm tra storage engine.
+4. Chỉ định được storage engine khi tạo bảng bằng mệnh đề `ENGINE`.
+5. Phân biệt được các storage engine phổ biến như `InnoDB`, `MyISAM`, `MEMORY`, `ARCHIVE`, `CSV`, `BLACKHOLE`, `MERGE` và `FEDERATED`.
+6. Lựa chọn được storage engine phù hợp cho một số tình huống thực tế.
 
 ---
 
-## 3. Khái niệm MySQL Storage Engine
+## 2. Giới thiệu tổng quan
 
-Trong MySQL, **storage engine** là thành phần phần mềm chịu trách nhiệm quản lý cách dữ liệu được:
+Trong MySQL, mỗi bảng được quản lý bởi một **storage engine**. Storage engine quyết định cách dữ liệu của bảng được lưu trữ, đọc, ghi, khóa, phục hồi và bảo vệ.
 
-- Lưu trữ.
-- Truy xuất.
-- Cập nhật.
-- Xóa.
-- Quản lý bên trong các bảng.
+Có thể hình dung MySQL Server gồm hai phần lớn:
 
-Nói cách khác, storage engine quyết định cách MySQL tổ chức dữ liệu ở tầng lưu trữ vật lý và hỗ trợ các tính năng khác nhau cho bảng.
+- **Tầng SQL:** nhận câu lệnh SQL, phân tích cú pháp, tối ưu truy vấn và điều phối thực thi.
+- **Tầng storage engine:** thực hiện việc lưu trữ và truy xuất dữ liệu vật lý cho từng bảng.
 
-Ví dụ, một storage engine có thể hỗ trợ:
-
-- Giao dịch.
-- Khóa ngoại.
-- Khôi phục sau sự cố.
-- Tìm kiếm toàn văn.
-- Lưu trữ dữ liệu trong bộ nhớ.
-- Nén dữ liệu.
-- Truy cập dữ liệu từ máy chủ từ xa.
+Việc hiểu storage engine rất quan trọng vì không phải engine nào cũng hỗ trợ cùng một tính năng. Ví dụ, `InnoDB` hỗ trợ giao dịch và khóa ngoại, còn `MEMORY` lưu dữ liệu trong RAM và không phù hợp để lưu dữ liệu lâu dài.
 
 ---
 
-## 4. Vì sao cần hiểu Storage Engine?
+### Quiz nhanh: Giới thiệu tổng quan
 
-Không phải tất cả các bảng trong MySQL đều được lưu trữ theo cùng một cách. Mỗi storage engine có ưu điểm và hạn chế riêng.
+**Câu 1.** Storage engine trong MySQL gắn trực tiếp với đối tượng nào?
 
-Ví dụ:
+A. User  
+B. Table  
+C. Database password  
+D. SQL comment  
 
-- Nếu cần giao dịch, rollback và khóa ngoại, nên dùng `InnoDB`.
-- Nếu cần bảng tạm trong bộ nhớ, có thể dùng `MEMORY`.
-- Nếu cần lưu trữ dữ liệu lịch sử với dung lượng lớn, có thể dùng `ARCHIVE`.
-- Nếu cần lưu bảng dạng CSV để trao đổi dữ liệu, có thể dùng `CSV`.
+**Câu 2.** Vì sao cần hiểu storage engine?
 
-Do đó, lựa chọn storage engine phù hợp giúp:
+A. Vì storage engine quyết định toàn bộ cú pháp SQL  
+B. Vì mỗi storage engine có đặc điểm lưu trữ và tính năng khác nhau  
+C. Vì MySQL chỉ có một storage engine  
+D. Vì storage engine chỉ dùng để đổi tên bảng  
 
-- Tăng hiệu năng truy vấn.
-- Đảm bảo tính toàn vẹn dữ liệu.
-- Giảm dung lượng lưu trữ.
-- Phù hợp hơn với mục đích sử dụng của ứng dụng.
+**Câu 3.** Tầng nào chịu trách nhiệm lưu trữ dữ liệu vật lý của bảng?
 
----
-
-## 5. Kiểm tra các Storage Engine có sẵn trong MySQL
-
-MySQL hỗ trợ nhiều storage engine. Để xem các storage engine hiện có trên MySQL Server, có thể dùng truy vấn sau:
-
-```sql
-SELECT 
-  engine, 
-  support 
-FROM 
-  information_schema.engines 
-ORDER BY 
-  engine;
-```
-
-Ví dụ kết quả:
-
-```text
-+--------------------+---------+
-| engine             | support |
-+--------------------+---------+
-| ARCHIVE            | YES     |
-| BLACKHOLE          | YES     |
-| CSV                | YES     |
-| FEDERATED          | NO      |
-| InnoDB             | DEFAULT |
-| MEMORY             | YES     |
-| MRG_MYISAM         | YES     |
-| MyISAM             | YES     |
-| ndbcluster         | NO      |
-| ndbinfo            | NO      |
-| PERFORMANCE_SCHEMA | YES     |
-+--------------------+---------+
-```
-
-### Ý nghĩa của cột `support`
-
-| Giá trị | Ý nghĩa |
-|---|---|
-| `YES` | Storage engine được hỗ trợ |
-| `NO` | Storage engine không được hỗ trợ |
-| `DEFAULT` | Storage engine được hỗ trợ và đang là mặc định |
-
-Trong ví dụ trên, `InnoDB` có giá trị `DEFAULT`, nghĩa là MySQL đang dùng `InnoDB` làm storage engine mặc định.
+A. SQL parser  
+B. Storage engine  
+C. Query cache  
+D. Client application  
 
 ---
 
-## 6. Sử dụng lệnh SHOW ENGINES
+## 3. Khái niệm cơ bản
 
-Ngoài cách truy vấn bảng `information_schema.engines`, ta cũng có thể dùng câu lệnh:
+### 3.1. Storage engine là gì?
 
-```sql
-SHOW ENGINES;
-```
+**Storage engine** là thành phần phần mềm trong MySQL chịu trách nhiệm quản lý cách dữ liệu của bảng được lưu trữ và truy xuất.
 
-Ví dụ kết quả:
+Một storage engine có thể quyết định:
 
-```text
-+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
-| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
-+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
-| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
-| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
-| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
-| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
-| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
-| MyISAM             | YES     | MyISAM storage engine                                          | NO           | NO   | NO         |
-| InnoDB             | DEFAULT | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
-| ndbinfo            | NO      | MySQL Cluster system information storage engine                | NULL         | NULL | NULL       |
-| BLACKHOLE          | YES     | /dev/null storage engine                                       | NO           | NO   | NO         |
-| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
-| ndbcluster         | NO      | Clustered, fault-tolerant tables                               | NULL         | NULL | NULL       |
-+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
-```
+- Dữ liệu được lưu trên đĩa hay trong bộ nhớ.
+- Bảng có hỗ trợ giao dịch hay không.
+- Bảng có hỗ trợ khóa ngoại hay không.
+- Cơ chế khóa là khóa dòng hay khóa bảng.
+- Cách phục hồi dữ liệu sau sự cố.
+- Cách tổ chức chỉ mục.
 
-Lệnh `SHOW ENGINES` cung cấp nhiều thông tin hơn, bao gồm:
+### 3.2. Engine mặc định
 
-- Tên storage engine.
-- Trạng thái hỗ trợ.
-- Mô tả ngắn.
-- Có hỗ trợ giao dịch hay không.
-- Có hỗ trợ XA transaction hay không.
-- Có hỗ trợ savepoint hay không.
-
----
-
-## 7. Storage Engine mặc định trong MySQL
-
-Từ MySQL 5.5 trở đi, `InnoDB` là storage engine mặc định.
-
-Điều này có nghĩa là nếu khi tạo bảng không chỉ định storage engine, MySQL sẽ tự động dùng `InnoDB`.
+Từ MySQL 5.5 trở đi, `InnoDB` là storage engine mặc định. Nếu câu lệnh `CREATE TABLE` không chỉ định `ENGINE`, MySQL sẽ dùng engine mặc định của server.
 
 Ví dụ:
 
@@ -163,23 +93,56 @@ CREATE TABLE students (
 );
 ```
 
-Trong trường hợp này, nếu storage engine mặc định là `InnoDB`, bảng `students` sẽ được tạo bằng `InnoDB`.
+Nếu engine mặc định là `InnoDB`, bảng `students` sẽ được tạo bằng `InnoDB`.
+
+### 3.3. Ý nghĩa của storage engine
+
+Storage engine ảnh hưởng trực tiếp đến:
+
+- Tính toàn vẹn dữ liệu.
+- Hiệu năng đọc/ghi.
+- Khả năng phục hồi sau lỗi.
+- Khả năng hỗ trợ ràng buộc khóa ngoại.
+- Tính phù hợp của bảng với từng loại ứng dụng.
 
 ---
 
-## 8. Chỉ định Storage Engine khi tạo bảng
+### Quiz nhanh: Khái niệm cơ bản
 
-Để chỉ định storage engine khi tạo bảng, sử dụng mệnh đề `ENGINE` trong câu lệnh `CREATE TABLE`.
+**Câu 1.** Storage engine nào là mặc định trong các phiên bản MySQL hiện đại?
 
-Cú pháp tổng quát:
+A. MyISAM  
+B. MEMORY  
+C. InnoDB  
+D. CSV  
 
-```sql
-CREATE TABLE table_name (
-    column_list
-) ENGINE = engine_name;
-```
+**Câu 2.** Tính năng nào thường gắn với `InnoDB`?
 
-Ví dụ tạo bảng dùng `InnoDB`:
+A. Không lưu dữ liệu thật  
+B. Hỗ trợ giao dịch và khóa ngoại  
+C. Chỉ lưu dữ liệu trong RAM  
+D. Chỉ lưu dữ liệu dạng CSV  
+
+**Câu 3.** Nếu không chỉ định `ENGINE` khi tạo bảng, MySQL sẽ làm gì?
+
+A. Báo lỗi ngay lập tức  
+B. Tạo bảng không có dữ liệu  
+C. Dùng storage engine mặc định  
+D. Tự động dùng `CSV`  
+
+---
+
+## 4. Cách MySQL làm việc với Storage Engine
+
+Khi người dùng gửi một câu lệnh SQL liên quan đến bảng, MySQL xử lý theo luồng tổng quát sau:
+
+1. **Nhận câu lệnh SQL:** Client gửi câu lệnh như `SELECT`, `INSERT`, `UPDATE`, `DELETE` hoặc `CREATE TABLE`.
+2. **Phân tích và tối ưu:** MySQL Server kiểm tra cú pháp, quyền truy cập và lập kế hoạch thực thi.
+3. **Gọi storage engine:** MySQL chuyển yêu cầu đọc/ghi xuống storage engine của bảng.
+4. **Truy cập dữ liệu:** Storage engine đọc, ghi, khóa, phục hồi hoặc tổ chức dữ liệu theo cơ chế riêng.
+5. **Trả kết quả:** MySQL Server nhận dữ liệu từ storage engine và trả về cho client.
+
+Ví dụ khi tạo bảng có chỉ định engine:
 
 ```sql
 CREATE TABLE customers (
@@ -189,109 +152,199 @@ CREATE TABLE customers (
 ) ENGINE = InnoDB;
 ```
 
-Ví dụ tạo bảng dùng `MEMORY`:
+Trong ví dụ này, bảng `customers` được quản lý bởi `InnoDB`.
+
+---
+
+### Quiz nhanh: Cách hoạt động
+
+**Câu 1.** Mệnh đề nào dùng để chỉ định storage engine khi tạo bảng?
+
+A. `USING`  
+B. `ENGINE`  
+C. `STORAGE PATH`  
+D. `TABLE TYPE ONLY`  
+
+**Câu 2.** Lệnh nào tạo bảng dùng engine `MEMORY`?
+
+A. `CREATE TABLE t (id INT) ENGINE = MEMORY;`  
+B. `CREATE MEMORY t (id INT);`  
+C. `CREATE TABLE t MEMORY(id INT);`  
+D. `ENGINE MEMORY CREATE TABLE t;`  
+
+**Câu 3.** Storage engine được MySQL gọi khi nào?
+
+A. Khi cần đọc hoặc ghi dữ liệu bảng  
+B. Chỉ khi đổi mật khẩu user  
+C. Chỉ khi mở MySQL Workbench  
+D. Chỉ khi sao lưu file ảnh  
+
+---
+
+## 5. Các thành phần chính khi làm việc với Storage Engine
+
+### 5.1. Danh sách engine có sẵn
+
+Dùng lệnh sau để xem các storage engine mà MySQL Server đang hỗ trợ:
 
 ```sql
-CREATE TABLE temp_results (
-    id INT PRIMARY KEY,
-    result_value VARCHAR(100)
-) ENGINE = MEMORY;
+SHOW ENGINES;
 ```
 
-Nếu bỏ qua mệnh đề `ENGINE`, MySQL sẽ dùng storage engine mặc định.
+Hoặc truy vấn bảng hệ thống:
+
+```sql
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
+```
+
+### 5.2. Trạng thái hỗ trợ
+
+Cột `Support` hoặc `support` thường có các giá trị:
+
+| Giá trị | Ý nghĩa |
+|---|---|
+| `YES` | Engine được hỗ trợ |
+| `NO` | Engine không được hỗ trợ |
+| `DEFAULT` | Engine được hỗ trợ và đang là mặc định |
+| `DISABLED` | Engine có trong MySQL nhưng đang bị vô hiệu hóa |
+
+### 5.3. Các khả năng quan trọng
+
+Khi so sánh storage engine, cần chú ý:
+
+- Có hỗ trợ giao dịch không.
+- Có hỗ trợ khóa ngoại không.
+- Có hỗ trợ phục hồi sau sự cố không.
+- Dữ liệu có bền vững sau khi server dừng không.
+- Engine phù hợp với đọc nhiều, ghi nhiều hay dữ liệu tạm.
+
+### 5.4. Mệnh đề `ENGINE`
+
+Cú pháp tổng quát:
+
+```sql
+CREATE TABLE table_name (
+    column_list
+) ENGINE = engine_name;
+```
 
 ---
 
-## 9. So sánh các Storage Engine trong MySQL
+### Quiz nhanh: Các thành phần chính
 
-Bảng sau tóm tắt một số đặc điểm quan trọng của các storage engine phổ biến.
+**Câu 1.** Lệnh nào dùng để xem danh sách storage engine?
 
-| Tính năng | MyISAM | MEMORY | CSV | ARCHIVE | BLACKHOLE | MERGE | FEDERATED | InnoDB |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Hỗ trợ giao dịch | Không | Không | Không | Không | Không | Không | Không | Có |
-| Tuân thủ ACID | Không | Không | Không | Không | Không | Không | Không | Có |
-| Khóa mức bảng | Có | Không | Có | Có | Có | Không | Có | Có |
-| Tìm kiếm toàn văn | Có | Không | Không | Không | Không | Không | Không | Có |
-| Khóa ngoại | Không | Không | Không | Không | Không | Không | Không | Có |
-| Khôi phục sau sự cố | Không | Không | Không | Không | Không | Không | Không | Có |
-| Truy cập dữ liệu ngoài | Không | Không | Có | Có | Không | Không | Có | Không |
-| Bảng tạm | Có | Có | Không | Không | Không | Không | Không | Có |
-| Storage engine mặc định | Không | Không | Không | Không | Không | Không | Không | Có |
+A. `SHOW TABLES;`  
+B. `SHOW ENGINES;`  
+C. `SHOW DATABASES;`  
+D. `SHOW USERS;`  
+
+**Câu 2.** Giá trị `DEFAULT` trong `SHOW ENGINES` nghĩa là gì?
+
+A. Engine bị vô hiệu hóa  
+B. Engine không tồn tại  
+C. Engine đang là mặc định  
+D. Engine chỉ dùng cho backup  
+
+**Câu 3.** Bảng hệ thống nào có thể dùng để xem thông tin engine?
+
+A. `information_schema.engines`  
+B. `mysql.users`  
+C. `performance_schema.passwords`  
+D. `sys.tablespaces_only`  
 
 ---
 
-## 10. InnoDB
+## 6. Phân loại các Storage Engine chính
 
-`InnoDB` là storage engine mặc định và được sử dụng phổ biến nhất trong MySQL hiện nay.
+Một số storage engine thường gặp trong MySQL:
 
-### Đặc điểm chính
+1. **InnoDB:** engine mặc định, hỗ trợ giao dịch, khóa ngoại và phục hồi sau sự cố.
+2. **MyISAM:** engine cũ, tối ưu cho một số tình huống đọc nhiều, không hỗ trợ giao dịch.
+3. **MEMORY:** lưu dữ liệu trong RAM, phù hợp cho dữ liệu tạm.
+4. **ARCHIVE:** lưu trữ dữ liệu nén, phù hợp cho dữ liệu lịch sử hoặc log.
+5. **CSV:** lưu dữ liệu dưới dạng file CSV.
+6. **BLACKHOLE:** nhận dữ liệu ghi vào nhưng không lưu dữ liệu.
+7. **MERGE/MRG_MyISAM:** gộp nhiều bảng `MyISAM` cùng cấu trúc thành một bảng logic.
+8. **FEDERATED:** truy cập dữ liệu từ một MySQL Server từ xa.
 
-`InnoDB` hỗ trợ đầy đủ:
+---
 
-- Giao dịch.
-- Tính chất ACID.
-- Khóa ngoại.
-- `COMMIT`.
-- `ROLLBACK`.
-- Khôi phục sau sự cố.
-- Khóa mức dòng.
+## 7. InnoDB
 
-### Ưu điểm
+### 7.1. Khái niệm
 
-- Phù hợp với các hệ thống cần tính toàn vẹn dữ liệu cao.
-- Hỗ trợ ràng buộc khóa ngoại.
-- Có khả năng phục hồi sau lỗi.
-- Thích hợp cho ứng dụng giao dịch như ngân hàng, bán hàng, quản lý đơn hàng.
+`InnoDB` là storage engine mặc định và phổ biến nhất trong MySQL hiện đại. Đây là lựa chọn an toàn cho phần lớn hệ thống nghiệp vụ vì hỗ trợ giao dịch, khóa ngoại, khóa mức dòng và phục hồi sau sự cố.
 
-### Ví dụ sử dụng
+### 7.2. Đặc điểm chính
+
+1. **Hỗ trợ giao dịch**
+
+   `InnoDB` hỗ trợ `COMMIT`, `ROLLBACK` và tính chất ACID.
+
+2. **Hỗ trợ khóa ngoại**
+
+   Có thể khai báo ràng buộc `FOREIGN KEY` để đảm bảo dữ liệu tham chiếu hợp lệ.
+
+3. **Khóa mức dòng**
+
+   Khi nhiều người dùng thao tác đồng thời, `InnoDB` có thể khóa ở mức dòng để giảm xung đột so với khóa toàn bảng.
+
+4. **Phục hồi sau sự cố**
+
+   `InnoDB` có cơ chế ghi log và phục hồi để giảm nguy cơ hỏng dữ liệu khi server gặp lỗi.
+
+### 7.3. Ví dụ
 
 ```sql
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
-    customer_id INT,
+    customer_id INT NOT NULL,
     order_date DATE,
     total_amount DECIMAL(12, 2)
 ) ENGINE = InnoDB;
 ```
 
-### Khi nào nên dùng InnoDB?
-
-Nên dùng `InnoDB` khi hệ thống cần:
-
-- Giao dịch.
-- Khóa ngoại.
-- Dữ liệu nhất quán.
-- Khả năng rollback.
-- Ứng dụng có nhiều thao tác thêm, sửa, xóa dữ liệu.
+Nên dùng `InnoDB` cho hệ thống bán hàng, ngân hàng, quản lý đơn hàng, quản lý người dùng và các ứng dụng cần tính toàn vẹn dữ liệu.
 
 ---
 
-## 11. MyISAM
+### Quiz nhanh: InnoDB
 
-`MyISAM` là storage engine cũ, từng là storage engine mặc định trong MySQL trước phiên bản 5.5.
+**Câu 1.** `InnoDB` phù hợp nhất với hệ thống nào?
 
-### Đặc điểm chính
+A. Hệ thống cần giao dịch và khóa ngoại  
+B. Bảng chỉ dùng để bỏ dữ liệu đi  
+C. File CSV mở bằng Excel  
+D. Bảng tạm mất dữ liệu khi server dừng  
 
-- Tối ưu cho tốc độ đọc.
-- Hỗ trợ nén bảng thành bảng chỉ đọc.
-- Có thể di chuyển giữa các nền tảng và hệ điều hành.
-- Không hỗ trợ giao dịch.
-- Không hỗ trợ khóa ngoại.
+**Câu 2.** `InnoDB` hỗ trợ cơ chế nào?
 
-### Ưu điểm
+A. `ROLLBACK`  
+B. Chỉ đọc file text  
+C. Không lưu dữ liệu thật  
+D. Chỉ lưu dữ liệu trong RAM  
 
-- Truy vấn đọc có thể nhanh trong một số tình huống.
-- Phù hợp với dữ liệu ít thay đổi.
-- Có thể dùng cho các bảng chủ yếu phục vụ đọc dữ liệu.
+**Câu 3.** Lý do quan trọng để dùng `InnoDB` cho bảng `orders` là gì?
 
-### Hạn chế
+A. Vì đơn hàng thường cần tính nhất quán và ràng buộc dữ liệu  
+B. Vì `orders` không cần lưu dữ liệu  
+C. Vì `orders` luôn là file CSV  
+D. Vì `orders` không bao giờ thay đổi  
 
-- Không an toàn về giao dịch.
-- Không hỗ trợ rollback.
-- Không hỗ trợ khóa ngoại.
-- Khả năng khôi phục sau sự cố kém hơn InnoDB.
+---
 
-### Ví dụ sử dụng
+## 8. Các Storage Engine khác
+
+### 8.1. MyISAM
+
+`MyISAM` từng là storage engine mặc định trong MySQL trước phiên bản 5.5. Engine này có thể nhanh trong một số tình huống đọc nhiều, nhưng không hỗ trợ giao dịch và khóa ngoại.
+
+Ví dụ:
 
 ```sql
 CREATE TABLE article_archive (
@@ -301,57 +354,9 @@ CREATE TABLE article_archive (
 ) ENGINE = MyISAM;
 ```
 
----
+### 8.2. MEMORY
 
-## 12. MERGE
-
-`MERGE`, còn gọi là `MRG_MyISAM`, là storage engine cho phép kết hợp nhiều bảng `MyISAM` có cùng cấu trúc thành một bảng ảo.
-
-### Đặc điểm chính
-
-- Bảng `MERGE` không tự lưu dữ liệu.
-- Dữ liệu thật nằm trong các bảng `MyISAM` thành phần.
-- Bảng `MERGE` sử dụng chỉ mục của các bảng thành phần.
-- Khi dùng `DROP TABLE` với bảng `MERGE`, MySQL chỉ xóa bảng `MERGE`, không xóa các bảng bên dưới.
-
-### Ứng dụng
-
-`MERGE` có thể được dùng khi muốn chia dữ liệu thành nhiều bảng nhỏ hơn nhưng vẫn truy vấn như một bảng thống nhất.
-
-Ví dụ:
-
-- Bảng doanh thu tháng 1.
-- Bảng doanh thu tháng 2.
-- Bảng doanh thu tháng 3.
-
-Sau đó tạo bảng `MERGE` để truy vấn tổng hợp nhiều tháng.
-
----
-
-## 13. MEMORY
-
-`MEMORY` là storage engine lưu toàn bộ dữ liệu trong bộ nhớ RAM.
-
-### Đặc điểm chính
-
-- Dữ liệu được lưu trong bộ nhớ.
-- Tốc độ truy cập nhanh.
-- Thường dùng chỉ mục băm.
-- Dữ liệu sẽ mất khi MySQL Server dừng hoặc khởi động lại.
-- Trước đây còn được gọi là `HEAP`.
-
-### Ưu điểm
-
-- Truy xuất rất nhanh.
-- Phù hợp với bảng tạm, dữ liệu trung gian, kết quả xử lý tạm thời.
-
-### Hạn chế
-
-- Không phù hợp để lưu dữ liệu lâu dài.
-- Dữ liệu phụ thuộc vào thời gian hoạt động của máy chủ.
-- Bị giới hạn bởi dung lượng RAM.
-
-### Ví dụ sử dụng
+`MEMORY` lưu dữ liệu trong RAM. Engine này phù hợp cho bảng tạm hoặc dữ liệu trung gian cần truy xuất nhanh.
 
 ```sql
 CREATE TABLE session_cache (
@@ -361,183 +366,11 @@ CREATE TABLE session_cache (
 ) ENGINE = MEMORY;
 ```
 
----
+Lưu ý: dữ liệu trong bảng `MEMORY` sẽ mất khi MySQL Server dừng hoặc khởi động lại.
 
-## 14. ARCHIVE
+### 8.3. ARCHIVE
 
-`ARCHIVE` là storage engine dùng để lưu trữ số lượng lớn bản ghi ở dạng nén.
-
-### Đặc điểm chính
-
-- Dữ liệu được nén khi ghi.
-- Dữ liệu được giải nén khi đọc.
-- Phù hợp với dữ liệu lưu trữ lịch sử.
-- Chủ yếu hỗ trợ `INSERT` và `SELECT`.
-- Không hỗ trợ chỉ mục như các storage engine thông thường.
-- Khi đọc thường phải quét toàn bảng.
-
-### Ưu điểm
-
-- Tiết kiệm dung lượng đĩa.
-- Phù hợp với dữ liệu ít khi cập nhật.
-- Thích hợp cho dữ liệu log, lịch sử, lưu trữ dài hạn.
-
-### Hạn chế
-
-- Không phù hợp với truy vấn cần hiệu năng cao.
-- Không phù hợp với dữ liệu thường xuyên cập nhật.
-- Việc đọc dữ liệu có thể chậm do phải quét toàn bảng.
-
-### Ví dụ sử dụng
-
-```sql
-CREATE TABLE system_logs (
-    log_id INT,
-    log_message TEXT,
-    created_at DATETIME
-) ENGINE = ARCHIVE;
-```
-
----
-
-## 15. CSV
-
-`CSV` là storage engine lưu dữ liệu dưới dạng tệp CSV, tức là dữ liệu được phân tách bằng dấu phẩy.
-
-### Đặc điểm chính
-
-- Dữ liệu được lưu dưới dạng văn bản CSV.
-- Dễ trao đổi với các ứng dụng ngoài SQL.
-- Có thể mở bằng phần mềm bảng tính.
-- Không hỗ trợ kiểu dữ liệu `NULL`.
-- Khi đọc dữ liệu thường cần quét toàn bảng.
-
-### Ứng dụng
-
-`CSV` phù hợp khi cần:
-
-- Trao đổi dữ liệu với phần mềm bảng tính.
-- Xuất nhập dữ liệu đơn giản.
-- Lưu dữ liệu theo định dạng dễ đọc bởi con người.
-
-### Ví dụ sử dụng
-
-```sql
-CREATE TABLE export_customers (
-    customer_id INT NOT NULL,
-    customer_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL
-) ENGINE = CSV;
-```
-
----
-
-## 16. BLACKHOLE
-
-`BLACKHOLE` là storage engine đặc biệt không lưu dữ liệu.
-
-Điều này có nghĩa là mọi dữ liệu được ghi vào bảng `BLACKHOLE` sẽ bị loại bỏ.
-
-### Đặc điểm chính
-
-- Có thể ghi dữ liệu vào bảng.
-- Dữ liệu không được lưu lại.
-- Truy vấn đọc không trả về dữ liệu thực.
-- Có thể hữu ích trong một số tình huống sao chép dữ liệu.
-
-### Ứng dụng
-
-`BLACKHOLE` có thể được dùng trong kịch bản replication, khi muốn ghi nhận thay đổi dữ liệu trên máy chủ chính nhưng không muốn lưu dữ liệu đó trên máy chủ cục bộ.
-
-### Ví dụ sử dụng
-
-```sql
-CREATE TABLE event_sink (
-    event_id INT,
-    event_data TEXT
-) ENGINE = BLACKHOLE;
-```
-
----
-
-## 17. FEDERATED
-
-`FEDERATED` là storage engine cho phép quản lý dữ liệu từ một MySQL Server từ xa mà không cần dùng công nghệ cluster hoặc replication.
-
-### Đặc điểm chính
-
-- Bảng cục bộ không lưu dữ liệu thật.
-- Khi truy vấn bảng cục bộ, dữ liệu được lấy từ bảng từ xa.
-- Cho phép truy cập dữ liệu nằm trên MySQL Server khác.
-
-### Ứng dụng
-
-`FEDERATED` phù hợp khi cần:
-
-- Truy vấn dữ liệu từ xa.
-- Kết nối dữ liệu phân tán.
-- Truy cập bảng ở máy chủ khác mà không sao chép dữ liệu về máy cục bộ.
-
-### Hạn chế
-
-- Phụ thuộc vào kết nối mạng.
-- Hiệu năng có thể thấp hơn bảng cục bộ.
-- Cấu hình phức tạp hơn các storage engine thông thường.
-
----
-
-## 18. Ví dụ thực hành tổng hợp
-
-### 18.1. Tạo bảng mặc định
-
-```sql
-CREATE TABLE products (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(100),
-    price DECIMAL(10, 2)
-);
-```
-
-Nếu không chỉ định `ENGINE`, MySQL sẽ dùng storage engine mặc định.
-
----
-
-### 18.2. Tạo bảng InnoDB có khóa ngoại
-
-```sql
-CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,
-    customer_name VARCHAR(100)
-) ENGINE = InnoDB;
-
-CREATE TABLE orders (
-    order_id INT PRIMARY KEY,
-    customer_id INT,
-    order_date DATE,
-    CONSTRAINT fk_orders_customers
-        FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id)
-) ENGINE = InnoDB;
-```
-
-Bảng `orders` dùng khóa ngoại tham chiếu đến bảng `customers`, vì vậy nên dùng `InnoDB`.
-
----
-
-### 18.3. Tạo bảng MEMORY cho dữ liệu tạm
-
-```sql
-CREATE TABLE temp_scores (
-    student_id INT PRIMARY KEY,
-    score DECIMAL(5, 2)
-) ENGINE = MEMORY;
-```
-
-Bảng này phù hợp để lưu dữ liệu tạm trong quá trình xử lý.
-
----
-
-### 18.4. Tạo bảng ARCHIVE cho dữ liệu log
+`ARCHIVE` dùng để lưu lượng lớn dữ liệu lịch sử ở dạng nén. Engine này phù hợp với dữ liệu log hoặc dữ liệu ít thay đổi.
 
 ```sql
 CREATE TABLE audit_logs (
@@ -547,78 +380,344 @@ CREATE TABLE audit_logs (
 ) ENGINE = ARCHIVE;
 ```
 
-Bảng này phù hợp để lưu dữ liệu lịch sử với dung lượng lớn.
+### 8.4. CSV
+
+`CSV` lưu dữ liệu dưới dạng file CSV. Engine này thuận tiện cho trao đổi dữ liệu nhưng hạn chế về hiệu năng và ràng buộc.
+
+```sql
+CREATE TABLE export_customers (
+    customer_id INT NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL
+) ENGINE = CSV;
+```
+
+### 8.5. BLACKHOLE
+
+`BLACKHOLE` nhận dữ liệu ghi vào nhưng không lưu dữ liệu. Nó thường dùng cho một số kịch bản kiểm thử hoặc replication đặc biệt.
+
+```sql
+CREATE TABLE event_sink (
+    event_id INT,
+    event_data TEXT
+) ENGINE = BLACKHOLE;
+```
+
+### 8.6. MERGE
+
+`MERGE`, còn gọi là `MRG_MyISAM`, cho phép kết hợp nhiều bảng `MyISAM` có cùng cấu trúc thành một bảng logic.
+
+### 8.7. FEDERATED
+
+`FEDERATED` cho phép truy cập dữ liệu từ một MySQL Server từ xa mà không lưu dữ liệu thật trong bảng cục bộ.
 
 ---
 
-## 19. Hướng dẫn lựa chọn Storage Engine
+### Quiz nhanh: Các Storage Engine khác
 
-| Nhu cầu sử dụng | Storage engine phù hợp |
-|---|---|
-| Cần giao dịch, rollback, khóa ngoại | `InnoDB` |
-| Dữ liệu chủ yếu đọc, ít cập nhật | `MyISAM` |
-| Dữ liệu tạm, cần tốc độ cao | `MEMORY` |
-| Lưu trữ log, dữ liệu lịch sử | `ARCHIVE` |
-| Trao đổi dữ liệu dạng CSV | `CSV` |
-| Không cần lưu dữ liệu thật | `BLACKHOLE` |
-| Truy cập dữ liệu từ MySQL Server khác | `FEDERATED` |
-| Gộp nhiều bảng MyISAM cùng cấu trúc | `MERGE` |
+**Câu 1.** Engine nào lưu dữ liệu trong RAM?
 
----
+A. MEMORY  
+B. CSV  
+C. BLACKHOLE  
+D. FEDERATED  
 
-## 20. Một số lưu ý quan trọng
+**Câu 2.** Engine nào nhận dữ liệu nhưng không lưu lại dữ liệu?
 
-1. `InnoDB` là lựa chọn mặc định và an toàn cho hầu hết các ứng dụng hiện đại.
-2. Không nên dùng `MyISAM` nếu hệ thống cần giao dịch hoặc khóa ngoại.
-3. `MEMORY` nhanh nhưng dữ liệu không bền vững sau khi máy chủ dừng.
-4. `ARCHIVE` phù hợp với lưu trữ lâu dài nhưng không phù hợp với cập nhật thường xuyên.
-5. `CSV` thuận tiện cho trao đổi dữ liệu nhưng hạn chế về hiệu năng và kiểu dữ liệu.
-6. `BLACKHOLE` là storage engine đặc biệt, không lưu dữ liệu thật.
-7. `FEDERATED` hữu ích cho dữ liệu từ xa nhưng cần chú ý hiệu năng mạng.
+A. InnoDB  
+B. BLACKHOLE  
+C. MyISAM  
+D. ARCHIVE  
+
+**Câu 3.** Engine nào phù hợp hơn cho dữ liệu log lịch sử, ít cập nhật?
+
+A. ARCHIVE  
+B. MEMORY  
+C. BLACKHOLE  
+D. FEDERATED  
 
 ---
 
-## 21. Câu hỏi ôn tập
+## 9. Nguyên lý và tiêu chí lựa chọn Storage Engine
 
-### Câu hỏi 1
+### 9.1. Tính toàn vẹn dữ liệu
 
-Storage engine trong MySQL dùng để làm gì?
+Nếu dữ liệu có quan hệ chặt chẽ, cần khóa ngoại hoặc cần rollback khi lỗi, nên ưu tiên `InnoDB`.
 
-### Câu hỏi 2
+### 9.2. Độ bền dữ liệu
 
-Câu lệnh nào dùng để liệt kê các storage engine đang có trong MySQL?
+Nếu dữ liệu phải tồn tại sau khi server khởi động lại, không nên dùng `MEMORY` cho dữ liệu chính.
 
-### Câu hỏi 3
+### 9.3. Mục tiêu hiệu năng
 
-Giá trị `DEFAULT` trong cột `Support` của lệnh `SHOW ENGINES` có ý nghĩa gì?
+Nếu cần truy cập dữ liệu tạm rất nhanh, `MEMORY` có thể phù hợp. Nếu cần lưu dữ liệu giao dịch ổn định, `InnoDB` thường là lựa chọn mặc định.
 
-### Câu hỏi 4
+### 9.4. Tính chất dữ liệu
 
-Storage engine nào hỗ trợ giao dịch và khóa ngoại?
-
-### Câu hỏi 5
-
-Vì sao `MEMORY` không phù hợp để lưu dữ liệu quan trọng lâu dài?
-
-### Câu hỏi 6
-
-Storage engine nào phù hợp để lưu dữ liệu lịch sử với dung lượng lớn?
-
-### Câu hỏi 7
-
-Vì sao quan hệ khóa ngoại thường nên dùng với `InnoDB`?
+Dữ liệu lịch sử ít thay đổi có thể phù hợp với `ARCHIVE`. Dữ liệu trao đổi với công cụ ngoài có thể cân nhắc `CSV`, nhưng không nên dùng cho bảng nghiệp vụ chính.
 
 ---
 
-## 22. Bài tập thực hành
+### Quiz nhanh: Nguyên lý lựa chọn
 
-### Bài tập 1: Kiểm tra storage engine
+**Câu 1.** Nếu cần khóa ngoại, engine nào thường phù hợp nhất?
 
-Viết câu lệnh SQL để liệt kê tất cả các storage engine có trong MySQL Server.
+A. InnoDB  
+B. MEMORY  
+C. BLACKHOLE  
+D. CSV  
+
+**Câu 2.** Vì sao không nên dùng `MEMORY` cho dữ liệu nghiệp vụ quan trọng?
+
+A. Vì dữ liệu có thể mất khi server dừng  
+B. Vì nó luôn hỗ trợ khóa ngoại  
+C. Vì nó chỉ dùng cho file ảnh  
+D. Vì nó không thể tạo bảng  
+
+**Câu 3.** Dữ liệu log lớn, ít cập nhật có thể cân nhắc engine nào?
+
+A. ARCHIVE  
+B. BLACKHOLE  
+C. FEDERATED  
+D. MEMORY  
 
 ---
 
-### Bài tập 2: Tạo bảng InnoDB
+## 10. Ứng dụng thực tế
+
+1. **Hệ thống bán hàng**
+
+   Dùng `InnoDB` cho bảng khách hàng, đơn hàng, chi tiết đơn hàng và thanh toán vì cần giao dịch và tính nhất quán.
+
+2. **Bảng dữ liệu tạm**
+
+   Dùng `MEMORY` cho bảng tạm trong quá trình tính toán hoặc tạo báo cáo ngắn hạn.
+
+3. **Lưu trữ log**
+
+   Dùng `ARCHIVE` khi cần lưu lượng lớn dữ liệu lịch sử, ít khi cập nhật.
+
+4. **Trao đổi dữ liệu**
+
+   Dùng `CSV` khi cần dữ liệu ở dạng dễ đọc bởi công cụ bảng tính hoặc quy trình import/export đơn giản.
+
+5. **Kiểm thử hoặc replication đặc biệt**
+
+   Dùng `BLACKHOLE` trong các tình huống muốn ghi nhận câu lệnh ghi nhưng không lưu dữ liệu thật.
+
+---
+
+### Quiz nhanh: Ứng dụng thực tế
+
+**Câu 1.** Hệ thống bán hàng có đơn hàng và thanh toán nên ưu tiên engine nào?
+
+A. InnoDB  
+B. CSV  
+C. BLACKHOLE  
+D. MEMORY  
+
+**Câu 2.** Bảng tạm để lưu kết quả trung gian có thể dùng engine nào?
+
+A. MEMORY  
+B. FEDERATED  
+C. BLACKHOLE  
+D. CSV  
+
+**Câu 3.** Dữ liệu cần trao đổi dạng file văn bản phân tách bằng dấu phẩy phù hợp với engine nào?
+
+A. CSV  
+B. InnoDB  
+C. MEMORY  
+D. MERGE  
+
+---
+
+## 11. Vai trò trong quản trị cơ sở dữ liệu
+
+### 11.1. Thiết kế cơ sở dữ liệu
+
+Người thiết kế cần chọn storage engine phù hợp với tính chất bảng. Bảng nghiệp vụ chính thường dùng `InnoDB`.
+
+### 11.2. Tối ưu hiệu năng
+
+DBA cần hiểu engine để phân tích nguyên nhân chậm, xung đột khóa, khả năng ghi log và đặc điểm đọc/ghi.
+
+### 11.3. Sao lưu và phục hồi
+
+Mỗi engine có đặc điểm lưu trữ khác nhau, vì vậy chiến lược backup/restore cần phù hợp với engine đang dùng.
+
+### 11.4. Vận hành hệ thống
+
+Khi nâng cấp, di chuyển hoặc kiểm tra server, DBA cần biết engine nào đang được hỗ trợ và engine nào đang là mặc định.
+
+---
+
+### Quiz nhanh: Vai trò theo lĩnh vực
+
+**Câu 1.** Trong thiết kế cơ sở dữ liệu nghiệp vụ, engine nào thường là lựa chọn mặc định an toàn?
+
+A. InnoDB  
+B. BLACKHOLE  
+C. CSV  
+D. MEMORY  
+
+**Câu 2.** DBA dùng kiến thức storage engine để làm gì?
+
+A. Phân tích hiệu năng và khả năng phục hồi dữ liệu  
+B. Đổi màu giao diện MySQL Workbench  
+C. Tạo mật khẩu hệ điều hành  
+D. Viết HTML cho website  
+
+**Câu 3.** Khi kiểm tra server, lệnh nào giúp biết engine đang được hỗ trợ?
+
+A. `SHOW ENGINES;`  
+B. `SHOW COLORS;`  
+C. `SHOW FILES;`  
+D. `SHOW CLIENTS;`  
+
+---
+
+## 12. Bảng so sánh
+
+| Tiêu chí | InnoDB | MyISAM | MEMORY | ARCHIVE | CSV | BLACKHOLE | FEDERATED |
+|---|---|---|---|---|---|---|---|
+| Giao dịch | Có | Không | Không | Không | Không | Không | Không |
+| Khóa ngoại | Có | Không | Không | Không | Không | Không | Không |
+| Dữ liệu bền vững | Có | Có | Không | Có | Có | Không | Phụ thuộc server từ xa |
+| Mục tiêu chính | Bảng nghiệp vụ | Đọc nhiều, hệ thống cũ | Bảng tạm | Lưu trữ lịch sử | Trao đổi CSV | Bỏ dữ liệu ghi vào | Truy cập dữ liệu từ xa |
+| Phù hợp cho dữ liệu chính | Có | Hạn chế | Không | Hạn chế | Không | Không | Hạn chế |
+| Ví dụ | Đơn hàng | Bài viết cũ | Cache tạm | Audit log | Export data | Replication đặc biệt | Bảng remote |
+
+---
+
+## 13. Câu hỏi ôn tập
+
+### 13.1. Câu hỏi trắc nghiệm
+
+**Câu 1.** Storage engine trong MySQL dùng để làm gì?
+
+A. Quản lý cách bảng lưu trữ và truy xuất dữ liệu  
+B. Chỉ quản lý màu giao diện  
+C. Chỉ tạo user  
+D. Chỉ đổi tên database  
+
+---
+
+**Câu 2.** Lệnh nào dùng để xem danh sách storage engine?
+
+A. `SHOW ENGINES;`  
+B. `SHOW TABLE TYPES ONLY;`  
+C. `LIST STORAGE;`  
+D. `SELECT ENGINE FROM users;`  
+
+---
+
+**Câu 3.** Engine nào là mặc định trong MySQL hiện đại?
+
+A. CSV  
+B. InnoDB  
+C. BLACKHOLE  
+D. MERGE  
+
+---
+
+**Câu 4.** Engine nào hỗ trợ giao dịch và khóa ngoại?
+
+A. InnoDB  
+B. MyISAM  
+C. CSV  
+D. MEMORY  
+
+---
+
+**Câu 5.** Engine nào lưu dữ liệu trong RAM?
+
+A. MEMORY  
+B. ARCHIVE  
+C. FEDERATED  
+D. MyISAM  
+
+---
+
+**Câu 6.** Engine nào phù hợp cho dữ liệu log lịch sử ở dạng nén?
+
+A. ARCHIVE  
+B. BLACKHOLE  
+C. MEMORY  
+D. CSV  
+
+---
+
+**Câu 7.** Engine nào không lưu dữ liệu thật?
+
+A. BLACKHOLE  
+B. InnoDB  
+C. MyISAM  
+D. CSV  
+
+---
+
+**Câu 8.** Câu lệnh nào chỉ định bảng dùng `InnoDB`?
+
+A. `CREATE TABLE t (id INT) ENGINE = InnoDB;`  
+B. `CREATE InnoDB TABLE t (id INT);`  
+C. `CREATE TABLE t ENGINE ONLY;`  
+D. `ENGINE t CREATE TABLE InnoDB;`  
+
+---
+
+**Câu 9.** Nếu bảng cần khóa ngoại, lựa chọn nào phù hợp nhất?
+
+A. InnoDB  
+B. MEMORY  
+C. CSV  
+D. BLACKHOLE  
+
+---
+
+**Câu 10.** Engine nào cho phép truy cập bảng từ MySQL Server từ xa?
+
+A. FEDERATED  
+B. MEMORY  
+C. ARCHIVE  
+D. CSV  
+
+---
+
+### 13.2. Câu hỏi tự luận ngắn
+
+**Câu 1.** Trình bày khái niệm storage engine trong MySQL.
+
+---
+
+**Câu 2.** Vì sao `InnoDB` thường được khuyến nghị cho các bảng nghiệp vụ chính?
+
+---
+
+**Câu 3.** Phân biệt `InnoDB` và `MEMORY` theo độ bền dữ liệu.
+
+---
+
+**Câu 4.** Nêu một tình huống phù hợp để dùng `ARCHIVE`.
+
+---
+
+**Câu 5.** Vì sao không nên dùng `BLACKHOLE` cho dữ liệu cần lưu trữ?
+
+---
+
+## 14. Bài tập vận dụng
+
+### Bài tập 1
+
+Viết câu lệnh SQL để liệt kê tất cả storage engine có trên MySQL Server.
+
+**Yêu cầu:**  
+Sử dụng ít nhất một trong hai cách: `SHOW ENGINES` hoặc truy vấn `information_schema.engines`.
+
+---
+
+### Bài tập 2
 
 Tạo bảng `students` gồm các cột:
 
@@ -626,11 +725,12 @@ Tạo bảng `students` gồm các cột:
 - `student_name`
 - `email`
 
-Yêu cầu bảng sử dụng storage engine `InnoDB`.
+**Yêu cầu:**  
+Bảng phải dùng storage engine `InnoDB`.
 
 ---
 
-### Bài tập 3: Tạo bảng MEMORY
+### Bài tập 3
 
 Tạo bảng `temp_report` gồm các cột:
 
@@ -638,39 +738,157 @@ Tạo bảng `temp_report` gồm các cột:
 - `report_name`
 - `created_at`
 
-Yêu cầu bảng sử dụng storage engine `MEMORY`.
+**Yêu cầu:**  
+Bảng phải dùng storage engine `MEMORY` và người học cần giải thích hạn chế của lựa chọn này.
 
 ---
 
-### Bài tập 4: Phân tích tình huống
+### Bài tập 4
 
-Một hệ thống bán hàng cần lưu thông tin khách hàng, đơn hàng và chi tiết đơn hàng. Hệ thống cần đảm bảo:
+Một hệ thống bán hàng cần lưu khách hàng, đơn hàng và thanh toán. Hệ thống cần rollback khi giao dịch lỗi và cần đảm bảo đơn hàng luôn tham chiếu đến khách hàng hợp lệ.
 
-- Có thể rollback khi giao dịch lỗi.
-- Đơn hàng phải tham chiếu đến khách hàng hợp lệ.
-- Dữ liệu không bị mất khi máy chủ khởi động lại.
-
-Hãy chọn storage engine phù hợp và giải thích lý do.
+**Yêu cầu:**  
+Chọn storage engine phù hợp và giải thích lý do.
 
 ---
 
-### Bài tập 5: So sánh storage engine
+## 15. Tóm tắt bài học
 
-So sánh `InnoDB`, `MyISAM` và `MEMORY` theo các tiêu chí:
-
-- Có hỗ trợ giao dịch không?
-- Có hỗ trợ khóa ngoại không?
-- Dữ liệu có bền vững không?
-- Phù hợp với tình huống nào?
+- Storage engine quyết định cách MySQL lưu trữ và truy xuất dữ liệu trong bảng.
+- `InnoDB` là engine mặc định và phù hợp với phần lớn ứng dụng hiện đại.
+- `InnoDB` hỗ trợ giao dịch, khóa ngoại, khóa mức dòng và phục hồi sau sự cố.
+- `MEMORY` nhanh nhưng không phù hợp để lưu dữ liệu lâu dài.
+- `ARCHIVE` phù hợp cho dữ liệu lịch sử hoặc log lớn, ít cập nhật.
+- `CSV`, `BLACKHOLE`, `MERGE` và `FEDERATED` phục vụ các nhu cầu đặc thù.
+- Chọn storage engine đúng giúp cải thiện hiệu năng, độ tin cậy và tính toàn vẹn dữ liệu.
 
 ---
 
-## 23. Đáp án gợi ý
+## 16. Từ khóa chính
 
-<details>
-<summary>Bấm để xem đáp án gợi ý</summary>
+- MySQL
+- Storage engine
+- InnoDB
+- MyISAM
+- MEMORY
+- ARCHIVE
+- CSV
+- BLACKHOLE
+- MERGE
+- FEDERATED
+- Transaction
+- Foreign key
+- `SHOW ENGINES`
+- `information_schema.engines`
+- `CREATE TABLE`
+- `ENGINE`
 
-### Đáp án bài tập 1
+---
+
+## 17. Đáp án và gợi ý trả lời
+
+<details markdown="1">
+<summary>Bấm để xem đáp án và gợi ý trả lời</summary>
+
+### Quiz nhanh: Giới thiệu tổng quan
+
+- **Câu 1.** B
+- **Câu 2.** B
+- **Câu 3.** B
+
+### Quiz nhanh: Khái niệm cơ bản
+
+- **Câu 1.** C
+- **Câu 2.** B
+- **Câu 3.** C
+
+### Quiz nhanh: Cách hoạt động
+
+- **Câu 1.** B
+- **Câu 2.** A
+- **Câu 3.** A
+
+### Quiz nhanh: Các thành phần chính
+
+- **Câu 1.** B
+- **Câu 2.** C
+- **Câu 3.** A
+
+### Quiz nhanh: InnoDB
+
+- **Câu 1.** A
+- **Câu 2.** A
+- **Câu 3.** A
+
+### Quiz nhanh: Các Storage Engine khác
+
+- **Câu 1.** A
+- **Câu 2.** B
+- **Câu 3.** A
+
+### Quiz nhanh: Nguyên lý lựa chọn
+
+- **Câu 1.** A
+- **Câu 2.** A
+- **Câu 3.** A
+
+### Quiz nhanh: Ứng dụng thực tế
+
+- **Câu 1.** A
+- **Câu 2.** A
+- **Câu 3.** A
+
+### Quiz nhanh: Vai trò theo lĩnh vực
+
+- **Câu 1.** A
+- **Câu 2.** A
+- **Câu 3.** A
+
+### Câu hỏi ôn tập - Trắc nghiệm
+
+- **Câu 1.** A
+- **Câu 2.** A
+- **Câu 3.** B
+- **Câu 4.** A
+- **Câu 5.** A
+- **Câu 6.** A
+- **Câu 7.** A
+- **Câu 8.** A
+- **Câu 9.** A
+- **Câu 10.** A
+
+### Câu hỏi ôn tập - Tự luận ngắn
+
+#### Câu 1
+
+**Gợi ý trả lời:**  
+Storage engine là thành phần trong MySQL quản lý cách dữ liệu của bảng được lưu trữ, truy xuất, khóa, cập nhật và phục hồi.
+
+#### Câu 2
+
+**Gợi ý trả lời:**  
+`InnoDB` thường được khuyến nghị vì hỗ trợ giao dịch, khóa ngoại, tính nhất quán dữ liệu, khóa mức dòng và phục hồi sau sự cố.
+
+#### Câu 3
+
+**Gợi ý trả lời:**  
+`InnoDB` lưu dữ liệu bền vững trên đĩa và có cơ chế phục hồi. `MEMORY` lưu dữ liệu trong RAM nên dữ liệu có thể mất khi MySQL Server dừng hoặc khởi động lại.
+
+#### Câu 4
+
+**Gợi ý trả lời:**  
+`ARCHIVE` phù hợp để lưu audit log, dữ liệu lịch sử, dữ liệu ít cập nhật nhưng có dung lượng lớn.
+
+#### Câu 5
+
+**Gợi ý trả lời:**  
+`BLACKHOLE` không lưu dữ liệu thật. Dữ liệu ghi vào bảng sẽ bị bỏ đi, nên không phù hợp cho dữ liệu cần lưu trữ.
+
+### Bài tập vận dụng
+
+#### Bài tập 1
+
+**Gợi ý trả lời:**
 
 ```sql
 SHOW ENGINES;
@@ -679,16 +897,16 @@ SHOW ENGINES;
 Hoặc:
 
 ```sql
-SELECT 
-  engine, 
-  support 
-FROM 
-  information_schema.engines 
-ORDER BY 
-  engine;
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
 ```
 
-### Đáp án bài tập 2
+#### Bài tập 2
+
+**Gợi ý trả lời:**
 
 ```sql
 CREATE TABLE students (
@@ -698,7 +916,9 @@ CREATE TABLE students (
 ) ENGINE = InnoDB;
 ```
 
-### Đáp án bài tập 3
+#### Bài tập 3
+
+**Gợi ý trả lời:**
 
 ```sql
 CREATE TABLE temp_report (
@@ -708,42 +928,12 @@ CREATE TABLE temp_report (
 ) ENGINE = MEMORY;
 ```
 
-### Đáp án bài tập 4
+Hạn chế: dữ liệu trong bảng `MEMORY` không phù hợp để lưu lâu dài vì có thể mất khi MySQL Server dừng hoặc khởi động lại.
 
-Nên chọn `InnoDB` vì:
+#### Bài tập 4
 
-- Hỗ trợ giao dịch.
-- Hỗ trợ rollback.
-- Hỗ trợ khóa ngoại.
-- Dữ liệu được lưu bền vững.
-- Phù hợp với hệ thống bán hàng cần tính toàn vẹn dữ liệu.
-
-### Đáp án bài tập 5
-
-| Tiêu chí | InnoDB | MyISAM | MEMORY |
-|---|---|---|---|
-| Hỗ trợ giao dịch | Có | Không | Không |
-| Hỗ trợ khóa ngoại | Có | Không | Không |
-| Dữ liệu bền vững | Có | Có | Không, dữ liệu mất khi server dừng |
-| Tình huống phù hợp | Hệ thống giao dịch | Dữ liệu đọc nhiều, ít cập nhật | Dữ liệu tạm, cache |
+**Gợi ý trả lời:**  
+Nên chọn `InnoDB` vì hệ thống cần giao dịch, rollback, khóa ngoại và tính toàn vẹn dữ liệu giữa khách hàng, đơn hàng và thanh toán.
 
 </details>
-
----
-
-## 24. Tổng kết
-
-Storage engine quyết định cách MySQL lưu trữ, truy xuất và xử lý dữ liệu trong bảng.
-
-Các ý chính cần nhớ:
-
-- `InnoDB` là storage engine mặc định và phù hợp với hầu hết ứng dụng hiện đại.
-- `InnoDB` hỗ trợ giao dịch, khóa ngoại và khôi phục sau sự cố.
-- `MyISAM` nhanh trong một số tình huống đọc dữ liệu nhưng không hỗ trợ giao dịch.
-- `MEMORY` lưu dữ liệu trong RAM, phù hợp cho dữ liệu tạm.
-- `ARCHIVE` phù hợp cho lưu trữ dữ liệu lịch sử dạng nén.
-- `CSV` thuận tiện cho trao đổi dữ liệu với phần mềm ngoài SQL.
-- `BLACKHOLE` không lưu dữ liệu thật.
-- `FEDERATED` cho phép truy cập dữ liệu từ máy chủ MySQL từ xa.
-- Việc lựa chọn đúng storage engine có ảnh hưởng trực tiếp đến hiệu năng, tính toàn vẹn và độ an toàn của hệ thống cơ sở dữ liệu.
 

@@ -133,6 +133,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Khởi động và dừng MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Nạp MySQL sample database vào server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
+| MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
 
@@ -197,6 +198,7 @@ Learning materials for database management systems and MySQL.
 | Connect to MySQL in VS Code | [Markdown](MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Load MySQL Sample Database into Server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
+| MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
 | Start and Stop MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
 
 ## References

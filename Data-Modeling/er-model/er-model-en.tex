@@ -480,12 +480,11 @@ Examples:
   \item \texttt{Gender}
   \item \texttt{Roll\_No}
 \end{itemize}
-\end{frame}
 
-%------------------------------------------------
-\begin{frame}{Illustration: Simple Attribute}
-\centering
-\imageplaceholder{simple-attribute.png}{Simple Attribute in the ER Model}
+\vspace{2mm}
+\begin{alertblock}{Note about the illustration}
+The original reference does not provide a separate illustration for Simple Attribute. In an ER Diagram, a simple attribute is still represented by a single oval, similar to ordinary attributes such as \texttt{Name}, \texttt{DOB}, or \texttt{Age}.
+\end{alertblock}
 \end{frame}
 
 %------------------------------------------------
@@ -530,7 +529,7 @@ For example, \texttt{Address} may consist of:
 %------------------------------------------------
 \begin{frame}{Illustration: Composite Attribute}
 \centering
-\imageplaceholder{composite-attribute.png}{Composite Attribute in the ER Model}
+\imageplaceholder{simple-attribute.png}{Composite Attribute in the ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -553,7 +552,7 @@ In an ER Diagram, a multivalued attribute is represented by a double oval.
 %------------------------------------------------
 \begin{frame}{Illustration: Multivalued Attribute}
 \centering
-\imageplaceholder{multivalued-attribute.png}{Multivalued Attribute in the ER Model}
+\imageplaceholder{composite-attribute.png}{Multivalued Attribute in the ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -576,7 +575,27 @@ In an ER Diagram, a derived attribute is represented by a dashed oval.
 %------------------------------------------------
 \begin{frame}{Illustration: Derived Attribute}
 \centering
-\imageplaceholder{derived-attribute.png}{Derived Attribute in the ER Model}
+\imageplaceholder{multivalued-attribute.png}{Derived Attribute in the ER Model}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Entity and Combined Attributes}
+\small
+When attribute types are combined in one ER Diagram, the entity \texttt{Student} may have:
+\begin{itemize}
+\smallitem
+  \item \texttt{Roll\_No} as a key attribute.
+  \item \texttt{Name} and \texttt{DOB} as simple attributes.
+  \item \texttt{Phone\_No} as a multivalued attribute.
+  \item \texttt{Age} as a derived attribute.
+  \item \texttt{Address} as a composite attribute consisting of \texttt{Street}, \texttt{City}, \texttt{State}, and \texttt{Country}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Entity and Combined Attributes}
+\centering
+\imageplaceholder{derived-attribute.png}{Student entity and attribute types in the ER Model}
 \end{frame}
 
 %------------------------------------------------
@@ -657,12 +676,21 @@ The set of relationships of the same type, for example S1 enrolled in C2, S2 enr
 \end{frame}
 
 %------------------------------------------------
-\begin{frame}{Illustration: Relationship Set}
+\begin{frame}{Illustration: Relationship Type}
 \centering
-\imageplaceholder{relationship-set.png}{Relationship type and relationship set}
+\imageplaceholder{relationship-set.png}{Relationship Type between Student and Course}
 
 \vspace{2mm}
-{\small Figure 5. Relationship type and relationship set.}
+{\small Figure 5a. Relationship type between Student and Course.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Illustration: Relationship Set}
+\centering
+\imageplaceholder{recursive-relationship.png}{Relationship set of the Enrolled in type}
+
+\vspace{2mm}
+{\small Figure 5b. Relationship set of the Enrolled in type.}
 \end{frame}
 
 %------------------------------------------------
@@ -699,13 +727,13 @@ N-ary & A relationship involving more than three entity sets \\
 %------------------------------------------------
 \begin{frame}{Illustration: Unary / Recursive Relationship}
 \centering
-\imageplaceholder{recursive-relationship.png}{Unary or Recursive Relationship}
+\imageplaceholder{binary-relationship.png}{Unary or Recursive Relationship}
 \end{frame}
 
 %------------------------------------------------
 \begin{frame}{Illustration: Binary Relationship}
 \centering
-\imageplaceholder{binary-relationship.png}{Binary Relationship}
+\imageplaceholder{relationship-set.png}{Binary Relationship}
 \end{frame}
 
 %------------------------------------------------

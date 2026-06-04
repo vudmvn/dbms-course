@@ -144,7 +144,7 @@ Current homepage sections:
   - `MySQL/mysql-sample-database/mysql-sample-database.md`
   - `MySQL/load-sample-database/load-sample-database.md`
   - `MySQL/storage-engine/storage-engine.md`
-    - Created from `TEMP_MARKDOWN_INPUT.md`.
+    - MySQL storage engines lecture created from `TEMP_MARKDOWN_INPUT.md`.
     - `images/` currently has no downloaded content images from the source page.
   - `MySQL/start-stop-MySQL/start-stop-MySQL.md`
 
@@ -219,8 +219,11 @@ Workflow trigger paths:
 
 ## Update Notes
 
-- 2026-06-04: Added the empty `MySQL/storage-engine/` lesson scaffold with an
-  `images/` folder placeholder from `TEMP_MARKDOWN_INPUT.md`.
+- 2026-06-04: Refreshed `Data-Modeling/er-model/` attribute and relationship
+  image references against the GeeksforGeeks source, then regenerated the
+  Vietnamese and English ER model PDFs.
+- 2026-06-04: Expanded `MySQL/storage-engine/` into a full lecture, kept its
+  `images/` placeholder, and linked it from the bilingual homepage.
 - 2026-06-04: Added `Data-Modeling/lab-er-model-1.md` and a bilingual Labs
   section in `index.md`.
 - 2026-06-04: Refreshed the repository summary against current `index.md`,
