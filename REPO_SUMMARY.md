@@ -87,7 +87,8 @@ Important Jekyll settings:
 
 - `TEMP_MARKDOWN_INPUT.md`
   - Temporary Markdown input file.
-  - Currently untracked by git and excluded from the published site.
+  - Currently contains the input metadata for `MySQL/storage-engine/` and is
+    excluded from the published site.
 
 ## Content Inventory
 
@@ -142,6 +143,9 @@ Current homepage sections:
   - `MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md`
   - `MySQL/mysql-sample-database/mysql-sample-database.md`
   - `MySQL/load-sample-database/load-sample-database.md`
+  - `MySQL/storage-engine/storage-engine.md`
+    - Created from `TEMP_MARKDOWN_INPUT.md`.
+    - `images/` currently has no downloaded content images from the source page.
   - `MySQL/start-stop-MySQL/start-stop-MySQL.md`
 
 ## Deployment Flow
@@ -215,6 +219,8 @@ Workflow trigger paths:
 
 ## Update Notes
 
+- 2026-06-04: Added the empty `MySQL/storage-engine/` lesson scaffold with an
+  `images/` folder placeholder from `TEMP_MARKDOWN_INPUT.md`.
 - 2026-06-04: Added `Data-Modeling/lab-er-model-1.md` and a bilingual Labs
   section in `index.md`.
 - 2026-06-04: Refreshed the repository summary against current `index.md`,
