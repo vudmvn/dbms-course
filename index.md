@@ -114,6 +114,8 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 |---|---|---|---|
 | Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
+| Quan hệ đệ quy trong sơ đồ ER | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
+| Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | <span class="missing">—</span> | |
 
 ## Labs
 
@@ -134,6 +136,9 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Nạp MySQL sample database vào server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
 | MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
+| Chọn cơ sở dữ liệu trong MySQL | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
+| Tạo cơ sở dữ liệu trong MySQL | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
+| Xóa cơ sở dữ liệu trong MySQL | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
 
@@ -178,6 +183,8 @@ Learning materials for database management systems and MySQL.
 |---|---|---|---|
 | Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
+| Recursive Relationships in ER Diagrams | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
+| Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | <span class="missing">—</span> | |
 
 ## Labs
 
@@ -200,6 +207,9 @@ Learning materials for database management systems and MySQL.
 | Load MySQL Sample Database into Server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
 | MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
 | Start and Stop MySQL | [Markdown](MySQL/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
+| Selecting a MySQL Database | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
+| Creating a MySQL Database | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
+| Dropping a MySQL Database | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
 
 ## References
 
