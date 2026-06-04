@@ -115,6 +115,14 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
 
+## Labs
+
+| Lab | Markdown | Thời gian | Độ khó |
+|---|---|---:|---|
+| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) | 60m | Beginner |
+
+**Mô tả ngắn:** Thực hành xây dựng ER model: thực thể, thuộc tính, khóa chính, mối quan hệ và chuyển sang mô hình quan hệ.
+
 ## MySQL
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
@@ -171,6 +179,14 @@ Learning materials for database management systems and MySQL.
 |---|---|---|---|
 | Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
+
+## Labs
+
+| Lab | Markdown | Duration | Difficulty |
+|---|---|---:|---|
+| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) | 60m | Beginner |
+
+**Short description:** Hands-on practice building an ER model: entities, attributes, primary keys, relationships, and mapping to relational schema.
 
 ## MySQL
 
