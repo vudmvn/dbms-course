@@ -795,6 +795,32 @@ Khi thiết kế ERD, cần xác định rõ:
 
 </details>
 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!window.mermaid) {
+      return;
+    }
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "loose",
+      theme: "default"
+    });
+
+    document.querySelectorAll("pre > code.language-mermaid").forEach(function (codeBlock) {
+      const container = document.createElement("div");
+      container.className = "mermaid";
+      container.textContent = codeBlock.textContent;
+      codeBlock.parentNode.replaceWith(container);
+    });
+
+    mermaid.run({
+      querySelector: ".mermaid"
+    });
+  });
+</script>
+
 ---
 
 ## 12. Bài tập thực hành: United Helpers
