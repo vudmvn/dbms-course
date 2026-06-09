@@ -10,6 +10,7 @@ on:
       - "Data-Modeling/**"
       - "MySQL/**"
       - "index.md"
+      - "favicon.ico"
       - "_config.yml"
       - "DEPLOYMENT_RULES.md"
       - ".github/workflows/pages.yml"
