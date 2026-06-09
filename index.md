@@ -113,6 +113,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
 | Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Relational Schema trong DBMS | [Markdown](Data-Modeling/relational-schema/relational-schema.md) | <span class="missing">—</span> | |
 | Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
 | Quan hệ đệ quy trong sơ đồ ER | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
@@ -185,6 +186,7 @@ Learning materials for database management systems and MySQL.
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
 | Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
+| Relational Schema in DBMS | [Markdown](Data-Modeling/relational-schema/relational-schema.md) | <span class="missing">—</span> | |
 | Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
 | Recursive Relationships in ER Diagrams | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
