@@ -115,13 +115,13 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Mô hình hóa dữ liệu trong DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
 | Quan hệ đệ quy trong sơ đồ ER | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
-| Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | <span class="missing">—</span> | |
+| Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 
 ## Labs
 
 | Lab | Markdown | Thời gian | Độ khó |
 |---|---|---:|---|
-| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) | 60m | Beginner |
+| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) / [Solution](Data-Modeling/lab-er-model-1-hot-water-solution.md) | 60m | Beginner |
 
 ## MySQL
 
@@ -139,12 +139,15 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Chọn cơ sở dữ liệu trong MySQL | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Tạo cơ sở dữ liệu trong MySQL | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Xóa cơ sở dữ liệu trong MySQL | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
+| Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
+| Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
 - MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
+- Roadmap.sh: [SQL Roadmap](https://roadmap.sh/sql?fl=1)
 
 </section>
 
@@ -184,13 +187,13 @@ Learning materials for database management systems and MySQL.
 | Data Modeling in DBMS | [Markdown](Data-Modeling/data-modeling/data-modeling.md) | <span class="missing">—</span> | |
 | Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
 | Recursive Relationships in ER Diagrams | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
-| Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | <span class="missing">—</span> | |
+| Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 
 ## Labs
 
 | Lab | Markdown | Duration | Difficulty |
 |---|---|---:|---|
-| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) | 60m | Beginner |
+| Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) / [Solution](Data-Modeling/lab-er-model-1-hot-water-solution.md) | 60m | Beginner |
 
 **Short description:** Hands-on practice building an ER model: entities, attributes, primary keys, relationships, and mapping to relational schema.
 
@@ -210,12 +213,15 @@ Learning materials for database management systems and MySQL.
 | Selecting a MySQL Database | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Creating a MySQL Database | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Dropping a MySQL Database | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
+| SQL Data Types | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
+| Creating Tables with SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 
 ## References
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
 - MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
+- Roadmap.sh: [SQL Roadmap](https://roadmap.sh/sql?fl=1)
 
 </section>
 
