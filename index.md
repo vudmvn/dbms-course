@@ -139,8 +139,8 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Chọn cơ sở dữ liệu trong MySQL | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Tạo cơ sở dữ liệu trong MySQL | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Xóa cơ sở dữ liệu trong MySQL | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
-| Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/) | <span class="missing">—</span> | |
-| Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/) | <span class="missing">—</span> | |
+| Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
+| Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 
 ## Tham khảo
 
@@ -213,8 +213,8 @@ Learning materials for database management systems and MySQL.
 | Selecting a MySQL Database | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Creating a MySQL Database | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Dropping a MySQL Database | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
-| SQL Data Types | [Markdown](MySQL/sql-data-types/) | <span class="missing">—</span> | |
-| Creating Tables with SQL | [Markdown](MySQL/sql-create-table/) | <span class="missing">—</span> | |
+| SQL Data Types | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
+| Creating Tables with SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 
 ## References
 
