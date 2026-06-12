@@ -1,0 +1,16 @@
+\frametitle{Ví dụ mapping: một bảng duy nhất}
+\begin{lstlisting}
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(12,2),
+    employee_type VARCHAR(30),
+    typing_speed INT,
+    skill VARCHAR(100),
+    trade VARCHAR(100)
+);
+\end{lstlisting}
+
+\begin{alertblock}{Nhận xét}
+Cách này đơn giản nhưng có thể tạo nhiều giá trị NULL nếu các subclass có nhiều thuộc tính riêng.
+\end{alertblock}
