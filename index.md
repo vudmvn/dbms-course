@@ -144,7 +144,11 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Câu lệnh SELECT cơ bản trong MySQL | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| SELECT và JOIN trong MySQL | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Hàm SQL trong MySQL | [Markdown](MySQL/select-statement-3.md) | <span class="missing">—</span> | Không bao gồm `GROUP BY`/`HAVING` |
+| GROUP BY, HAVING và truy vấn tổng hợp trong MySQL | [Markdown](MySQL/select-statement-4.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Subquery trong MySQL | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| CTE và WITH trong MySQL | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 
 ## Tham khảo
 
@@ -220,9 +224,13 @@ Learning materials for database management systems and MySQL.
 | Creating a MySQL Database | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Dropping a MySQL Database | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
 | Basic MySQL SELECT Statement | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL SELECT and JOIN | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | SQL Data Types | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Creating Tables with SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | MySQL SQL Functions | [Markdown](MySQL/select-statement-3.md) | <span class="missing">—</span> | Excludes `GROUP BY`/`HAVING` |
+| MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](MySQL/select-statement-4.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL Subqueries | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL CTE and WITH | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 
 ## References
 
