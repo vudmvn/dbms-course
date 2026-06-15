@@ -118,6 +118,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Giới thiệu ER Model trong DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Có slides song ngữ |
 | Quan hệ đệ quy trong sơ đồ ER | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
+| Generalization, Specialization và Aggregation trong ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Có ví dụ và bài tập vận dụng |
 
 ## Labs
 
@@ -198,6 +199,7 @@ Learning materials for database management systems and MySQL.
 | Introduction to ER Model in DBMS | [Markdown](Data-Modeling/er-model/er-model.md) | [VI](Data-Modeling/er-model/er-model-vi.pdf) / [EN](Data-Modeling/er-model/er-model-en.pdf) | Bilingual slides |
 | Recursive Relationships in ER Diagrams | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
+| Generalization, Specialization, and Aggregation in the ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Includes examples and exercises |
 
 ## Labs
 
