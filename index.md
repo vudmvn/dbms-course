@@ -119,6 +119,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Quan hệ đệ quy trong sơ đồ ER | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 | Generalization, Specialization và Aggregation trong ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Có ví dụ và bài tập vận dụng |
+| Các loại khóa trong mô hình quan hệ | [Markdown](Data-Modeling/key/key.md) | <span class="missing">—</span> | Super, candidate, primary, foreign và các loại khóa khác |
 
 ## Labs
 
@@ -200,6 +201,7 @@ Learning materials for database management systems and MySQL.
 | Recursive Relationships in ER Diagrams | [Markdown](Data-Modeling/recursive-relationship/recursive-relationship.md) | <span class="missing">—</span> | |
 | Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 | Generalization, Specialization, and Aggregation in the ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Includes examples and exercises |
+| Types of Keys in the Relational Model | [Markdown](Data-Modeling/key/key.md) | <span class="missing">—</span> | Super, candidate, primary, foreign, and other key types |
 
 ## Labs
 
