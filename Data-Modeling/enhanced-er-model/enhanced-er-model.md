@@ -6,7 +6,7 @@ permalink: /Data-Modeling/enhanced-er-model/
 
 # Bài giảng: Mô hình Enhanced ER
 
-**Cập nhật lần cuối:** 05/06/2026
+**Cập nhật lần cuối:** 15/06/2026
 
 **Nguồn tham khảo:**  
 - Nguồn 1: GeeksforGeeks - [Enhanced ER Model](https://www.geeksforgeeks.org/dbms/enhanced-er-model/)
@@ -88,6 +88,8 @@ Employee(eno, name, salary)
 
 `Employee` là superclass vì mọi loại nhân viên đều có mã nhân viên, tên và lương.
 
+Một ví dụ khác là `Science` đóng vai trò superclass của `Physics`, `Chemistry` và `Biology`. Các lĩnh vực con cùng thuộc nhóm khoa học nhưng mỗi lĩnh vực vẫn có nội dung và thuộc tính chuyên biệt riêng.
+
 ### 3.2. Subclass
 
 **Subclass** là entity set chuyên biệt hơn, kế thừa thuộc tính và quan hệ từ superclass, đồng thời có thêm thuộc tính riêng.
@@ -102,11 +104,31 @@ Engineer(trade)
 
 Các subclass trên đều là các loại cụ thể của `Employee`.
 
+Quan hệ giữa subclass và superclass được đọc theo dạng **IS-A**:
+
+- `Secretary IS-A Employee`.
+- `Technician IS-A Employee`.
+- `Engineer IS-A Employee`.
+- Tương tự, `Laptop IS-A Computer`.
+
+Vì vậy, mọi thực thể thuộc `Secretary`, `Technician` hoặc `Engineer` trước hết đều phải là một `Employee` hợp lệ.
+
 ![Ví dụ superclass và subclass](images/enhanced-er-model-3.png)
 
 ### 3.3. Inheritance
 
 **Inheritance** nghĩa là subclass kế thừa thuộc tính và quan hệ của superclass. Nếu `Engineer` là subclass của `Employee`, thì `Engineer` tự động có các thuộc tính chung như `eno`, `name`, `salary`, đồng thời có thể có thuộc tính riêng như `trade`.
+
+Ví dụ với dữ liệu cụ thể:
+
+| eno | Subclass | Thuộc tính kế thừa | Thuộc tính riêng |
+|---|---|---|---|
+| 1001 | `Secretary` | `name`, `salary` | `typing_speed = 68` |
+| 1009 | `Engineer` | `name`, `salary` | `trade = Electrical` |
+
+Nhân viên `1001` không cần khai báo lại `eno`, `name` và `salary` trong `Secretary`; các thuộc tính này được kế thừa từ `Employee`. Tương tự, nhân viên `1009` nhận các thuộc tính chung từ `Employee` và chỉ bổ sung chuyên môn `trade`.
+
+Kế thừa cũng áp dụng cho relationship. Chẳng hạn, nếu `Employee` tham gia quan hệ `WORKS_FOR` với `Department`, thì một `Engineer` cũng tham gia quan hệ đó với tư cách là một `Employee`.
 
 ---
 
@@ -193,6 +215,8 @@ Car, Truck, Motorbike -> Vehicle
 
 Generalization thường đi từ dưới lên, tập trung vào thuộc tính chung và giúp giảm trùng lặp trong mô hình.
 
+Ví dụ chi tiết: nếu `Car`, `Truck` và `Motorbike` đều có `vehicle_id`, `brand` và `model`, ta đưa các thuộc tính chung này lên `Vehicle`. Các thuộc tính riêng như `load_capacity` của `Truck` vẫn nằm tại subclass tương ứng.
+
 ### 5.2. Specialization
 
 **Specialization** là quá trình chia một entity set tổng quát thành các entity set chuyên biệt hơn.
@@ -207,6 +231,14 @@ Employee -> Secretary, Technician, Engineer
 
 Specialization thường đi từ trên xuống, tập trung vào đặc điểm riêng của từng subclass.
 
+Trong ví dụ nhân viên, `Employee(eno, name, salary)` được chuyên biệt hóa theo loại công việc:
+
+- `Secretary` bổ sung `typing_speed`.
+- `Technician` bổ sung `skill`.
+- `Engineer` bổ sung `trade`.
+
+Một nhân viên chỉ xuất hiện trong subclass khi có đặc điểm chuyên biệt cần quản lý. Cách tổ chức này tránh lặp lại `eno`, `name` và `salary` ở cả ba loại nhân viên.
+
 ### 5.3. Aggregation
 
 **Aggregation** là cơ chế xem một relationship cùng các entity liên quan như một thực thể cấp cao hơn. Aggregation hữu ích khi một relationship cần tham gia vào relationship khác.
@@ -219,6 +251,11 @@ Ví dụ:
 
 - `LibraryMember` có thể là `Student`, `Faculty` hoặc `Staff`.
 - `VehicleOwner` có thể là `Person` hoặc `Company`.
+- `RTORegisteredVehicle` có thể là `Car` hoặc `Truck`.
+
+Với `VehicleOwner`, `Person` và `Company` là hai entity độc lập, không cần có chung một superclass. Category chỉ diễn tả rằng chủ sở hữu phương tiện phải đến từ một trong hai tập thực thể đó.
+
+Tương tự, `RTORegisteredVehicle` lấy thành viên từ hợp của `Car` và `Truck`. Đây là union type, không có nghĩa `Car` và `Truck` kế thừa thuộc tính từ chính category này.
 
 ![Mô hình EER với category hoặc union type](images/enhanced-er-model-2.png)
 
@@ -259,21 +296,29 @@ Total subclassing nghĩa là mọi thực thể trong superclass bắt buộc ph
 
 Ví dụ: mọi `Account` phải là `SavingsAccount` hoặc `CurrentAccount`.
 
+Theo ví dụ nhân viên trong bài nguồn, nếu doanh nghiệp quy định mọi `Employee` đều phải là `SalariedEmployee` hoặc `HourlyEmployee`, đây là total subclassing vì hai subclass bao phủ toàn bộ tập `Employee`.
+
 ### 6.2. Partial subclassing
 
 Partial subclassing nghĩa là một số thực thể trong superclass có thể không thuộc subclass nào.
 
 Ví dụ: không phải mọi `Employee` đều là `Secretary`, `Technician` hoặc `Engineer`.
 
+Chẳng hạn, một nhân viên hành chính thông thường vẫn tồn tại trong `Employee` dù không thuộc ba subclass kể trên. Vì vậy, phân loại theo loại công việc này không bao phủ toàn bộ superclass.
+
 ### 6.3. Disjoint subclassing
 
 Disjoint subclassing nghĩa là một thực thể chỉ được thuộc tối đa một subclass.
+
+Ví dụ: nếu quy tắc nghiệp vụ quy định một nhân viên chỉ có đúng một loại công việc chính, nhân viên `1001` thuộc `Secretary` thì không thể đồng thời thuộc `Engineer` hoặc `Technician`.
 
 ### 6.4. Overlapping subclassing
 
 Overlapping subclassing nghĩa là một thực thể có thể thuộc nhiều subclass.
 
 Ví dụ: một nhân viên có thể vừa là `Teacher`, vừa là `Researcher`.
+
+Trong trường hợp này, cùng một mã nhân viên xuất hiện ở cả hai subclass và kế thừa các thuộc tính chung từ một bản ghi `Employee` duy nhất.
 
 ---
 
