@@ -127,7 +127,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 |---|---|---:|---|
 | Lab 1: ER model basics | [Markdown](Data-Modeling/lab-er-model-1.md) / [Solution](Data-Modeling/lab-er-model-1-hot-water-solution/) | 60m | Beginner |
 
-## MySQL
+## MySQL Server
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
@@ -143,6 +143,11 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Chọn cơ sở dữ liệu trong MySQL | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Tạo cơ sở dữ liệu trong MySQL | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Xóa cơ sở dữ liệu trong MySQL | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
+
+## Các câu lệnh SQL trong MySQL
+
+| Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
+|---|---|---|---|
 | Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Câu lệnh SELECT cơ bản trong MySQL | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
@@ -213,7 +218,7 @@ Learning materials for database management systems and MySQL.
 
 **Short description:** Hands-on practice building an ER model: entities, attributes, primary keys, relationships, and mapping to relational schema.
 
-## MySQL
+## MySQL Server
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
@@ -229,10 +234,15 @@ Learning materials for database management systems and MySQL.
 | Selecting a MySQL Database | [Markdown](MySQL/select-database/select-database.md) | <span class="missing">—</span> | |
 | Creating a MySQL Database | [Markdown](MySQL/create-database/create-database.md) | <span class="missing">—</span> | |
 | Dropping a MySQL Database | [Markdown](MySQL/drop-database/drop-database.md) | <span class="missing">—</span> | |
-| Basic MySQL SELECT Statement | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL SELECT and JOIN | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+
+## SQL Statements in MySQL
+
+| Lesson | Markdown Lecture | Slides PDF | Notes |
+|---|---|---|---|
 | SQL Data Types | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Creating Tables with SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
+| Basic MySQL SELECT Statement | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL SELECT and JOIN | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL SQL Functions | [Markdown](MySQL/select-statement-3.md) | <span class="missing">—</span> | Excludes `GROUP BY`/`HAVING` |
 | MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](MySQL/select-statement-4.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL Subqueries | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
