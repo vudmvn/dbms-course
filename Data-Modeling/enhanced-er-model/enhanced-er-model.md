@@ -6,7 +6,7 @@ permalink: /Data-Modeling/enhanced-er-model/
 
 # Bài giảng: Mô hình Enhanced ER
 
-**Cập nhật lần cuối:** 15/06/2026
+**Cập nhật lần cuối:** 16/06/2026
 
 **Nguồn tham khảo:**  
 - Nguồn 1: GeeksforGeeks - [Enhanced ER Model](https://www.geeksforgeeks.org/dbms/enhanced-er-model/)
@@ -26,6 +26,7 @@ Sau khi hoàn thành bài học này, người học có thể:
 7. Phân biệt disjoint subclassing và overlapping subclassing.
 8. Nhận biết category hoặc union type trong mô hình dữ liệu.
 9. Chuyển một mô hình EER đơn giản sang mô hình quan hệ.
+10. Lựa chọn cách triển khai superclass, subclass, category và aggregation thành các bảng trong CSDL quan hệ.
 
 ---
 
@@ -510,7 +511,383 @@ D. Để xóa subclass
 
 ---
 
-## 10. Ứng dụng thực tế
+## 10. Triển khai EER thành các bảng trong CSDL quan hệ
+
+EER Model là mô hình khái niệm, còn CSDL quan hệ lưu dữ liệu dưới dạng bảng. Vì vậy, khi thiết kế database, cần chuyển các thành phần như superclass, subclass, category và aggregation thành bảng, khóa chính, khóa ngoại và ràng buộc dữ liệu.
+
+Không có một cách mapping duy nhất phù hợp cho mọi bài toán. Cách triển khai phụ thuộc vào:
+
+- Subclass có nhiều thuộc tính riêng hay không.
+- Một thực thể có thể thuộc một hay nhiều subclass.
+- Specialization là total hay partial.
+- Truy vấn thường đọc dữ liệu ở cấp superclass hay subclass.
+- Mức độ chấp nhận `NULL`, trùng lặp dữ liệu và độ phức tạp khi `JOIN`.
+
+### 10.1. Cách 1: Một bảng cho superclass và mỗi subclass
+
+Đây là cách triển khai phổ biến khi muốn giữ mô hình gần với EER nhất.
+
+Ví dụ EER:
+
+```text
+Employee(eno, name, salary)
+Employee -> Secretary(typing_speed), Technician(skill), Engineer(trade)
+```
+
+Có thể chuyển thành các bảng:
+
+```sql
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL
+);
+
+CREATE TABLE Secretary (
+    eno INT PRIMARY KEY,
+    typing_speed INT NOT NULL,
+    FOREIGN KEY (eno) REFERENCES Employee(eno)
+);
+
+CREATE TABLE Technician (
+    eno INT PRIMARY KEY,
+    skill VARCHAR(100) NOT NULL,
+    FOREIGN KEY (eno) REFERENCES Employee(eno)
+);
+
+CREATE TABLE Engineer (
+    eno INT PRIMARY KEY,
+    trade VARCHAR(100) NOT NULL,
+    FOREIGN KEY (eno) REFERENCES Employee(eno)
+);
+```
+
+Trong cách này, mỗi nhân viên có một dòng trong `Employee`. Nếu nhân viên đó là kỹ sư, sẽ có thêm một dòng trong `Engineer` với cùng `eno`. Cột `eno` ở bảng subclass vừa là khóa chính, vừa là khóa ngoại về bảng superclass.
+
+Ưu điểm:
+
+- Tránh lặp lại thuộc tính chung như `name`, `salary`.
+- Phù hợp với partial subclassing vì có thể tồn tại nhân viên chỉ nằm trong `Employee`.
+- Phù hợp với overlapping subclassing vì cùng một `eno` có thể xuất hiện ở nhiều bảng subclass.
+
+Nhược điểm:
+
+- Khi cần lấy đầy đủ thông tin subclass, thường phải `JOIN`.
+- Ràng buộc disjoint hoặc total có thể cần thêm logic bằng trigger, constraint hoặc kiểm tra ở tầng ứng dụng.
+
+Ví dụ truy vấn lấy kỹ sư:
+
+```sql
+SELECT
+    e.eno,
+    e.name,
+    e.salary,
+    en.trade
+FROM Employee e
+JOIN Engineer en
+    ON e.eno = en.eno;
+```
+
+### 10.2. Cách 2: Một bảng duy nhất cho toàn bộ phân cấp
+
+Cách này gộp superclass và tất cả subclass vào một bảng, thường dùng thêm cột phân loại.
+
+Ví dụ:
+
+```sql
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL,
+    employee_type VARCHAR(20) NOT NULL,
+    typing_speed INT NULL,
+    skill VARCHAR(100) NULL,
+    trade VARCHAR(100) NULL,
+    CHECK (employee_type IN ('Secretary', 'Technician', 'Engineer', 'Other'))
+);
+```
+
+Nếu dòng dữ liệu là `Engineer`, cột `trade` có giá trị, còn `typing_speed` và `skill` thường để `NULL`.
+
+Ví dụ dữ liệu:
+
+| eno | name | salary | employee_type | typing_speed | skill | trade |
+|---|---|---:|---|---:|---|---|
+| 1001 | An | 1200.00 | Secretary | 68 | NULL | NULL |
+| 1009 | Binh | 1800.00 | Engineer | NULL | NULL | Electrical |
+| 1015 | Chi | 1100.00 | Other | NULL | NULL | NULL |
+
+Ưu điểm:
+
+- Truy vấn đơn giản vì không cần `JOIN`.
+- Phù hợp khi các subclass ít thuộc tính riêng.
+- Phù hợp với disjoint subclassing vì mỗi dòng có một `employee_type`.
+
+Nhược điểm:
+
+- Có thể sinh nhiều giá trị `NULL`.
+- Khó biểu diễn overlapping subclassing vì một dòng chỉ có một loại chính.
+- Ràng buộc như "Engineer phải có trade" thường cần `CHECK` phức tạp hoặc logic ứng dụng.
+
+Ví dụ ràng buộc có thể dùng:
+
+```sql
+CHECK (
+    (employee_type = 'Engineer' AND trade IS NOT NULL)
+    OR (employee_type <> 'Engineer')
+)
+```
+
+### 10.3. Cách 3: Chỉ tạo bảng cho các subclass
+
+Cách này đưa thuộc tính chung của superclass xuống từng bảng subclass, thường chỉ phù hợp khi specialization là total và disjoint.
+
+Ví dụ:
+
+```sql
+CREATE TABLE Secretary (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL,
+    typing_speed INT NOT NULL
+);
+
+CREATE TABLE Engineer (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL,
+    trade VARCHAR(100) NOT NULL
+);
+```
+
+Nếu mọi nhân viên bắt buộc phải thuộc đúng một subclass, cách này có thể dùng được. Tuy nhiên, thuộc tính chung như `name`, `salary` bị lặp lại ở nhiều bảng, nên khi quy tắc chung thay đổi, thiết kế khó bảo trì hơn.
+
+Ưu điểm:
+
+- Không cần bảng superclass.
+- Truy vấn từng loại subclass đơn giản.
+- Phù hợp khi hệ thống gần như chỉ làm việc với từng loại cụ thể.
+
+Nhược điểm:
+
+- Khó truy vấn toàn bộ `Employee` vì phải dùng `UNION`.
+- Không phù hợp với partial subclassing.
+- Dễ lặp thuộc tính chung ở nhiều bảng.
+
+Ví dụ truy vấn toàn bộ nhân viên:
+
+```sql
+SELECT eno, name, salary, 'Secretary' AS employee_type
+FROM Secretary
+UNION ALL
+SELECT eno, name, salary, 'Engineer' AS employee_type
+FROM Engineer;
+```
+
+### 10.4. Triển khai total, partial, disjoint và overlapping
+
+Các ràng buộc EER không phải lúc nào cũng biểu diễn trực tiếp bằng khóa chính và khóa ngoại. Khi chuyển sang bảng quan hệ, cần xác định ràng buộc nào database tự kiểm soát được và ràng buộc nào cần trigger hoặc logic ứng dụng.
+
+| Ràng buộc | Ý nghĩa | Cách triển khai thường gặp |
+|---|---|---|
+| Total | Mỗi dòng superclass phải thuộc ít nhất một subclass | Trigger, kiểm tra ở ứng dụng, hoặc dùng bảng duy nhất với `employee_type NOT NULL` |
+| Partial | Một số dòng superclass có thể không thuộc subclass nào | Bảng superclass riêng và bảng subclass tùy chọn |
+| Disjoint | Một dòng superclass thuộc tối đa một subclass | Cột loại trong superclass, trigger, hoặc bảng phân loại riêng |
+| Overlapping | Một dòng superclass có thể thuộc nhiều subclass | Bảng superclass riêng và nhiều bảng subclass cùng dùng khóa chính của superclass |
+
+Ví dụ disjoint với cột phân loại:
+
+```sql
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL,
+    employee_type VARCHAR(20) NOT NULL,
+    CHECK (employee_type IN ('Secretary', 'Technician', 'Engineer'))
+);
+```
+
+Ví dụ overlapping:
+
+```text
+Employee -> Teacher, Researcher
+```
+
+Có thể triển khai:
+
+```sql
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Teacher (
+    eno INT PRIMARY KEY,
+    teaching_area VARCHAR(100) NOT NULL,
+    FOREIGN KEY (eno) REFERENCES Employee(eno)
+);
+
+CREATE TABLE Researcher (
+    eno INT PRIMARY KEY,
+    research_area VARCHAR(100) NOT NULL,
+    FOREIGN KEY (eno) REFERENCES Employee(eno)
+);
+```
+
+Cùng một `eno` có thể xuất hiện trong cả `Teacher` và `Researcher`, nên mô hình này biểu diễn được overlapping subclassing.
+
+### 10.5. Triển khai category hoặc union type
+
+Với category, một entity có thể đến từ nhiều superclass khác nhau. Ví dụ:
+
+```text
+VehicleOwner = Person union Company
+```
+
+Cách đơn giản là dùng bảng category có cột chỉ loại nguồn:
+
+```sql
+CREATE TABLE Person (
+    person_id INT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Company (
+    company_id INT PRIMARY KEY,
+    company_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE VehicleOwner (
+    owner_id INT PRIMARY KEY,
+    owner_type VARCHAR(20) NOT NULL,
+    person_id INT NULL,
+    company_id INT NULL,
+    CHECK (owner_type IN ('Person', 'Company')),
+    FOREIGN KEY (person_id) REFERENCES Person(person_id),
+    FOREIGN KEY (company_id) REFERENCES Company(company_id)
+);
+```
+
+Với thiết kế này, nếu `owner_type = 'Person'` thì `person_id` có giá trị và `company_id` để `NULL`; nếu `owner_type = 'Company'` thì ngược lại. Ràng buộc "chỉ một trong hai khóa ngoại được có giá trị" thường cần `CHECK` hoặc trigger:
+
+```sql
+CHECK (
+    (owner_type = 'Person' AND person_id IS NOT NULL AND company_id IS NULL)
+    OR
+    (owner_type = 'Company' AND company_id IS NOT NULL AND person_id IS NULL)
+)
+```
+
+Một cách khác là tạo hai bảng liên kết riêng:
+
+```sql
+CREATE TABLE PersonVehicleOwner (
+    owner_id INT PRIMARY KEY,
+    person_id INT NOT NULL,
+    FOREIGN KEY (person_id) REFERENCES Person(person_id)
+);
+
+CREATE TABLE CompanyVehicleOwner (
+    owner_id INT PRIMARY KEY,
+    company_id INT NOT NULL,
+    FOREIGN KEY (company_id) REFERENCES Company(company_id)
+);
+```
+
+Cách này rõ ràng hơn về khóa ngoại, nhưng khi truy vấn tất cả chủ sở hữu, thường phải dùng `UNION`.
+
+### 10.6. Triển khai aggregation
+
+Aggregation thường được triển khai bằng cách biến relationship được gom nhóm thành một bảng quan hệ trung gian.
+
+Ví dụ EER:
+
+```text
+Employee -- WORKS_ON -- Project
+(Employee WORKS_ON Project) -- MONITORED_BY -- Manager
+```
+
+Có thể triển khai:
+
+```sql
+CREATE TABLE Employee (
+    eno INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Project (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Manager (
+    manager_id INT PRIMARY KEY,
+    manager_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE WorksOn (
+    eno INT NOT NULL,
+    project_id INT NOT NULL,
+    hours_per_week DECIMAL(5, 2),
+    PRIMARY KEY (eno, project_id),
+    FOREIGN KEY (eno) REFERENCES Employee(eno),
+    FOREIGN KEY (project_id) REFERENCES Project(project_id)
+);
+
+CREATE TABLE Monitors (
+    eno INT NOT NULL,
+    project_id INT NOT NULL,
+    manager_id INT NOT NULL,
+    PRIMARY KEY (eno, project_id, manager_id),
+    FOREIGN KEY (eno, project_id) REFERENCES WorksOn(eno, project_id),
+    FOREIGN KEY (manager_id) REFERENCES Manager(manager_id)
+);
+```
+
+Ở đây, `WorksOn` biểu diễn relationship `Employee WORKS_ON Project`. Vì `Monitors` tham chiếu đến khóa chính của `WorksOn`, database hiểu rằng người quản lý đang giám sát chính việc một nhân viên làm trên một dự án cụ thể, không chỉ giám sát riêng nhân viên hoặc riêng dự án.
+
+### 10.7. Gợi ý chọn chiến lược mapping
+
+| Tình huống | Cách triển khai nên cân nhắc |
+|---|---|
+| Subclass có nhiều thuộc tính riêng | Một bảng cho superclass và mỗi subclass |
+| Cần hỗ trợ overlapping subclassing | Một bảng cho superclass và mỗi subclass |
+| Subclass ít thuộc tính riêng, truy vấn cần đơn giản | Một bảng duy nhất cho toàn bộ phân cấp |
+| Specialization total và disjoint | Một bảng duy nhất hoặc chỉ tạo bảng cho subclass |
+| Cần tránh `NULL` và tránh lặp thuộc tính chung | Superclass riêng, subclass riêng |
+| Category từ nhiều superclass | Bảng category có cột loại nguồn hoặc nhiều bảng liên kết riêng |
+| Aggregation | Bảng quan hệ trung gian và bảng tham chiếu đến quan hệ trung gian đó |
+
+Nguyên tắc thực tế là ưu tiên thiết kế dễ đảm bảo toàn vẹn dữ liệu và dễ hiểu cho người bảo trì. Nếu một ràng buộc EER không thể biểu diễn đầy đủ bằng khóa chính, khóa ngoại và `CHECK`, cần ghi rõ ràng buộc đó sẽ được kiểm soát bằng trigger, stored procedure hoặc logic ứng dụng.
+
+---
+
+### Quiz nhanh: Triển khai EER thành bảng quan hệ
+
+**Câu 1.** Trong cách "một bảng cho superclass và mỗi subclass", khóa chính của bảng subclass thường đồng thời là gì?
+
+A. Một thuộc tính mô tả không liên quan  
+B. Khóa ngoại tham chiếu đến bảng superclass  
+C. Một bảng tạm  
+D. Một chỉ mục không duy nhất  
+
+**Câu 2.** Cách "một bảng duy nhất cho toàn bộ phân cấp" thường cần thêm cột nào?
+
+A. Cột phân loại subclass, ví dụ `employee_type`  
+B. Cột chứa toàn bộ câu SQL  
+C. Cột lưu tên database server  
+D. Cột không có kiểu dữ liệu  
+
+**Câu 3.** Aggregation thường được triển khai trong CSDL quan hệ bằng cách nào?
+
+A. Xóa relationship khỏi mô hình  
+B. Biến relationship cần gom nhóm thành bảng trung gian  
+C. Chỉ lưu dữ liệu trong file văn bản  
+D. Bỏ toàn bộ khóa ngoại  
+
+---
+
+## 11. Ứng dụng thực tế
 
 EER Model thường được dùng trong các hệ thống có cấu trúc dữ liệu phân cấp hoặc nhiều loại đối tượng liên quan.
 
@@ -563,27 +940,27 @@ D. Tạo trigger
 
 ---
 
-## 11. Vai trò trong các lĩnh vực công nghệ hoặc nghiệp vụ
+## 12. Vai trò trong các lĩnh vực công nghệ hoặc nghiệp vụ
 
-### 11.1. Phân tích nghiệp vụ
+### 12.1. Phân tích nghiệp vụ
 
 - Giúp phân loại rõ các nhóm đối tượng.
 - Giúp mô hình phản ánh quy tắc nghiệp vụ thực tế.
 - Giúp trao đổi dễ hơn giữa analyst, developer và stakeholder.
 
-### 11.2. Thiết kế cơ sở dữ liệu
+### 12.2. Thiết kế cơ sở dữ liệu
 
 - Hỗ trợ chuyển mô hình khái niệm sang mô hình quan hệ.
 - Giúp chọn chiến lược mapping phù hợp.
 - Giảm trùng lặp thuộc tính.
 
-### 11.3. Phát triển phần mềm
+### 12.3. Phát triển phần mềm
 
 - Hỗ trợ thiết kế class/domain model.
 - Giúp hiểu quan hệ kế thừa trong nghiệp vụ.
 - Tạo nền tảng cho API và schema dữ liệu nhất quán.
 
-### 11.4. Quản trị dữ liệu
+### 12.4. Quản trị dữ liệu
 
 - Giúp chuẩn hóa cách phân loại dữ liệu.
 - Giúp kiểm soát ràng buộc và chất lượng dữ liệu.
@@ -616,7 +993,7 @@ D. File compression
 
 ---
 
-## 12. Bảng so sánh
+## 13. Bảng so sánh
 
 | Tiêu chí | ER Model | Enhanced ER Model |
 |---|---|---|
@@ -628,9 +1005,9 @@ D. File compression
 
 ---
 
-## 13. Câu hỏi ôn tập
+## 14. Câu hỏi ôn tập
 
-### 13.1. Câu hỏi trắc nghiệm
+### 14.1. Câu hỏi trắc nghiệm
 
 **Câu 1.** EER Model là gì?
 
@@ -722,7 +1099,7 @@ D. Chỉ tạo một thuộc tính duy nhất
 
 ---
 
-### 13.2. Câu hỏi tự luận ngắn
+### 14.2. Câu hỏi tự luận ngắn
 
 **Câu 1.** Trình bày khái niệm Enhanced ER Model.
 
@@ -744,7 +1121,7 @@ D. Chỉ tạo một thuộc tính duy nhất
 
 ---
 
-## 14. Bài tập vận dụng
+## 15. Bài tập vận dụng
 
 ### Bài tập 1
 
@@ -782,7 +1159,16 @@ Hãy thiết kế mô hình EER đơn giản trong đó `LibraryMember` là cate
 
 ---
 
-## 15. Tóm tắt bài học
+### Bài tập 5
+
+Một hệ thống nhân sự có superclass `Employee` và hai subclass `Teacher`, `Researcher`. Một nhân sự có thể vừa giảng dạy vừa nghiên cứu.
+
+**Yêu cầu:**  
+Hãy đề xuất các bảng quan hệ phù hợp để triển khai mô hình trên và giải thích vì sao cách này hỗ trợ overlapping subclassing.
+
+---
+
+## 16. Tóm tắt bài học
 
 - Enhanced ER Model là phần mở rộng của ER Model truyền thống.
 - EER giúp biểu diễn các yêu cầu dữ liệu phức tạp như phân cấp, kế thừa và phân loại thực thể.
@@ -794,10 +1180,13 @@ Hãy thiết kế mô hình EER đơn giản trong đó `LibraryMember` là cate
 - Disjoint/overlapping mô tả một entity có thể thuộc một hay nhiều subclass.
 - Category hoặc union type biểu diễn một subclass được hình thành từ nhiều superclass.
 - Khi chuyển sang mô hình quan hệ, cần chọn chiến lược mapping phù hợp.
+- Superclass/subclass có thể triển khai bằng bảng riêng cho superclass và subclass, một bảng duy nhất cho toàn bộ phân cấp, hoặc chỉ các bảng subclass trong trường hợp phù hợp.
+- Category thường cần cột loại nguồn hoặc các bảng liên kết riêng để tham chiếu nhiều superclass.
+- Aggregation thường được triển khai bằng bảng quan hệ trung gian và bảng khác tham chiếu đến quan hệ trung gian đó.
 
 ---
 
-## 16. Từ khóa chính
+## 17. Từ khóa chính
 
 - Enhanced ER Model
 - EER Model
@@ -814,10 +1203,14 @@ Hãy thiết kế mô hình EER đơn giản trong đó `LibraryMember` là cate
 - Category
 - Union type
 - Aggregation
+- Relational mapping
+- Superclass table
+- Subclass table
+- Type discriminator
 
 ---
 
-## 17. Đáp án và gợi ý trả lời
+## 18. Đáp án và gợi ý trả lời
 
 ### Quiz nhanh: Giới thiệu tổng quan
 
@@ -860,6 +1253,12 @@ Hãy thiết kế mô hình EER đơn giản trong đó `LibraryMember` là cate
 - **Câu 1.** A
 - **Câu 2.** B
 - **Câu 3.** C
+
+### Quiz nhanh: Triển khai EER thành bảng quan hệ
+
+- **Câu 1.** B
+- **Câu 2.** A
+- **Câu 3.** B
 
 ### Quiz nhanh: Ứng dụng thực tế
 
@@ -951,3 +1350,9 @@ Staff   ----/
 ```
 
 `LibraryMember` là category hoặc union type được hình thành từ `Student`, `Faculty` và `Staff`.
+
+#### Bài tập 5
+
+**Gợi ý trả lời:**
+
+Có thể tạo bảng `Employee(eno, name, ...)`, bảng `Teacher(eno, teaching_area, ...)` và bảng `Researcher(eno, research_area, ...)`. Cột `eno` trong `Teacher` và `Researcher` vừa là khóa chính, vừa là khóa ngoại tham chiếu `Employee(eno)`. Cách này hỗ trợ overlapping subclassing vì cùng một `eno` có thể xuất hiện đồng thời trong cả `Teacher` và `Researcher`.
