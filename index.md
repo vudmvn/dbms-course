@@ -123,6 +123,12 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Functional Dependency trong DBMS | [Markdown](Data-Modeling/functional-dependency/functional-dependency.md) | <span class="missing">—</span> | Phụ thuộc hàm, determinant và dependent attribute |
 | Các loại Functional Dependency trong DBMS | [Markdown](Data-Modeling/functional-dependency-types/functional-dependency-types.md) | <span class="missing">—</span> | Trivial, non-trivial, multivalued, transitive, fully và partial dependency |
 | Attribute Closure trong DBMS | [Markdown](Data-Modeling/attribute-closure/attribute-closure.md) | <span class="missing">—</span> | Đang cập nhật nội dung bài học |
+| Normal Forms trong DBMS | [Markdown](Data-Modeling/normal-forms/normal-forms.md) | <span class="missing">—</span> | Tổng quan chuẩn hóa và các dạng chuẩn |
+| First Normal Form (1NF) trong DBMS | [Markdown](Data-Modeling/1st-normal-form/1st-normal-form.md) | <span class="missing">—</span> | Loại bỏ nhóm lặp và đảm bảo giá trị nguyên tử |
+| Second Normal Form (2NF) trong DBMS | [Markdown](Data-Modeling/2nd-normal-form/2nd-normal-form.md) | <span class="missing">—</span> | Phụ thuộc đầy đủ vào khóa chính |
+| Third Normal Form (3NF) trong DBMS | [Markdown](Data-Modeling/3rd-normal-form/3rd-normal-form.md) | <span class="missing">—</span> | Loại bỏ phụ thuộc bắc cầu |
+| Fourth Normal Form (4NF) trong DBMS | [Markdown](Data-Modeling/4th-normal-form/4th-normal-form.md) | <span class="missing">—</span> | Xử lý phụ thuộc đa trị |
+| Schema Design trong DBMS | [Markdown](Data-Modeling/schema-design/schema-design.md) | <span class="missing">—</span> | Đang cập nhật nội dung bài học |
 
 ## Labs
 
@@ -215,6 +221,12 @@ Learning materials for database management systems and MySQL.
 | Functional Dependency in DBMS | [Markdown](Data-Modeling/functional-dependency/functional-dependency.md) | <span class="missing">—</span> | Functional dependency, determinant, and dependent attribute |
 | Types of Functional Dependencies in DBMS | [Markdown](Data-Modeling/functional-dependency-types/functional-dependency-types.md) | <span class="missing">—</span> | Trivial, non-trivial, multivalued, transitive, fully, and partial dependency |
 | Attribute Closure in DBMS | [Markdown](Data-Modeling/attribute-closure/attribute-closure.md) | <span class="missing">—</span> | Lesson content in progress |
+| Normal Forms in DBMS | [Markdown](Data-Modeling/normal-forms/normal-forms.md) | <span class="missing">—</span> | Overview of normalization and normal forms |
+| First Normal Form (1NF) in DBMS | [Markdown](Data-Modeling/1st-normal-form/1st-normal-form.md) | <span class="missing">—</span> | Removes repeating groups and keeps values atomic |
+| Second Normal Form (2NF) in DBMS | [Markdown](Data-Modeling/2nd-normal-form/2nd-normal-form.md) | <span class="missing">—</span> | Full dependency on the primary key |
+| Third Normal Form (3NF) in DBMS | [Markdown](Data-Modeling/3rd-normal-form/3rd-normal-form.md) | <span class="missing">—</span> | Removes transitive dependencies |
+| Fourth Normal Form (4NF) in DBMS | [Markdown](Data-Modeling/4th-normal-form/4th-normal-form.md) | <span class="missing">—</span> | Handles multivalued dependencies |
+| Schema Design in DBMS | [Markdown](Data-Modeling/schema-design/schema-design.md) | <span class="missing">—</span> | Lesson content in progress |
 
 ## Labs
 
