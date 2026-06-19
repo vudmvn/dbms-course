@@ -120,6 +120,9 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Mô hình Enhanced ER trong DBMS | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 | Generalization, Specialization và Aggregation trong ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Có ví dụ và bài tập vận dụng |
 | Các loại khóa trong mô hình quan hệ | [Markdown](Data-Modeling/key/key.md) | <span class="missing">—</span> | Super, candidate, primary, foreign và các loại khóa khác |
+| Functional Dependency trong DBMS | [Markdown](Data-Modeling/functional-dependency/functional-dependency.md) | <span class="missing">—</span> | Phụ thuộc hàm, determinant và dependent attribute |
+| Các loại Functional Dependency trong DBMS | [Markdown](Data-Modeling/functional-dependency-types/functional-dependency-types.md) | <span class="missing">—</span> | Trivial, non-trivial, multivalued, transitive, fully và partial dependency |
+| Attribute Closure trong DBMS | [Markdown](Data-Modeling/attribute-closure/attribute-closure.md) | <span class="missing">—</span> | Đang cập nhật nội dung bài học |
 
 ## Labs
 
@@ -209,6 +212,9 @@ Learning materials for database management systems and MySQL.
 | Enhanced ER Model | [Markdown](Data-Modeling/enhanced-er-model/enhanced-er-model.md) | [VI](Data-Modeling/enhanced-er-model/enhance-er-model-beamer-vi.pdf) | |
 | Generalization, Specialization, and Aggregation in the ER Model | [Markdown](Data-Modeling/generalization-specialization-aggregation/generalization-specialization-aggregation.md) | <span class="missing">—</span> | Includes examples and exercises |
 | Types of Keys in the Relational Model | [Markdown](Data-Modeling/key/key.md) | <span class="missing">—</span> | Super, candidate, primary, foreign, and other key types |
+| Functional Dependency in DBMS | [Markdown](Data-Modeling/functional-dependency/functional-dependency.md) | <span class="missing">—</span> | Functional dependency, determinant, and dependent attribute |
+| Types of Functional Dependencies in DBMS | [Markdown](Data-Modeling/functional-dependency-types/functional-dependency-types.md) | <span class="missing">—</span> | Trivial, non-trivial, multivalued, transitive, fully, and partial dependency |
+| Attribute Closure in DBMS | [Markdown](Data-Modeling/attribute-closure/attribute-closure.md) | <span class="missing">—</span> | Lesson content in progress |
 
 ## Labs
 
