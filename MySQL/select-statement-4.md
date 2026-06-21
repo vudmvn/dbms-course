@@ -12,6 +12,12 @@ summary: "Thực hành nhóm dữ liệu, tính toán thống kê và lọc nhó
 
 # Lab: `GROUP BY`, `HAVING` và các truy vấn tổng hợp với `classicmodels`
 
+## Link tham khảo
+
+- [MySQL GROUP BY](https://www.mysqltutorial.org/mysql-basics/mysql-group-by/)
+- [MySQL HAVING](https://www.mysqltutorial.org/mysql-basics/mysql-having/)
+- [MySQL HAVING COUNT](https://www.mysqltutorial.org/mysql-basics/mysql-having-count/)
+
 ## 1. Mục tiêu học tập
 
 Sau khi hoàn thành lab này, người học có thể:

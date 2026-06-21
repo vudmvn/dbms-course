@@ -12,6 +12,11 @@ summary: "Thực hành truy vấn con trong WHERE, SELECT, FROM, subquery tươn
 
 # Lab: Subquery trong MySQL với `classicmodels`
 
+## Link tham khảo
+
+- [MySQL Subquery](https://www.mysqltutorial.org/mysql-basics/mysql-subquery/)
+- [MySQL Derived Table](https://www.mysqltutorial.org/mysql-basics/mysql-derived-table/)
+
 ## 1. Mục tiêu học tập
 
 Sau khi hoàn thành lab này, người học có thể:

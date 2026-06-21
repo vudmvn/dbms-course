@@ -11,6 +11,13 @@ summary: "Thực hành truy vấn dữ liệu một bảng bằng SELECT trên c
 
 # Tutorial: Sử dụng câu lệnh `SELECT` cơ bản với `classicmodels`
 
+## Link tham khảo
+
+- [MySQL SELECT FROM](https://www.mysqltutorial.org/mysql-basics/mysql-select-from/)
+- [MySQL SELECT](https://www.mysqltutorial.org/mysql-basics/mysql-select/)
+- [MySQL DISTINCT](https://www.mysqltutorial.org/mysql-basics/mysql-distinct/)
+- [MySQL WHERE](https://www.mysqltutorial.org/mysql-basics/mysql-where/)
+
 ## 1. Mục tiêu học tập
 
 Sau khi hoàn thành tutorial này, người học có thể:
