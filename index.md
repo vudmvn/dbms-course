@@ -165,6 +165,8 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | GROUP BY, HAVING và truy vấn tổng hợp trong MySQL | [Markdown](MySQL/select-statement-4.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Subquery trong MySQL | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | CTE và WITH trong MySQL | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Subquery với EXISTS, NOT EXISTS, ALL và ANY trong MySQL | [Markdown](MySQL/select-statement-7.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| INSERT, UPDATE và DELETE trong MySQL | [Markdown](MySQL/insert-update-delete.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Lab: Kết nối nhiều bảng bằng WHERE và JOIN ON trong MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Ghi chú bổ sung về implicit join, explicit join và điều kiện `ON` |
 | Tutorial: CTE vs Subquery trong MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Ghi chú bổ sung so sánh Subquery và CTE |
 
@@ -173,6 +175,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
 - MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
+- GeeksforGeeks: [30 Days of SQL - From Basic to Advanced Level](https://www.geeksforgeeks.org/sql/30-days-of-sql-from-basic-to-advanced-level/)
 - Roadmap.sh: [SQL Roadmap](https://roadmap.sh/sql?fl=1)
 
 </section>
@@ -265,6 +268,8 @@ Learning materials for database management systems and MySQL.
 | MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](MySQL/select-statement-4.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL Subqueries | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL CTE and WITH | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL Subqueries with EXISTS, NOT EXISTS, ALL, and ANY | [Markdown](MySQL/select-statement-7.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL INSERT, UPDATE, and DELETE | [Markdown](MySQL/insert-update-delete.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | Lab: Joining Tables with WHERE and JOIN ON in MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Supplementary notes on implicit joins, explicit joins, and `ON` conditions |
 | Tutorial: CTE vs Subquery in MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Supplementary notes comparing Subquery and CTE |
 
@@ -273,6 +278,7 @@ Learning materials for database management systems and MySQL.
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
 - GeeksforGeeks: [SQL Tutorial](https://www.geeksforgeeks.org/sql/sql-tutorial/)
 - MySQL Tutorial: [MySQL Tutorial](https://www.mysqltutorial.org/)
+- GeeksforGeeks: [30 Days of SQL - From Basic to Advanced Level](https://www.geeksforgeeks.org/sql/30-days-of-sql-from-basic-to-advanced-level/)
 - Roadmap.sh: [SQL Roadmap](https://roadmap.sh/sql?fl=1)
 
 </section>
