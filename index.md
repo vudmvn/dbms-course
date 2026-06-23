@@ -149,6 +149,9 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Nạp MySQL sample database vào server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
 | MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
+| Khám phá MySQL Server: kiến trúc và mysqld | [Markdown](MySQL/exploring-mysql-server-1.md) | <span class="missing">—</span> | MySQL Server, mysqld, client và storage engine |
+| Quản lý vòng đời MySQL Server: start, stop và restart | [Markdown](MySQL/exploring-mysql-server-2.md) | <span class="missing">—</span> | Kiểm tra service, start, stop, restart và log cơ bản |
+| MySQL Configuration File và Data Directory | [Markdown](MySQL/exploring-mysql-server-3.md) | <span class="missing">—</span> | Option file, system variables và data directory |
 
 ## Quản lý CSDL và quản trị MySQL
 
@@ -184,6 +187,14 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Các phép toán tập hợp UNION, EXCEPT và INTERSECT trong MySQL | [Markdown](MySQL/set-operations.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Lab: Kết nối nhiều bảng bằng WHERE và JOIN ON trong MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Ghi chú bổ sung về implicit join, explicit join và điều kiện `ON` |
 | Tutorial: CTE vs Subquery trong MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Ghi chú bổ sung so sánh Subquery và CTE |
+
+### Index và tối ưu truy vấn
+
+| Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
+|---|---|---|---|
+| Tạo và quản lý Index trong MySQL | [Markdown](MySQL/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX và composite index |
+| MySQL Index Types và chiến lược chọn Index | [Markdown](MySQL/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered và functional indexes |
+| MySQL Index Hints: USE INDEX và FORCE INDEX | [Markdown](MySQL/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer và index hints |
 
 ### Thao tác dữ liệu và giao dịch
 
@@ -285,6 +296,9 @@ Learning materials for database management systems and MySQL.
 | MySQL Sample Database: classicmodels | [Markdown](MySQL/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
 | Load MySQL Sample Database into Server | [Markdown](MySQL/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
 | MySQL Storage Engines | [Markdown](MySQL/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
+| Exploring MySQL Server: Architecture and mysqld | [Markdown](MySQL/exploring-mysql-server-1.md) | <span class="missing">—</span> | MySQL Server, mysqld, clients, and storage engines |
+| MySQL Server Lifecycle: Start, Stop, and Restart | [Markdown](MySQL/exploring-mysql-server-2.md) | <span class="missing">—</span> | Service checks, start, stop, restart, and basic logs |
+| MySQL Configuration File and Data Directory | [Markdown](MySQL/exploring-mysql-server-3.md) | <span class="missing">—</span> | Option files, system variables, and data directory |
 
 ## Database Management and MySQL Administration
 
@@ -320,6 +334,14 @@ Learning materials for database management systems and MySQL.
 | MySQL Set Operations: UNION, EXCEPT, and INTERSECT | [Markdown](MySQL/set-operations.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | Lab: Joining Tables with WHERE and JOIN ON in MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Supplementary notes on implicit join, explicit join, and `ON` conditions |
 | Tutorial: CTE vs Subquery in MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Supplementary notes comparing Subquery and CTE |
+
+### Indexes and Query Optimization
+
+| Lesson | Markdown Lecture | Slides PDF | Notes |
+|---|---|---|---|
+| Creating and Managing Indexes in MySQL | [Markdown](MySQL/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX, and composite indexes |
+| MySQL Index Types and Index Selection Strategy | [Markdown](MySQL/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered, and functional indexes |
+| MySQL Index Hints: USE INDEX and FORCE INDEX | [Markdown](MySQL/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer, and index hints |
 
 ### Data Modification and Transactions
 
