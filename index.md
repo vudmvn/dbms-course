@@ -159,6 +159,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 |---|---|---|---|
 | Kiểu dữ liệu SQL | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Tạo bảng bằng SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
+| Tutorial: Ràng buộc trong CREATE TABLE với MySQL | [Markdown](MySQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK và DEFAULT |
 | Câu lệnh SELECT cơ bản trong MySQL | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | SELECT và JOIN trong MySQL | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Hàm SQL trong MySQL | [Markdown](MySQL/select-statement-3.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels`|
@@ -262,6 +263,7 @@ Learning materials for database management systems and MySQL.
 |---|---|---|---|
 | SQL Data Types | [Markdown](MySQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Creating Tables with SQL | [Markdown](MySQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
+| Tutorial: Constraints in CREATE TABLE with MySQL | [Markdown](MySQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK, and DEFAULT |
 | Basic MySQL SELECT Statement | [Markdown](MySQL/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL SELECT and JOIN | [Markdown](MySQL/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL SQL Functions | [Markdown](MySQL/select-statement-3.md) | <span class="missing">—</span> | Excludes `GROUP BY`/`HAVING` |
