@@ -167,6 +167,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Subquery trong MySQL | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | CTE và WITH trong MySQL | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Subquery với EXISTS, NOT EXISTS, ALL và ANY trong MySQL | [Markdown](MySQL/select-statement-7.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Các phép toán tập hợp UNION, EXCEPT và INTERSECT trong MySQL | [Markdown](MySQL/set-operations.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | INSERT, UPDATE và DELETE trong MySQL | [Markdown](MySQL/insert-update-delete.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Lab: Kết nối nhiều bảng bằng WHERE và JOIN ON trong MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Ghi chú bổ sung về implicit join, explicit join và điều kiện `ON` |
 | Tutorial: CTE vs Subquery trong MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Ghi chú bổ sung so sánh Subquery và CTE |
@@ -271,6 +272,7 @@ Learning materials for database management systems and MySQL.
 | MySQL Subqueries | [Markdown](MySQL/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL CTE and WITH | [Markdown](MySQL/select-statement-6.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL Subqueries with EXISTS, NOT EXISTS, ALL, and ANY | [Markdown](MySQL/select-statement-7.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL Set Operations: UNION, EXCEPT, and INTERSECT | [Markdown](MySQL/set-operations.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL INSERT, UPDATE, and DELETE | [Markdown](MySQL/insert-update-delete.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | Lab: Joining Tables with WHERE and JOIN ON in MySQL | [Markdown](MySQL/select-statement-note-1.md) | <span class="missing">—</span> | Supplementary notes on implicit joins, explicit joins, and `ON` conditions |
 | Tutorial: CTE vs Subquery in MySQL | [Markdown](MySQL/select-statement-note-2.md) | <span class="missing">—</span> | Supplementary notes comparing Subquery and CTE |
