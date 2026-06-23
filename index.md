@@ -204,7 +204,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Thao tác dữ liệu nâng cao trong MySQL | [Markdown](MySQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN và REPLACE |
 | Transaction trong MySQL | [Markdown](MySQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT và autocommit |
 
-### View, stored procedure và stored function
+### View, stored procedure, stored function và trigger
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
@@ -213,6 +213,9 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Điều kiện và vòng lặp trong MySQL Stored Procedures | [Markdown](MySQL/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT và LEAVE |
 | Cursors và Prepared Statements trong MySQL Stored Procedures | [Markdown](MySQL/stored-procedure-3.md) | <span class="missing">—</span> | Cursor và dynamic SQL |
 | Stored Functions trong MySQL | [Markdown](MySQL/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION và SHOW FUNCTION STATUS |
+| MySQL Triggers: nền tảng, CREATE/DROP/SHOW và INSERT triggers | [Markdown](MySQL/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit log và summary table |
+| MySQL Triggers: UPDATE, DELETE, validation và audit | [Markdown](MySQL/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE và AFTER DELETE |
+| MySQL Triggers: multiple triggers, metadata và best practices | [Markdown](MySQL/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA và restrictions |
 
 ## Tham khảo
 
@@ -351,7 +354,7 @@ Learning materials for database management systems and MySQL.
 | Advanced Data Modification in MySQL | [Markdown](MySQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN, and REPLACE |
 | Transactions in MySQL | [Markdown](MySQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, and autocommit |
 
-### Views, Stored Procedures, and Stored Functions
+### Views, Stored Procedures, Stored Functions, and Triggers
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
@@ -360,6 +363,9 @@ Learning materials for database management systems and MySQL.
 | Conditions and Loops in MySQL Stored Procedures | [Markdown](MySQL/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT, and LEAVE |
 | Cursors and Prepared Statements in MySQL Stored Procedures | [Markdown](MySQL/stored-procedure-3.md) | <span class="missing">—</span> | Cursors and dynamic SQL |
 | Stored Functions in MySQL | [Markdown](MySQL/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION, and SHOW FUNCTION STATUS |
+| MySQL Triggers: Foundations, CREATE/DROP/SHOW, and INSERT Triggers | [Markdown](MySQL/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit logs, and summary tables |
+| MySQL Triggers: UPDATE, DELETE, Validation, and Audit | [Markdown](MySQL/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE, and AFTER DELETE |
+| MySQL Triggers: Multiple Triggers, Metadata, and Best Practices | [Markdown](MySQL/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA, and restrictions |
 
 ## References
 
