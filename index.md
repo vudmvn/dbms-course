@@ -140,25 +140,25 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Giới thiệu MySQL | [Markdown](MySQL/MySQL%20Server/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | |
-| Cài đặt MySQL trên Windows | [Markdown](MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | |
-| Cài đặt MySQL Workbench trên Windows | [Markdown](MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
-| Kết nối MySQL bằng command options | [Markdown](MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
-| Kết nối MySQL trong VS Code | [Markdown](MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
-| Khởi động và dừng MySQL | [Markdown](MySQL/MySQL%20Server/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
-| MySQL Sample Database: classicmodels | [Markdown](MySQL/MySQL%20Server/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
-| Nạp MySQL sample database vào server | [Markdown](MySQL/MySQL%20Server/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
-| MySQL Storage Engines | [Markdown](MySQL/MySQL%20Server/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
-| Khám phá MySQL Server: kiến trúc và mysqld | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-1.md) | <span class="missing">—</span> | MySQL Server, mysqld, client và storage engine |
-| Quản lý vòng đời MySQL Server: start, stop và restart | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-2.md) | <span class="missing">—</span> | Kiểm tra service, start, stop, restart và log cơ bản |
-| MySQL Configuration File và Data Directory | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-3.md) | <span class="missing">—</span> | Option file, system variables và data directory |
+| Giới thiệu MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/gioi-thieu-mysql/gioi-thieu-mysql/) | <span class="missing">—</span> | |
+| Cài đặt MySQL trên Windows | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows/) | <span class="missing">—</span> | |
+| Cài đặt MySQL Workbench trên Windows | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows/) | <span class="missing">—</span> | |
+| Kết nối MySQL bằng command options | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options/) | <span class="missing">—</span> | |
+| Kết nối MySQL trong VS Code | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode/) | <span class="missing">—</span> | |
+| Khởi động và dừng MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/start-stop-MySQL/start-stop-MySQL/) | <span class="missing">—</span> | |
+| MySQL Sample Database: classicmodels | [Markdown]({{ site.baseurl }}/MySQL/mysql-sample-database/) | <span class="missing">—</span> | |
+| Nạp MySQL sample database vào server | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/load-sample-database/load-sample-database/) | <span class="missing">—</span> | |
+| MySQL Storage Engines | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/storage-engine/storage-engine/) | <span class="missing">—</span> | |
+| Khám phá MySQL Server: kiến trúc và mysqld | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-1/) | <span class="missing">—</span> | MySQL Server, mysqld, client và storage engine |
+| Quản lý vòng đời MySQL Server: start, stop và restart | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-2/) | <span class="missing">—</span> | Kiểm tra service, start, stop, restart và log cơ bản |
+| MySQL Configuration File và Data Directory | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-3/) | <span class="missing">—</span> | Option file, system variables và data directory |
 
 ## Quản lý CSDL và quản trị MySQL
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
 | Quản lý Database trong MySQL | [Markdown](MySQL/SQL/database/create-use-drop-database.md) | <span class="missing">—</span> | `USE`, `CREATE DATABASE`, `DROP DATABASE`, charset, collation và backup checklist |
-| SHOW Commands và mysqldump trong MySQL | [Markdown](MySQL/MySQL%20Server/show-command.md) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup và restore |
+| SHOW Commands và mysqldump trong MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/show-command/) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup và restore |
 | Quản lý người dùng, quyền và role trong MySQL | [Markdown](MySQL/SQL/user-administration.md) | <span class="missing">—</span> | User administration, privileges và roles |
 
 ## Câu lệnh SQL trong MySQL
@@ -202,6 +202,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | INSERT, UPDATE và DELETE trong MySQL | [Markdown](MySQL/SQL/dml/insert-update-delete.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Thao tác dữ liệu nâng cao trong MySQL | [Markdown](MySQL/SQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN và REPLACE |
 | Transaction trong MySQL | [Markdown](MySQL/SQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT và autocommit |
+| MySQL Table Locking và InnoDB Locks | [Markdown](MySQL/SQL/locking/locking.md) | <span class="missing">—</span> | LOCK TABLES, READ/WRITE locks, row locks, metadata locks và deadlocks |
 
 ### View, stored procedure, stored function, trigger và event
 
@@ -290,25 +291,25 @@ Learning materials for database management systems and MySQL.
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Introduction to MySQL | [Markdown](MySQL/MySQL%20Server/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | |
-| Install MySQL on Windows | [Markdown](MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | |
-| Install MySQL Workbench on Windows | [Markdown](MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | |
-| Connect to MySQL with Command Options | [Markdown](MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | |
-| Connect to MySQL in VS Code | [Markdown](MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md) | <span class="missing">—</span> | |
-| Start and Stop MySQL | [Markdown](MySQL/MySQL%20Server/start-stop-MySQL/start-stop-MySQL.md) | <span class="missing">—</span> | |
-| MySQL Sample Database: classicmodels | [Markdown](MySQL/MySQL%20Server/mysql-sample-database/mysql-sample-database.md) | <span class="missing">—</span> | |
-| Load MySQL Sample Database into Server | [Markdown](MySQL/MySQL%20Server/load-sample-database/load-sample-database.md) | <span class="missing">—</span> | |
-| MySQL Storage Engines | [Markdown](MySQL/MySQL%20Server/storage-engine/storage-engine.md) | <span class="missing">—</span> | |
-| Exploring MySQL Server: Architecture and mysqld | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-1.md) | <span class="missing">—</span> | MySQL Server, mysqld, clients, and storage engines |
-| MySQL Server Lifecycle: Start, Stop, and Restart | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-2.md) | <span class="missing">—</span> | Service checks, start, stop, restart, and basic logs |
-| MySQL Configuration File and Data Directory | [Markdown](MySQL/MySQL%20Server/exploring-mysql-server-3.md) | <span class="missing">—</span> | Option files, system variables, and data directory |
+| Introduction to MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/gioi-thieu-mysql/gioi-thieu-mysql/) | <span class="missing">—</span> | |
+| Install MySQL on Windows | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows/) | <span class="missing">—</span> | |
+| Install MySQL Workbench on Windows | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows/) | <span class="missing">—</span> | |
+| Connect to MySQL with Command Options | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options/) | <span class="missing">—</span> | |
+| Connect to MySQL in VS Code | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode/) | <span class="missing">—</span> | |
+| Start and Stop MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/start-stop-MySQL/start-stop-MySQL/) | <span class="missing">—</span> | |
+| MySQL Sample Database: classicmodels | [Markdown]({{ site.baseurl }}/MySQL/mysql-sample-database/) | <span class="missing">—</span> | |
+| Load MySQL Sample Database into Server | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/load-sample-database/load-sample-database/) | <span class="missing">—</span> | |
+| MySQL Storage Engines | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/storage-engine/storage-engine/) | <span class="missing">—</span> | |
+| Exploring MySQL Server: Architecture and mysqld | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-1/) | <span class="missing">—</span> | MySQL Server, mysqld, clients, and storage engines |
+| MySQL Server Lifecycle: Start, Stop, and Restart | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-2/) | <span class="missing">—</span> | Service checks, start, stop, restart, and basic logs |
+| MySQL Configuration File and Data Directory | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/exploring-mysql-server-3/) | <span class="missing">—</span> | Option files, system variables, and data directory |
 
 ## Database Management and MySQL Administration
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
 | Managing Databases in MySQL | [Markdown](MySQL/SQL/database/create-use-drop-database.md) | <span class="missing">—</span> | `USE`, `CREATE DATABASE`, `DROP DATABASE`, charset, collation, and backup checklist |
-| SHOW Commands and mysqldump in MySQL | [Markdown](MySQL/MySQL%20Server/show-command.md) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup, and restore |
+| SHOW Commands and mysqldump in MySQL | [Markdown]({{ site.baseurl }}/MySQL/MySQL%20Server/show-command/) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup, and restore |
 | User Administration, Privileges, and Roles in MySQL | [Markdown](MySQL/SQL/user-administration.md) | <span class="missing">—</span> | Users, privileges, and roles |
 
 ## SQL Statements in MySQL
@@ -352,6 +353,7 @@ Learning materials for database management systems and MySQL.
 | MySQL INSERT, UPDATE, and DELETE | [Markdown](MySQL/SQL/dml/insert-update-delete.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | Advanced Data Modification in MySQL | [Markdown](MySQL/SQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN, and REPLACE |
 | Transactions in MySQL | [Markdown](MySQL/SQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, and autocommit |
+| MySQL Table Locking and InnoDB Locks | [Markdown](MySQL/SQL/locking/locking.md) | <span class="missing">—</span> | LOCK TABLES, READ/WRITE locks, row locks, metadata locks, and deadlocks |
 
 ### Views, Stored Procedures, Stored Functions, Triggers, and Events
 
