@@ -157,9 +157,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Chọn cơ sở dữ liệu trong MySQL | [Markdown](MySQL/SQL/select-database/select-database.md) | <span class="missing">—</span> | `USE`, database mặc định |
-| Tạo cơ sở dữ liệu trong MySQL | [Markdown](MySQL/SQL/create-database/create-database.md) | <span class="missing">—</span> | `CREATE DATABASE` |
-| Xóa cơ sở dữ liệu trong MySQL | [Markdown](MySQL/SQL/drop-database/drop-database.md) | <span class="missing">—</span> | `DROP DATABASE` |
+| Quản lý Database trong MySQL | [Markdown](MySQL/SQL/database/create-use-drop-database.md) | <span class="missing">—</span> | `USE`, `CREATE DATABASE`, `DROP DATABASE`, charset, collation và backup checklist |
 | SHOW Commands và mysqldump trong MySQL | [Markdown](MySQL/MySQL%20Server/show-command.md) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup và restore |
 | Quản lý người dùng, quyền và role trong MySQL | [Markdown](MySQL/SQL/user-administration.md) | <span class="missing">—</span> | User administration, privileges và roles |
 
@@ -172,36 +170,36 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Kiểu dữ liệu SQL | [Markdown](MySQL/SQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Tạo bảng bằng SQL | [Markdown](MySQL/SQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Tutorial: Ràng buộc trong CREATE TABLE với MySQL | [Markdown](MySQL/SQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK và DEFAULT |
-| Quản lý vòng đời Table trong MySQL | [Markdown](MySQL/SQL/TABLES/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary table, TRUNCATE và generated columns |
+| Quản lý vòng đời Table trong MySQL | [Markdown](MySQL/SQL/table/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary table, TRUNCATE và generated columns |
 
 ### Truy vấn dữ liệu với SELECT
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Câu lệnh SELECT cơ bản trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-1.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| SELECT và JOIN trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-2.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| Hàm SQL trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-3.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| GROUP BY, HAVING và truy vấn tổng hợp trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-4.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| Subquery trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-5.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| CTE và WITH trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-6.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| Subquery với EXISTS, NOT EXISTS, ALL và ANY trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-7.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Câu lệnh SELECT cơ bản trong MySQL | [Markdown](MySQL/SQL/select/select-statement-1.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| SELECT và JOIN trong MySQL | [Markdown](MySQL/SQL/select/select-statement-2.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Hàm SQL trong MySQL | [Markdown](MySQL/SQL/select/select-statement-3.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| GROUP BY, HAVING và truy vấn tổng hợp trong MySQL | [Markdown](MySQL/SQL/select/select-statement-4.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Subquery trong MySQL | [Markdown](MySQL/SQL/select/select-statement-5.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| CTE và WITH trong MySQL | [Markdown](MySQL/SQL/select/select-statement-6.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Subquery với EXISTS, NOT EXISTS, ALL và ANY trong MySQL | [Markdown](MySQL/SQL/select/select-statement-7.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Các phép toán tập hợp UNION, EXCEPT và INTERSECT trong MySQL | [Markdown](MySQL/SQL/set-operations.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
-| Lab: Kết nối nhiều bảng bằng WHERE và JOIN ON trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-note-1.md) | <span class="missing">—</span> | Ghi chú bổ sung về implicit join, explicit join và điều kiện `ON` |
-| Tutorial: CTE vs Subquery trong MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-note-2.md) | <span class="missing">—</span> | Ghi chú bổ sung so sánh Subquery và CTE |
+| Lab: Kết nối nhiều bảng bằng WHERE và JOIN ON trong MySQL | [Markdown](MySQL/SQL/select/select-statement-note-1.md) | <span class="missing">—</span> | Ghi chú bổ sung về implicit join, explicit join và điều kiện `ON` |
+| Tutorial: CTE vs Subquery trong MySQL | [Markdown](MySQL/SQL/select/select-statement-note-2.md) | <span class="missing">—</span> | Ghi chú bổ sung so sánh Subquery và CTE |
 
 ### Index và tối ưu truy vấn
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Tạo và quản lý Index trong MySQL | [Markdown](MySQL/SQL/INDEX/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX và composite index |
-| MySQL Index Types và chiến lược chọn Index | [Markdown](MySQL/SQL/INDEX/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered và functional indexes |
-| MySQL Index Hints: USE INDEX và FORCE INDEX | [Markdown](MySQL/SQL/INDEX/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer và index hints |
+| Tạo và quản lý Index trong MySQL | [Markdown](MySQL/SQL/index/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX và composite index |
+| MySQL Index Types và chiến lược chọn Index | [Markdown](MySQL/SQL/index/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered và functional indexes |
+| MySQL Index Hints: USE INDEX và FORCE INDEX | [Markdown](MySQL/SQL/index/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer và index hints |
 
 ### Thao tác dữ liệu và giao dịch
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| INSERT, UPDATE và DELETE trong MySQL | [Markdown](MySQL/SQL/DML/insert-update-delete.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| INSERT, UPDATE và DELETE trong MySQL | [Markdown](MySQL/SQL/dml/insert-update-delete.md) | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Thao tác dữ liệu nâng cao trong MySQL | [Markdown](MySQL/SQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN và REPLACE |
 | Transaction trong MySQL | [Markdown](MySQL/SQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT và autocommit |
 
@@ -209,15 +207,15 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Views trong MySQL | [Markdown](MySQL/SQL/View/view.md) | [PDF](MySQL/SQL/View/view.pdf) | CREATE VIEW, updatable view và WITH CHECK OPTION |
-| Stored Procedures cơ bản trong MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL và tham số |
-| Điều kiện và vòng lặp trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT và LEAVE |
-| Cursors và Prepared Statements trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursor và dynamic SQL |
-| Stored Functions trong MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION và SHOW FUNCTION STATUS |
-| MySQL Triggers: nền tảng, CREATE/DROP/SHOW và INSERT triggers | [Markdown](MySQL/SQL/TRIGGER/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit log và summary table |
-| MySQL Triggers: UPDATE, DELETE, validation và audit | [Markdown](MySQL/SQL/TRIGGER/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE và AFTER DELETE |
-| MySQL Triggers: multiple triggers, metadata và best practices | [Markdown](MySQL/SQL/TRIGGER/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA và restrictions |
-| MySQL Events và Event Scheduler | [Markdown](MySQL/SQL/EVENTS/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS và DROP EVENT |
+| Views trong MySQL | [Markdown](MySQL/SQL/view/view.md) | [PDF](MySQL/SQL/view/view.pdf) | CREATE VIEW, updatable view và WITH CHECK OPTION |
+| Stored Procedures cơ bản trong MySQL | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL và tham số |
+| Điều kiện và vòng lặp trong MySQL Stored Procedures | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT và LEAVE |
+| Cursors và Prepared Statements trong MySQL Stored Procedures | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-3.md) | <span class="missing">—</span> | Cursor và dynamic SQL |
+| Stored Functions trong MySQL | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION và SHOW FUNCTION STATUS |
+| MySQL Triggers: nền tảng, CREATE/DROP/SHOW và INSERT triggers | [Markdown](MySQL/SQL/trigger/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit log và summary table |
+| MySQL Triggers: UPDATE, DELETE, validation và audit | [Markdown](MySQL/SQL/trigger/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE và AFTER DELETE |
+| MySQL Triggers: multiple triggers, metadata và best practices | [Markdown](MySQL/SQL/trigger/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA và restrictions |
+| MySQL Events và Event Scheduler | [Markdown](MySQL/SQL/events/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS và DROP EVENT |
 
 ## Tham khảo
 
@@ -309,9 +307,7 @@ Learning materials for database management systems and MySQL.
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Selecting a MySQL Database | [Markdown](MySQL/SQL/select-database/select-database.md) | <span class="missing">—</span> | `USE` and default database |
-| Creating a MySQL Database | [Markdown](MySQL/SQL/create-database/create-database.md) | <span class="missing">—</span> | `CREATE DATABASE` |
-| Dropping a MySQL Database | [Markdown](MySQL/SQL/drop-database/drop-database.md) | <span class="missing">—</span> | `DROP DATABASE` |
+| Managing Databases in MySQL | [Markdown](MySQL/SQL/database/create-use-drop-database.md) | <span class="missing">—</span> | `USE`, `CREATE DATABASE`, `DROP DATABASE`, charset, collation, and backup checklist |
 | SHOW Commands and mysqldump in MySQL | [Markdown](MySQL/MySQL%20Server/show-command.md) | <span class="missing">—</span> | SHOW DATABASES, SHOW TABLES, SHOW COLUMNS, backup, and restore |
 | User Administration, Privileges, and Roles in MySQL | [Markdown](MySQL/SQL/user-administration.md) | <span class="missing">—</span> | Users, privileges, and roles |
 
@@ -324,36 +320,36 @@ Learning materials for database management systems and MySQL.
 | SQL Data Types | [Markdown](MySQL/SQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Creating Tables with SQL | [Markdown](MySQL/SQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Tutorial: Constraints in CREATE TABLE with MySQL | [Markdown](MySQL/SQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK, and DEFAULT |
-| Managing the Table Lifecycle in MySQL | [Markdown](MySQL/SQL/TABLES/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary tables, TRUNCATE, and generated columns |
+| Managing the Table Lifecycle in MySQL | [Markdown](MySQL/SQL/table/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary tables, TRUNCATE, and generated columns |
 
 ### Querying Data with SELECT
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Basic MySQL SELECT Statement | [Markdown](MySQL/SQL/SELECT/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL SELECT and JOIN | [Markdown](MySQL/SQL/SELECT/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL SQL Functions | [Markdown](MySQL/SQL/SELECT/select-statement-3.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](MySQL/SQL/SELECT/select-statement-4.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL Subqueries | [Markdown](MySQL/SQL/SELECT/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL CTE and WITH | [Markdown](MySQL/SQL/SELECT/select-statement-6.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| MySQL Subqueries with EXISTS, NOT EXISTS, ALL, and ANY | [Markdown](MySQL/SQL/SELECT/select-statement-7.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| Basic MySQL SELECT Statement | [Markdown](MySQL/SQL/select/select-statement-1.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL SELECT and JOIN | [Markdown](MySQL/SQL/select/select-statement-2.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL SQL Functions | [Markdown](MySQL/SQL/select/select-statement-3.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](MySQL/SQL/select/select-statement-4.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL Subqueries | [Markdown](MySQL/SQL/select/select-statement-5.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL CTE and WITH | [Markdown](MySQL/SQL/select/select-statement-6.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL Subqueries with EXISTS, NOT EXISTS, ALL, and ANY | [Markdown](MySQL/SQL/select/select-statement-7.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL Set Operations: UNION, EXCEPT, and INTERSECT | [Markdown](MySQL/SQL/set-operations.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
-| Lab: Joining Tables with WHERE and JOIN ON in MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-note-1.md) | <span class="missing">—</span> | Supplementary notes on implicit join, explicit join, and `ON` conditions |
-| Tutorial: CTE vs Subquery in MySQL | [Markdown](MySQL/SQL/SELECT/select-statement-note-2.md) | <span class="missing">—</span> | Supplementary notes comparing Subquery and CTE |
+| Lab: Joining Tables with WHERE and JOIN ON in MySQL | [Markdown](MySQL/SQL/select/select-statement-note-1.md) | <span class="missing">—</span> | Supplementary notes on implicit join, explicit join, and `ON` conditions |
+| Tutorial: CTE vs Subquery in MySQL | [Markdown](MySQL/SQL/select/select-statement-note-2.md) | <span class="missing">—</span> | Supplementary notes comparing Subquery and CTE |
 
 ### Indexes and Query Optimization
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Creating and Managing Indexes in MySQL | [Markdown](MySQL/SQL/INDEX/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX, and composite indexes |
-| MySQL Index Types and Index Selection Strategy | [Markdown](MySQL/SQL/INDEX/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered, and functional indexes |
-| MySQL Index Hints: USE INDEX and FORCE INDEX | [Markdown](MySQL/SQL/INDEX/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer, and index hints |
+| Creating and Managing Indexes in MySQL | [Markdown](MySQL/SQL/index/index-1.md) | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX, and composite indexes |
+| MySQL Index Types and Index Selection Strategy | [Markdown](MySQL/SQL/index/index-2.md) | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered, and functional indexes |
+| MySQL Index Hints: USE INDEX and FORCE INDEX | [Markdown](MySQL/SQL/index/index-3.md) | <span class="missing">—</span> | EXPLAIN, optimizer, and index hints |
 
 ### Data Modification and Transactions
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| MySQL INSERT, UPDATE, and DELETE | [Markdown](MySQL/SQL/DML/insert-update-delete.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| MySQL INSERT, UPDATE, and DELETE | [Markdown](MySQL/SQL/dml/insert-update-delete.md) | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | Advanced Data Modification in MySQL | [Markdown](MySQL/SQL/modifying-data.md) | <span class="missing">—</span> | INSERT, UPDATE, DELETE, CASCADE, DELETE JOIN, and REPLACE |
 | Transactions in MySQL | [Markdown](MySQL/SQL/transaction.md) | <span class="missing">—</span> | START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT, and autocommit |
 
@@ -361,15 +357,15 @@ Learning materials for database management systems and MySQL.
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Views in MySQL | [Markdown](MySQL/SQL/View/view.md) | [PDF](MySQL/SQL/View/view.pdf) | CREATE VIEW, updatable views, and WITH CHECK OPTION |
-| Basic Stored Procedures in MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL, and parameters |
-| Conditions and Loops in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT, and LEAVE |
-| Cursors and Prepared Statements in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursors and dynamic SQL |
-| Stored Functions in MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION, and SHOW FUNCTION STATUS |
-| MySQL Triggers: Foundations, CREATE/DROP/SHOW, and INSERT Triggers | [Markdown](MySQL/SQL/TRIGGER/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit logs, and summary tables |
-| MySQL Triggers: UPDATE, DELETE, Validation, and Audit | [Markdown](MySQL/SQL/TRIGGER/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE, and AFTER DELETE |
-| MySQL Triggers: Multiple Triggers, Metadata, and Best Practices | [Markdown](MySQL/SQL/TRIGGER/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA, and restrictions |
-| MySQL Events and Event Scheduler | [Markdown](MySQL/SQL/EVENTS/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS, and DROP EVENT |
+| Views in MySQL | [Markdown](MySQL/SQL/view/view.md) | [PDF](MySQL/SQL/view/view.pdf) | CREATE VIEW, updatable views, and WITH CHECK OPTION |
+| Basic Stored Procedures in MySQL | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL, and parameters |
+| Conditions and Loops in MySQL Stored Procedures | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT, and LEAVE |
+| Cursors and Prepared Statements in MySQL Stored Procedures | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-3.md) | <span class="missing">—</span> | Cursors and dynamic SQL |
+| Stored Functions in MySQL | [Markdown](MySQL/SQL/stored-procedure/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION, and SHOW FUNCTION STATUS |
+| MySQL Triggers: Foundations, CREATE/DROP/SHOW, and INSERT Triggers | [Markdown](MySQL/SQL/trigger/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit logs, and summary tables |
+| MySQL Triggers: UPDATE, DELETE, Validation, and Audit | [Markdown](MySQL/SQL/trigger/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE, and AFTER DELETE |
+| MySQL Triggers: Multiple Triggers, Metadata, and Best Practices | [Markdown](MySQL/SQL/trigger/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA, and restrictions |
+| MySQL Events and Event Scheduler | [Markdown](MySQL/SQL/events/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS, and DROP EVENT |
 
 ## References
 
