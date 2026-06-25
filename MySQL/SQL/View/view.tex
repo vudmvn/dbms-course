@@ -1,0 +1,685 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{fontspec}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+
+\definecolor{sqlblue}{RGB}{28,82,145}
+\definecolor{sqlgray}{RGB}{245,247,250}
+\definecolor{darkgray}{RGB}{65,65,65}
+\definecolor{mysqlorange}{RGB}{242,145,0}
+
+\lstdefinestyle{sqlstyle}{
+    language=SQL,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{sqlblue}\bfseries,
+    commentstyle=\color{darkgray}\itshape,
+    stringstyle=\color{mysqlorange},
+    backgroundcolor=\color{sqlgray},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{gray!35},
+    columns=fullflexible,
+    keepspaces=true
+}
+\lstset{style=sqlstyle}
+
+\newcommand{\imgplaceholder}[3]{%
+\begin{center}
+\begin{tikzpicture}
+\draw[rounded corners=3pt, dashed, line width=0.9pt, color=sqlblue!75, fill=sqlblue!4] (0,0) rectangle (#1,#2);
+\node[align=center, color=sqlblue!80, font=\small] at (#1/2,#2/2) {\textbf{Placeholder ảnh}\\#3};
+\end{tikzpicture}
+\end{center}}
+
+
+\newcommand{\slideimage}[2]{%
+\begin{center}
+\includegraphics[width=#1\textwidth,height=0.58\textheight,keepaspectratio]{#2}
+\end{center}}
+\newcommand{\notebox}[1]{\begin{tcolorbox}[colback=mysqlorange!8,colframe=mysqlorange!70!black,boxrule=0.5pt,arc=2pt,left=3pt,right=3pt,top=3pt,bottom=3pt]#1\end{tcolorbox}}
+
+\title[MySQL Views]{Bài giảng: Views trong MySQL}
+\subtitle{CREATE VIEW, View Processing, Updatable Views, WITH CHECK OPTION, Show/Rename/Drop Views}
+\author{CSDL / MySQL}
+\date{\today}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+  \vspace{-0.4cm}
+  \begin{center}
+  \small Nguồn tham khảo chính: MySQLTutorial.org - MySQL Views.
+  \end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mục tiêu bài học}
+Sau bài này, sinh viên có thể:
+\begin{itemize}
+    \item Giải thích được view là gì và vì sao view được gọi là bảng ảo.
+    \item Tạo view bằng \texttt{CREATE VIEW} và truy vấn view như một bảng.
+    \item Phân biệt các thuật toán xử lý view: \texttt{MERGE}, \texttt{TEMPTABLE}, \texttt{UNDEFINED}.
+    \item Xác định điều kiện để một view có thể cập nhật được.
+    \item Dùng \texttt{WITH CHECK OPTION}, \texttt{LOCAL}, \texttt{CASCADED} để kiểm soát tính nhất quán.
+    \item Quản lý view: show, show create, rename, drop.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{View là gì?}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{itemize}
+    \item View là một \textbf{truy vấn được đặt tên} và lưu trong database catalog.
+    \item View có thể được truy vấn bằng \texttt{SELECT} giống như bảng.
+    \item View thường \textbf{không lưu dữ liệu vật lý}; khi truy vấn, MySQL thực thi câu \texttt{SELECT} bên trong view.
+    \item Vì vậy, view thường được gọi là \textbf{virtual table}.
+\end{itemize}
+\column{0.40\textwidth}
+\slideimage{0.86}{mysql-views-MySQL-View.png}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ động cơ: lặp lại truy vấn JOIN}
+\begin{lstlisting}
+SELECT
+    customerName,
+    checkNumber,
+    paymentDate,
+    amount
+FROM customers
+INNER JOIN payments USING (customerNumber);
+\end{lstlisting}
+
+\begin{itemize}
+    \item Nếu truy vấn này được dùng nhiều lần, việc viết lại sẽ dài và dễ sai.
+    \item Ta có thể lưu truy vấn này thành một view để dùng lại.
+\end{itemize}
+
+\slideimage{0.86}{mysql-views-customers-payments-1.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Tạo view đầu tiên}
+\begin{lstlisting}
+CREATE VIEW customerPayments AS
+SELECT
+    customerName,
+    checkNumber,
+    paymentDate,
+    amount
+FROM customers
+INNER JOIN payments USING (customerNumber);
+\end{lstlisting}
+
+\vspace{0.2cm}
+Sau đó truy vấn ngắn gọn hơn:
+
+\begin{lstlisting}
+SELECT * FROM customerPayments;
+\end{lstlisting}
+
+\notebox{Ý tưởng chính: view giúp đóng gói truy vấn dài thành một tên dễ dùng.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lợi ích của view}
+\begin{enumerate}
+    \item \textbf{Đơn giản hoá truy vấn phức tạp}: dùng \texttt{SELECT * FROM view\_name} thay cho truy vấn dài.
+    \item \textbf{Nhất quán logic nghiệp vụ}: công thức/tính toán được định nghĩa một lần.
+    \item \textbf{Tăng lớp bảo mật}: chỉ expose một số cột/dòng cần thiết.
+    \item \textbf{Tương thích ngược}: ứng dụng cũ có thể truy cập view như bảng cũ sau khi tái cấu trúc CSDL.
+\end{enumerate}
+
+\slideimage{0.86}{mysql-create-view-mysql-create-view-simple-view-example.png}
+\end{frame}
+
+%------------------------------------------------
+\section{CREATE VIEW}
+
+\begin{frame}[fragile]{Cú pháp CREATE VIEW}
+\begin{lstlisting}
+CREATE [OR REPLACE] VIEW [db_name.]view_name [(column_list)]
+AS
+    select_statement;
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{view\_name}: tên view, không được trùng tên bảng/view trong cùng database.
+    \item \texttt{OR REPLACE}: thay thế view nếu view đã tồn tại.
+    \item \texttt{column\_list}: đặt tên cột cho view, có thể bỏ qua nếu lấy từ \texttt{SELECT}.
+    \item \texttt{select\_statement}: câu truy vấn định nghĩa dữ liệu mà view hiển thị.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ 1: View tính tổng doanh số mỗi đơn hàng}
+\begin{lstlisting}
+CREATE VIEW salePerOrder AS
+SELECT
+    orderNumber,
+    SUM(quantityOrdered * priceEach) AS total
+FROM orderDetails
+GROUP BY orderNumber
+ORDER BY total DESC;
+\end{lstlisting}
+
+\begin{lstlisting}
+SELECT * FROM salePerOrder;
+\end{lstlisting}
+
+\slideimage{0.86}{mysql-views-MySQL-View-example.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ 2: Tạo view dựa trên view khác}
+\begin{lstlisting}
+CREATE VIEW bigSalesOrder AS
+SELECT
+    orderNumber,
+    ROUND(total, 2) AS total
+FROM salePerOrder
+WHERE total > 60000;
+\end{lstlisting}
+
+\begin{lstlisting}
+SELECT orderNumber, total
+FROM bigSalesOrder;
+\end{lstlisting}
+
+\notebox{View có thể được định nghĩa dựa trên bảng gốc hoặc dựa trên một view đã có.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ 3: View với JOIN nhiều bảng}
+\begin{lstlisting}
+CREATE OR REPLACE VIEW customerOrders AS
+SELECT
+    orderNumber,
+    customerName,
+    SUM(quantityOrdered * priceEach) AS total
+FROM orderDetails
+INNER JOIN orders USING (orderNumber)
+INNER JOIN customers USING (customerNumber)
+GROUP BY orderNumber;
+\end{lstlisting}
+
+\slideimage{0.86}{mysql-create-view-mysql-create-view-with-join-example.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ 4: View với subquery}
+\begin{lstlisting}
+CREATE VIEW aboveAvgProducts AS
+SELECT
+    productCode,
+    productName,
+    buyPrice
+FROM products
+WHERE buyPrice > (
+    SELECT AVG(buyPrice)
+    FROM products
+)
+ORDER BY buyPrice DESC;
+\end{lstlisting}
+
+\begin{itemize}
+    \item View này hiển thị các sản phẩm có giá mua lớn hơn giá mua trung bình.
+    \item Người dùng view không cần biết subquery bên trong được viết như thế nào.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ 5: Đặt tên cột tường minh cho view}
+\begin{lstlisting}
+CREATE VIEW customerOrderStats (
+    customerName,
+    orderCount
+) AS
+SELECT
+    customerName,
+    COUNT(orderNumber)
+FROM customers
+INNER JOIN orders USING (customerNumber)
+GROUP BY customerName;
+\end{lstlisting}
+
+\begin{itemize}
+    \item Dùng \texttt{column\_list} khi muốn tên cột của view rõ ràng hơn.
+    \item Hữu ích khi biểu thức trong \texttt{SELECT} không có alias đẹp.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section{View Processing Algorithms}
+
+\begin{frame}[fragile]{Thuật toán xử lý view trong MySQL}
+MySQL có thể xử lý view theo 3 lựa chọn:
+\begin{itemize}
+    \item \texttt{MERGE}
+    \item \texttt{TEMPTABLE}
+    \item \texttt{UNDEFINED}
+\end{itemize}
+
+\begin{lstlisting}
+CREATE [OR REPLACE]
+ALGORITHM = {MERGE | TEMPTABLE | UNDEFINED}
+VIEW view_name [(column_list)] AS
+    select_statement;
+\end{lstlisting}
+
+\notebox{Thuật toán ảnh hưởng đến cách MySQL biến truy vấn trên view thành truy vấn thực thi.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{MERGE algorithm}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{itemize}
+    \item MySQL kết hợp truy vấn bên ngoài với câu \texttt{SELECT} định nghĩa view.
+    \item Kết quả là một truy vấn duy nhất trên bảng gốc.
+    \item Thường hiệu quả hơn vì có thể tận dụng điều kiện lọc trực tiếp trên bảng gốc.
+\end{itemize}
+\column{0.40\textwidth}
+\slideimage{0.86}{mysql-create-view-create-a-view-based-on-another-view.jpg}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ MERGE}
+\begin{lstlisting}
+CREATE ALGORITHM = MERGE VIEW contactPersons AS
+SELECT
+    customerName,
+    contactFirstName AS firstName,
+    contactLastName  AS lastName,
+    phone
+FROM customers;
+\end{lstlisting}
+
+Truy vấn trên view:
+\begin{lstlisting}
+SELECT * FROM contactPersons
+WHERE customerName LIKE '%Co%';
+\end{lstlisting}
+
+Có thể được hiểu như truy vấn trực tiếp trên \texttt{customers} với điều kiện \texttt{WHERE} tương ứng.
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{TEMPTABLE và UNDEFINED}
+\begin{tabularx}{\textwidth}{>{\bfseries}l X}
+\toprule
+Thuật toán & Ý nghĩa \\
+\midrule
+\texttt{TEMPTABLE} & MySQL tạo bảng tạm chứa kết quả của câu \texttt{SELECT} trong view, sau đó truy vấn bảng tạm. Thường kém hiệu quả hơn \texttt{MERGE}; view dạng này không updatable. \\
+\addlinespace
+\texttt{UNDEFINED} & MySQL tự chọn thuật toán. Đây là mặc định nếu không chỉ định \texttt{ALGORITHM}. MySQL thường ưu tiên \texttt{MERGE} nếu có thể. \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.4cm}
+\slideimage{0.86}{mysql-create-view-mysql-view-with-subquery.png}
+\end{frame}
+
+%------------------------------------------------
+\section{Updatable Views}
+
+\begin{frame}{Updatable view là gì?}
+\begin{itemize}
+    \item Một số view không chỉ dùng để \texttt{SELECT}, mà còn có thể \texttt{INSERT}, \texttt{UPDATE}, \texttt{DELETE}.
+    \item Khi cập nhật qua view, dữ liệu thật trong bảng gốc được thay đổi.
+    \item Điều này tiện lợi nhưng cần kiểm soát kỹ để tránh cập nhật ngoài phạm vi view.
+\end{itemize}
+
+\slideimage{0.86}{mysql-view-processing-algorithms-customers_table.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Khi nào view thường không cập nhật được?}
+Một view thường \textbf{không updatable} nếu \texttt{SELECT} định nghĩa view chứa:
+\begin{itemize}
+    \item Hàm tổng hợp: \texttt{SUM}, \texttt{COUNT}, \texttt{AVG}, \texttt{MIN}, \texttt{MAX}, ...
+    \item \texttt{DISTINCT}, \texttt{GROUP BY}, \texttt{HAVING}.
+    \item \texttt{UNION} hoặc \texttt{UNION ALL}.
+    \item Outer join / left join.
+    \item Subquery phụ thuộc vào bảng trong \texttt{FROM}.
+    \item View dùng thuật toán \texttt{TEMPTABLE}.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ updatable view}
+\begin{lstlisting}
+CREATE VIEW officeInfo AS
+SELECT officeCode, phone, city
+FROM offices;
+\end{lstlisting}
+
+Cập nhật qua view:
+\begin{lstlisting}
+UPDATE officeInfo
+SET phone = '+33 14 723 5555'
+WHERE officeCode = 4;
+\end{lstlisting}
+
+\notebox{Nếu view đủ điều kiện updatable, lệnh \texttt{UPDATE} trên view sẽ cập nhật bảng \texttt{offices}.}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Kiểm tra view có updatable không}
+Có thể kiểm tra metadata trong \texttt{information\_schema.views}:
+
+\begin{lstlisting}
+SELECT
+    table_name,
+    is_updatable
+FROM information_schema.views
+WHERE table_schema = 'classicmodels';
+\end{lstlisting}
+
+\slideimage{0.86}{mysql-updatable-views-mysql-updateable-view-example.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Xóa dữ liệu qua view}
+Tạo view lọc các mặt hàng đắt tiền:
+\begin{lstlisting}
+CREATE VIEW LuxuryItems AS
+SELECT *
+FROM items
+WHERE price > 700;
+\end{lstlisting}
+
+Xóa qua view:
+\begin{lstlisting}
+DELETE FROM LuxuryItems
+WHERE id = 3;
+\end{lstlisting}
+
+\begin{itemize}
+    \item Nếu view updatable, dòng tương ứng trong bảng \texttt{items} cũng bị xóa.
+    \item Cần phân quyền cẩn thận khi cho phép thao tác trên view.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section{WITH CHECK OPTION}
+
+\begin{frame}{Vấn đề nhất quán của updatable view}
+Giả sử view chỉ hiển thị nhân viên loại \texttt{'Contractor'}.
+
+\begin{itemize}
+    \item Nếu view updatable, người dùng có thể chèn qua view.
+    \item Không có kiểm tra bổ sung, họ có thể chèn một nhân viên \texttt{'Full-time'} qua view.
+    \item Dòng mới được thêm vào bảng gốc nhưng không xuất hiện trong view.
+    \item Đây là tình huống làm view trở nên khó hiểu và thiếu nhất quán.
+\end{itemize}
+
+\slideimage{0.86}{mysql-updatable-views-updatable-views-information_schema.png}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{WITH CHECK OPTION}
+\begin{lstlisting}
+CREATE OR REPLACE VIEW contractors AS
+SELECT id, type, name
+FROM employees
+WHERE type = 'Contractor'
+WITH CHECK OPTION;
+\end{lstlisting}
+
+\begin{itemize}
+    \item \texttt{WITH CHECK OPTION} yêu cầu dòng được \texttt{INSERT}/\texttt{UPDATE} qua view phải vẫn nhìn thấy được qua view.
+    \item Nếu không thoả điều kiện \texttt{WHERE} của view, MySQL từ chối thao tác.
+\end{itemize}
+
+\begin{lstlisting}
+INSERT INTO contractors(name, type)
+VALUES ('Brad Knox', 'Full-time');
+-- ERROR: CHECK OPTION failed
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{LOCAL và CASCADED trong WITH CHECK OPTION}
+Khi view được xây dựng chồng lên view khác, cần xác định phạm vi kiểm tra:
+
+\begin{tabularx}{\textwidth}{>{\bfseries}l X}
+\toprule
+Tuỳ chọn & Ý nghĩa \\
+\midrule
+\texttt{LOCAL} & Chỉ kiểm tra điều kiện của view hiện tại có khai báo \texttt{WITH LOCAL CHECK OPTION}. \\
+\addlinespace
+\texttt{CASCADED} & Kiểm tra điều kiện của view hiện tại và các view phụ thuộc bên dưới. Đây thường là lựa chọn an toàn hơn và là mặc định khi không ghi rõ. \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.3cm}
+\slideimage{0.86}{mysql-updatable-views-MySQL-DELETE-through-View.jpg}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ ý tưởng LOCAL/CASCADED}
+\begin{lstlisting}
+CREATE VIEW v_contractors AS
+SELECT * FROM employees
+WHERE type = 'Contractor'
+WITH CHECK OPTION;
+
+CREATE VIEW v_hanoi_contractors AS
+SELECT * FROM v_contractors
+WHERE city = 'Ha Noi'
+WITH CASCADED CHECK OPTION;
+\end{lstlisting}
+
+\begin{itemize}
+    \item Chèn/cập nhật qua \texttt{v\_hanoi\_contractors} phải thỏa cả \texttt{type = 'Contractor'} và \texttt{city = 'Ha Noi'}.
+    \item Nếu dùng \texttt{LOCAL}, cần đọc kỹ view nào được kiểm tra để tránh lọt dữ liệu không mong muốn.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\section{Quản lý views}
+
+\begin{frame}[fragile]{Show views trong database}
+Cách 1: dùng \texttt{SHOW FULL TABLES}:
+\begin{lstlisting}
+SHOW FULL TABLES
+WHERE table_type = 'VIEW';
+\end{lstlisting}
+
+Tìm trong database cụ thể:
+\begin{lstlisting}
+SHOW FULL TABLES IN classicmodels
+WHERE table_type = 'VIEW';
+\end{lstlisting}
+
+Tìm theo pattern:
+\begin{lstlisting}
+SHOW FULL TABLES FROM classicmodels
+LIKE 'customer%';
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Show views bằng INFORMATION\_SCHEMA}
+\begin{lstlisting}
+SELECT table_name AS view_name
+FROM information_schema.tables
+WHERE table_type = 'VIEW'
+  AND table_schema = 'classicmodels';
+\end{lstlisting}
+
+Tìm view có tên bắt đầu bằng \texttt{customer}:
+\begin{lstlisting}
+SELECT table_name AS view_name
+FROM information_schema.tables
+WHERE table_type = 'VIEW'
+  AND table_schema = 'classicmodels'
+  AND table_name LIKE 'customer%';
+\end{lstlisting}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{SHOW CREATE VIEW}
+Dùng để xem lại câu lệnh tạo view:
+
+\begin{lstlisting}
+SHOW CREATE VIEW customerPayments;
+\end{lstlisting}
+
+\begin{itemize}
+    \item Hữu ích khi cần kiểm tra định nghĩa view hiện tại.
+    \item Dùng khi debug: view đang lọc điều kiện nào, join bảng nào, có \texttt{WITH CHECK OPTION} không.
+\end{itemize}
+
+\slideimage{0.86}{mysql-view-with-check-option-code_7.jpg}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Rename views}
+MySQL có thể đổi tên view bằng \texttt{RENAME TABLE}:
+
+\begin{lstlisting}
+RENAME TABLE old_view_name TO new_view_name;
+\end{lstlisting}
+
+Ví dụ:
+\begin{lstlisting}
+RENAME TABLE customerPayments TO customerPaymentView;
+\end{lstlisting}
+
+\begin{itemize}
+    \item View và table dùng chung namespace, vì vậy tên mới không được trùng tên đối tượng đã có.
+    \item Cần kiểm tra các câu SQL, stored procedure, app code đang phụ thuộc tên view cũ.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Drop views}
+Xóa một view:
+\begin{lstlisting}
+DROP VIEW view_name;
+\end{lstlisting}
+
+Xóa nhiều view:
+\begin{lstlisting}
+DROP VIEW view_1, view_2;
+\end{lstlisting}
+
+Tránh lỗi nếu view không tồn tại:
+\begin{lstlisting}
+DROP VIEW IF EXISTS view_name;
+\end{lstlisting}
+
+\notebox{\texttt{DROP VIEW} chỉ xóa định nghĩa view, không xóa dữ liệu trong bảng gốc.}
+\end{frame}
+
+%------------------------------------------------
+\section{Tổng kết và bài tập}
+
+\begin{frame}{Quy trình làm việc với view}
+\begin{enumerate}
+    \item Xác định truy vấn cần dùng lại hoặc cần giới hạn dữ liệu.
+    \item Tạo view bằng \texttt{CREATE VIEW}.
+    \item Truy vấn thử bằng \texttt{SELECT}.
+    \item Nếu cho phép cập nhật, kiểm tra view có updatable không.
+    \item Với view lọc dữ liệu, cân nhắc thêm \texttt{WITH CHECK OPTION}.
+    \item Quản lý view bằng \texttt{SHOW FULL TABLES}, \texttt{SHOW CREATE VIEW}, \texttt{RENAME TABLE}, \texttt{DROP VIEW}.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Bài tập 1: Tạo view đơn giản}
+Cho bảng:
+\begin{lstlisting}
+products(productCode, productName, productLine, buyPrice, MSRP)
+\end{lstlisting}
+
+Yêu cầu:
+\begin{enumerate}
+    \item Tạo view \texttt{productPriceView} gồm \texttt{productCode}, \texttt{productName}, \texttt{buyPrice}, \texttt{MSRP}.
+    \item Truy vấn các sản phẩm có \texttt{MSRP > 100} từ view.
+    \item Dùng \texttt{SHOW CREATE VIEW} để kiểm tra định nghĩa view.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Bài tập 2: View tổng hợp không updatable}
+Cho bảng:
+\begin{lstlisting}
+orderDetails(orderNumber, productCode, quantityOrdered, priceEach)
+\end{lstlisting}
+
+Yêu cầu:
+\begin{enumerate}
+    \item Tạo view \texttt{orderTotalView} tính tổng tiền mỗi đơn hàng.
+    \item Kiểm tra view này có updatable không bằng \texttt{information\_schema.views}.
+    \item Giải thích vì sao view này không nên/không thể cập nhật trực tiếp.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Bài tập 3: WITH CHECK OPTION}
+Cho bảng:
+\begin{lstlisting}
+employees(id, type, name, city)
+\end{lstlisting}
+
+Yêu cầu:
+\begin{enumerate}
+    \item Tạo view \texttt{contractors} chỉ gồm nhân viên có \texttt{type = 'Contractor'}.
+    \item Thêm \texttt{WITH CHECK OPTION}.
+    \item Thử chèn một dòng \texttt{type = 'Full-time'} qua view và ghi nhận lỗi.
+    \item Giải thích vì sao lỗi này là đúng.
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Câu hỏi nhanh}
+\begin{enumerate}
+    \item Vì sao view được gọi là virtual table?
+    \item Khi nào nên dùng view thay vì viết lại truy vấn dài?
+    \item \texttt{MERGE} khác \texttt{TEMPTABLE} như thế nào?
+    \item Vì sao view có \texttt{GROUP BY} thường không updatable?
+    \item \texttt{WITH CHECK OPTION} giải quyết vấn đề gì?
+    \item Khi nào nên dùng \texttt{SHOW CREATE VIEW}?
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Tài liệu tham khảo}
+\small
+\begin{itemize}
+    \item MySQLTutorial.org, \textit{MySQL Views}.
+    \item MySQLTutorial.org, \textit{MySQL CREATE VIEW}.
+    \item MySQLTutorial.org, \textit{MySQL View Processing Algorithms}.
+    \item MySQLTutorial.org, \textit{Create MySQL Updatable Views}.
+    \item MySQLTutorial.org, \textit{MySQL WITH CHECK OPTION Clause}.
+    \item MySQLTutorial.org, \textit{MySQL Show View / SHOW CREATE VIEW / Rename View / DROP VIEW}.
+\end{itemize}
+\end{frame}
+
+\end{document}
