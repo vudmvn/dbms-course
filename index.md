@@ -172,6 +172,7 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Kiểu dữ liệu SQL | [Markdown](MySQL/SQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Tạo bảng bằng SQL | [Markdown](MySQL/SQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Tutorial: Ràng buộc trong CREATE TABLE với MySQL | [Markdown](MySQL/SQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK và DEFAULT |
+| Quản lý vòng đời Table trong MySQL | [Markdown](MySQL/SQL/TABLES/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary table, TRUNCATE và generated columns |
 
 ### Truy vấn dữ liệu với SELECT
 
@@ -323,6 +324,7 @@ Learning materials for database management systems and MySQL.
 | SQL Data Types | [Markdown](MySQL/SQL/sql-data-types/sql-data-types.md) | <span class="missing">—</span> | |
 | Creating Tables with SQL | [Markdown](MySQL/SQL/sql-create-table/sql-create-table.md) | <span class="missing">—</span> | |
 | Tutorial: Constraints in CREATE TABLE with MySQL | [Markdown](MySQL/SQL/create-table-statement.md) | <span class="missing">—</span> | PRIMARY KEY, FOREIGN KEY, NOT NULL, UNIQUE, CHECK, and DEFAULT |
+| Managing the Table Lifecycle in MySQL | [Markdown](MySQL/SQL/TABLES/tables.md) | <span class="missing">—</span> | CREATE, ALTER, RENAME, DROP, temporary tables, TRUNCATE, and generated columns |
 
 ### Querying Data with SELECT
 
