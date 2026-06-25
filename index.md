@@ -209,10 +209,10 @@ Tài liệu học tập về hệ quản trị cơ sở dữ liệu và MySQL.
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
 | Views trong MySQL | [Markdown](MySQL/SQL/View/view.md) | [PDF](MySQL/SQL/View/view.pdf) | CREATE VIEW, updatable view và WITH CHECK OPTION |
-| Stored Procedures cơ bản trong MySQL | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL và tham số |
-| Điều kiện và vòng lặp trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT và LEAVE |
-| Cursors và Prepared Statements trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursor và dynamic SQL |
-| Stored Functions trong MySQL | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION và SHOW FUNCTION STATUS |
+| Stored Procedures cơ bản trong MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL và tham số |
+| Điều kiện và vòng lặp trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT và LEAVE |
+| Cursors và Prepared Statements trong MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursor và dynamic SQL |
+| Stored Functions trong MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION và SHOW FUNCTION STATUS |
 | MySQL Triggers: nền tảng, CREATE/DROP/SHOW và INSERT triggers | [Markdown](MySQL/SQL/TRIGGER/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit log và summary table |
 | MySQL Triggers: UPDATE, DELETE, validation và audit | [Markdown](MySQL/SQL/TRIGGER/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE và AFTER DELETE |
 | MySQL Triggers: multiple triggers, metadata và best practices | [Markdown](MySQL/SQL/TRIGGER/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA và restrictions |
@@ -360,10 +360,10 @@ Learning materials for database management systems and MySQL.
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
 | Views in MySQL | [Markdown](MySQL/SQL/View/view.md) | [PDF](MySQL/SQL/View/view.pdf) | CREATE VIEW, updatable views, and WITH CHECK OPTION |
-| Basic Stored Procedures in MySQL | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL, and parameters |
-| Conditions and Loops in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT, and LEAVE |
-| Cursors and Prepared Statements in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursors and dynamic SQL |
-| Stored Functions in MySQL | [Markdown](MySQL/SQL/STORED%20PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION, and SHOW FUNCTION STATUS |
+| Basic Stored Procedures in MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-1.md) | <span class="missing">—</span> | DELIMITER, CREATE PROCEDURE, CALL, and parameters |
+| Conditions and Loops in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-2.md) | <span class="missing">—</span> | IF, CASE, LOOP, WHILE, REPEAT, and LEAVE |
+| Cursors and Prepared Statements in MySQL Stored Procedures | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-3.md) | <span class="missing">—</span> | Cursors and dynamic SQL |
+| Stored Functions in MySQL | [Markdown](MySQL/SQL/STORED-PROCEDURE/stored-procedure-4.md) | <span class="missing">—</span> | CREATE FUNCTION, DROP FUNCTION, and SHOW FUNCTION STATUS |
 | MySQL Triggers: Foundations, CREATE/DROP/SHOW, and INSERT Triggers | [Markdown](MySQL/SQL/TRIGGER/triggers-1.md) | <span class="missing">—</span> | BEFORE INSERT, AFTER INSERT, audit logs, and summary tables |
 | MySQL Triggers: UPDATE, DELETE, Validation, and Audit | [Markdown](MySQL/SQL/TRIGGER/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE, and AFTER DELETE |
 | MySQL Triggers: Multiple Triggers, Metadata, and Best Practices | [Markdown](MySQL/SQL/TRIGGER/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA, and restrictions |
