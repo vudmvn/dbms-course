@@ -2,9 +2,9 @@
 
 Suggested metadata (optional, can be edited):
 
-- Lesson group: Data-Modeling
-- Title: key
-- Original link: [<original-article-url>](https://www.geeksforgeeks.org/dbms/types-of-keys-in-relational-model-candidate-super-primary-alternate-and-foreign/)
+- Lesson group: entity-relationship-model, relational-model-and-functional-dependencies, normalization
+- Title: 4th-normal-form
+- Original link: [<original-article-url>](https://www.geeksforgeeks.org/dbms/introduction-of-4th-and-5th-normal-form-in-dbms/)
 - Create a folder using the title above inside the lesson group folder, and create an `images` subfolder.
 - Download all images in `.png` format from the original link and place them in the `images` folder; or convert the images to `.png` if the original image format is not `.png`.
 - Use Python/Pillow to convert `.webp` images to `.png`.

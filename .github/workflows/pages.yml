@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+﻿name: Deploy GitHub Pages
 
 on:
   push:
@@ -6,8 +6,10 @@ on:
       - master
       - main
     paths:
-      - "DBMS_Basic/**"
-      - "Data-Modeling/**"
+      - "introduction/**"
+      - "entity-relationship-model/**"
+      - "relational-model-and-functional-dependencies/**"
+      - "normalization/**"
       - "MySQL/**"
       - "index.md"
       - "favicon.ico"

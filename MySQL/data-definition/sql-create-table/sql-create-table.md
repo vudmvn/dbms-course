@@ -1,3 +1,5 @@
+﻿> **Ghi chú tổ chức nội dung:** Nội dung chính của bài này đã được hợp nhất vào [../create-table-statement.md](../create-table-statement.md). Bản được liên kết trong mục lục là bài tổng hợp để hạn chế trùng lặp.
+
 ---
 layout: page
 title: "SQL CREATE TABLE"

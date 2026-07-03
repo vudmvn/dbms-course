@@ -1,3 +1,5 @@
+﻿> **Ghi chú tổ chức nội dung:** Nội dung chính của bài này đã được hợp nhất vào [../modifying-data.md](../modifying-data.md). Bản được liên kết trong mục lục là bài tổng hợp để hạn chế trùng lặp.
+
 ---
 title: "Tutorial: Sử dụng câu lệnh INSERT, UPDATE và DELETE với classicmodels"
 author: "Tên giảng viên"

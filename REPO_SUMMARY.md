@@ -1,6 +1,6 @@
-# Repository Summary
+﻿# Repository Summary
 
-Last reviewed: 2026-06-04
+Last reviewed: 2026-07-03
 
 This file is a quick map of the repository so future updates do not need to
 rescan the whole folder before making small changes.
@@ -29,8 +29,8 @@ Important Jekyll settings:
 - `baseurl`: `/dbms-course`
 - `markdown`: `kramdown`
 - `permalink`: `pretty`
-- Explicitly included folders: `DBMS_Basic`, `MySQL`
-- `Data-Modeling` is published as a normal top-level content folder and is also
+- Explicitly included folders: `introduction`, `MySQL`
+- `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, and `normalization/` are published as normal top-level content folders and are also
   covered by the Pages workflow trigger paths.
 - Excluded temporary/build files include `TEMP_MARKDOWN_INPUT.md`, `node_modules`,
   and common LaTeX/log output files.
@@ -47,30 +47,28 @@ Important Jekyll settings:
   - `assets/files/` contains course files such as the syllabus PDF.
   - `assets/images/` contains shared images such as book covers.
 
-- `DBMS_Basic/`
+- `introduction/`
   - Core DBMS lessons.
   - Each lesson generally lives in its own folder.
   - Some lessons include generated/source formats such as `.html`, `.tex`, and `.pdf`
     in addition to the publishable `.md` file.
-  - `DBMS_Basic/data-independence/` includes bilingual Beamer source `.tex`
+  - `introduction/data-independence/` includes bilingual Beamer source `.tex`
     files and generated Vietnamese/English PDF slides.
 
-- `Data-Modeling/`
-  - Data modeling lessons.
-  - Current lessons include `data-modeling`, `er-model`, and
-    `lab-er-model-1.md`.
-  - Lesson images are stored in each lesson's `images/` folder.
-  - `Data-Modeling/er-model/images/` contains the ER diagram illustrations used
-    by the ER model lesson.
-  - `Data-Modeling/er-model/` includes Vietnamese/English Beamer source `.tex`
-    files and generated PDF slides for the ER model lesson.
-  - Prefer folder names without spaces. The old folder name `Data Modeling` was
-    renamed to `Data-Modeling` to avoid awkward URL encoding and link issues.
+- `entity-relationship-model/`
+  - Conceptual modeling lessons and ER labs.
+  - Current lessons include `data-modeling`, `er-model`, `enhanced-er-model`, `recursive-relationship`, and generalization/specialization/aggregation.
+  - `entity-relationship-model/er-model/` includes Vietnamese/English Beamer source `.tex` files and generated PDF slides.
 
+- `relational-model-and-functional-dependencies/`
+  - Relational schema, ER-to-relational mapping, keys, functional dependency, attribute closure, and schema design lessons.
+
+- `normalization/`
+  - Normal forms overview plus 1NF, 2NF, 3NF, and 4NF lessons.
 - `MySQL/`
-  - MySQL lessons and how-to guides.
+  - MySQL lessons and how-to guides organized by topic folder.
+  - Topic folders include `mysql-server`, `database-administration`, `data-definition`, `querying-data`, `index-optimization`, `data-modification-transactions`, and `programmability`.
   - Most lesson folders contain one `.md` lesson plus an `images/` folder.
-
 - `_config.yml`
   - Jekyll/GitHub Pages configuration.
 
@@ -87,7 +85,7 @@ Important Jekyll settings:
 
 - `TEMP_MARKDOWN_INPUT.md`
   - Temporary Markdown input file.
-  - Currently contains the input metadata for `MySQL/storage-engine/` and is
+  - Currently contains temporary lesson input metadata and is
     excluded from the published site.
 
 ## Content Inventory
@@ -100,54 +98,74 @@ Current homepage sections:
 - Reference books
   - Shared cover images in `assets/images/`
 
-- DBMS Basic
-  - `DBMS_Basic/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md`
+- Introduction
+  - `introduction/gioi_thieu_csdl_vi/gioi_thieu_csdl_vi.md`
     - Slides: `gioi_thieu_csdl_vi_beamer.pdf`
     - Slides: `gioi_thieu_csdl_en_beamer.pdf`
-  - `DBMS_Basic/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md`
-  - `DBMS_Basic/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md`
-  - `DBMS_Basic/kien_truc_dbms_vi/kien_truc_dbms_vi.md`
+  - `introduction/gioi_thieu_dbms_vi/gioi_thieu_dbms_vi.md`
+  - `introduction/nhu_cau_su_dung_dbms_vi/nhu_cau_su_dung_dbms_vi.md`
+  - `introduction/kien_truc_dbms_vi/kien_truc_dbms_vi.md`
     - Slides: `kien_truc_dbms_vi.pdf`
     - Slides: `kien_truc_dbms_en.pdf`
-  - `DBMS_Basic/data-abstraction/data-abstraction.md`
-  - `DBMS_Basic/data-independence/data-independence.md`
+  - `introduction/data-abstraction/data-abstraction.md`
+  - `introduction/data-independence/data-independence.md`
     - Slides: `data_independence_beamer_pdflatex.pdf`
     - Slides: `data_independence_beamer_english_pdflatex.pdf`
-  - `DBMS_Basic/physical-logical-independence/physical-logical-independence.md`
+  - `introduction/physical-logical-independence/physical-logical-independence.md`
     - Present in the repo and linked in the English homepage table, but hidden
       in the Vietnamese homepage table as of this review.
-  - `DBMS_Basic/database-schema/database-schema.md`
-  - `DBMS_Basic/choose-right-dbms/choose-right-dbms.md`
+  - `introduction/database-schema/database-schema.md`
+  - `introduction/choose-right-dbms/choose-right-dbms.md`
     - Slides: `choose-right-dbms-vi.pdf`
     - Slides: `choose-right-dbms-en.pdf`
 
-- Data Modeling
-  - `Data-Modeling/data-modeling/data-modeling.md`
-  - `Data-Modeling/er-model/er-model.md`
+- Entity Relationship Model
+  - `entity-relationship-model/data-modeling/data-modeling.md`
+  - `entity-relationship-model/er-model/er-model.md`
     - Slides: `er-model-vi.pdf`
     - Slides: `er-model-en.pdf`
     - Source: `er-model-vi.tex`
     - Source: `er-model-en.tex`
 
-- Labs
-  - `Data-Modeling/lab-er-model-1.md`
+- ER Model Labs
+  - `entity-relationship-model/lab-er-model-1.md`
     - Shown on the homepage as "Lab 1: ER model basics".
     - Duration: 60m.
     - Difficulty: Beginner.
 
-- MySQL
-  - `MySQL/gioi-thieu-mysql/gioi-thieu-mysql.md`
-  - `MySQL/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md`
-  - `MySQL/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md`
-  - `MySQL/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md`
-  - `MySQL/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md`
-  - `MySQL/mysql-sample-database/mysql-sample-database.md`
-  - `MySQL/load-sample-database/load-sample-database.md`
-  - `MySQL/storage-engine/storage-engine.md`
-    - MySQL storage engines lecture created from `TEMP_MARKDOWN_INPUT.md`.
-    - `images/` currently has no downloaded content images from the source page.
-  - `MySQL/start-stop-MySQL/start-stop-MySQL.md`
+- MySQL Server
+  - `MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.md`
+  - `MySQL/mysql-server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md`
+  - `MySQL/mysql-server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md`
+  - `MySQL/mysql-server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md`
+  - `MySQL/mysql-server/huong_dan_ket_noi_mysql_vscode/huong_dan_ket_noi_mysql_vscode.md`
+  - `MySQL/mysql-server/mysql-sample-database/mysql-sample-database.md`
+  - `MySQL/mysql-server/load-sample-database/load-sample-database.md`
+  - `MySQL/mysql-server/storage-engine/storage-engine.md`
+  - `MySQL/mysql-server/start-stop-MySQL/start-stop-MySQL.md`
 
+- MySQL Database Administration
+  - `MySQL/database-administration/database/create-use-drop-database.md`
+  - `MySQL/database-administration/show-command.md`
+  - `MySQL/database-administration/user-administration.md`
+  - `MySQL/database-administration/security/encryption-decryption.md`
+
+- MySQL SQL Statements
+  - `MySQL/data-definition/`
+  - `MySQL/querying-data/`
+  - `MySQL/index-optimization/`
+  - `MySQL/data-modification-transactions/`
+  - `MySQL/programmability/`
+## Canonical Lessons and Duplicate Reduction
+
+Some older focused lessons remain in the repository for source preservation, but the homepage links to broader canonical lessons to reduce duplicated navigation content.
+
+- `MySQL/database-administration/database/create-use-drop-database.md` is the canonical lesson for creating, selecting, and dropping databases.
+  - Supersedes the separate `create-database`, `select-database`, and `drop-database` lessons in the homepage navigation.
+- `MySQL/data-definition/create-table-statement.md` and `MySQL/data-definition/table/tables.md` are the canonical lessons for `CREATE TABLE`, constraints, and table lifecycle topics.
+  - Supersedes the separate basic `sql-create-table` homepage entry.
+- `MySQL/data-modification-transactions/modifying-data.md` is the canonical lesson for INSERT, UPDATE, DELETE, and advanced modification topics.
+  - Supersedes the separate `insert-update-delete` homepage entry.
 ## Deployment Flow
 
 Current working branch and push target:
@@ -201,7 +219,7 @@ gh run list --repo vudmvn/dbms-course --limit 5
 
 General content flow:
 
-1. Add or edit Markdown content under `DBMS_Basic/`, `Data-Modeling/`, or `MySQL/`.
+1. Add or edit Markdown content under `introduction/`, `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, `normalization/`, or `MySQL/`.
 2. Add any lesson images inside that lesson folder, usually under `images/`.
 3. Update `index.md` if the lesson should appear on the homepage.
 4. Commit and push to `course/main`.
@@ -209,8 +227,8 @@ General content flow:
 
 Workflow trigger paths:
 
-- `DBMS_Basic/**`
-- `Data-Modeling/**`
+- `introduction/**`
+- `entity-relationship-model/**`, `relational-model-and-functional-dependencies/**`, `normalization/**`
 - `MySQL/**`
 - `index.md`
 - `_config.yml`
@@ -219,28 +237,28 @@ Workflow trigger paths:
 
 ## Update Notes
 
-- 2026-06-04: Refreshed `Data-Modeling/er-model/` attribute and relationship
+- 2026-06-04: Refreshed `entity-relationship-model/er-model/` attribute and relationship
   image references against the GeeksforGeeks source, then regenerated the
   Vietnamese and English ER model PDFs.
-- 2026-06-04: Expanded `MySQL/storage-engine/` into a full lecture, kept its
+- 2026-06-04: Expanded `MySQL/mysql-server/storage-engine/` into a full lecture, kept its
   `images/` placeholder, and linked it from the bilingual homepage.
-- 2026-06-04: Added `Data-Modeling/lab-er-model-1.md` and a bilingual Labs
+- 2026-06-04: Added `entity-relationship-model/lab-er-model-1.md` and a bilingual Labs
   section in `index.md`.
 - 2026-06-04: Refreshed the repository summary against current `index.md`,
   `_config.yml`, workflow paths, branch, and remotes.
 - 2026-06-01: Added bilingual PDF slides and Beamer source files for
-  `DBMS_Basic/data-independence/`, and linked the slides from `index.md`.
-- 2026-06-01: Expanded `Data-Modeling/er-model/` with ER diagram illustrations
+  `introduction/data-independence/`, and linked the slides from `index.md`.
+- 2026-06-01: Expanded `entity-relationship-model/er-model/` with ER diagram illustrations
   for entities, attributes, relationships, cardinality, participation, and ER
   diagram construction steps.
 - 2026-06-01: Added Vietnamese and English ER model Beamer slides/PDFs, linked
   them from `index.md`, and refreshed ER cardinality/participation images to
   match the GeeksforGeeks source page.
-- 2026-06-01: Added `MySQL/mysql-sample-database/` with the classicmodels
+- 2026-06-01: Added `MySQL/mysql-server/mysql-sample-database/` with the classicmodels
   sample database lesson and local ER diagram image.
-- 2026-05-31: Added `Data-Modeling/` lessons and renamed the folder from
+- 2026-05-31: Added `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, and `normalization/` lessons and renamed the folder from
   `Data Modeling` to avoid space-encoded URLs.
-- 2026-05-31: Added `Data-Modeling/**` to the Pages workflow trigger paths so
+- 2026-05-31: Added `entity-relationship-model/**`, `relational-model-and-functional-dependencies/**`, `normalization/**` to the Pages workflow trigger paths so
   edits in that folder rebuild GitHub Pages.
 - 2026-05-31: Documented the practical commit/push flow for the
   `deploy-dbms-pages` branch and `course/main` remote.
@@ -255,7 +273,7 @@ Workflow trigger paths:
 - Because `_config.yml` uses `baseurl: /dbms-course`, avoid hard-coding root-relative
   links like `/assets/...` unless they are passed through Jekyll URL filters.
 - For lesson pages using `permalink`, prefer a permalink that matches the lesson
-  folder, for example `permalink: /Data-Modeling/er-model/`. This lets local
+  folder, for example `permalink: /entity-relationship-model/er-model/`. This lets local
   image links such as `images/example.png` work both locally and on GitHub Pages.
 - If a page is served at a nested pretty URL such as
   `/folder/lesson/lesson/`, relative image links like `images/x.png` will point

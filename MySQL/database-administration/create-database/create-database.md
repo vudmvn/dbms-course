@@ -1,3 +1,5 @@
+﻿> **Ghi chú tổ chức nội dung:** Nội dung chính của bài này đã được hợp nhất vào [../database/create-use-drop-database.md](../database/create-use-drop-database.md). Bản được liên kết trong mục lục là bài tổng hợp để hạn chế trùng lặp.
+
 ---
 layout: page
 title: "Creating a MySQL Database"

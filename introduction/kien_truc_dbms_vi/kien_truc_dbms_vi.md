@@ -58,7 +58,7 @@ Trong kiến trúc **1 tầng** (*1-Tier Architecture*), người dùng làm vi�
 đều nằm trong cùng một ứng dụng hoặc cùng một máy tính.
 
 Người dùng có thể mở ứng dụng, nhập dữ liệu, xử lý dữ liệu và lưu trữ dữ liệu trực tiếp mà không cần máy chủ riêng hoặc kết nối mạng.
-![alt text](images/image-1.png)
+![alt text](image-1.png)
 ### 3.2. Ví dụ
 
 Một ví dụ phổ biến của kiến trúc 1 tầng là **Microsoft Access**.
@@ -112,28 +112,26 @@ Kiến trúc này phù hợp với các ứng dụng cá nhân, ứng dụng đ�
 
 ### Quiz nhanh: Kiến trúc 1 tầng
 
-**Câu 1.** Trong kiến trúc 1 tầng, các thành phần nào thường nằm trên cùng một máy?
+**Câu 1.** Một nhân viên dùng ứng dụng quản lý kho trên đúng một laptop; giao diện, xử lý nghiệp vụ và dữ liệu đều ở máy đó. Khi muốn cho ba nhân viên khác cùng cập nhật dữ liệu theo thời gian thực, hạn chế nào cần được xem xét trước tiên?
 
-A. Chỉ cơ sở dữ liệu  
-B. Chỉ giao diện người dùng  
-C. Giao diện, logic xử lý và dữ liệu  
-D. Chỉ máy chủ ứng dụng  
+A. Kiến trúc thiếu cơ chế chia sẻ và điều phối truy cập tập trung cho nhiều người dùng.
+B. Máy không thể lưu bất kỳ dữ liệu nào.
+C. Ứng dụng không thể hiển thị giao diện.
+D. Người dùng bắt buộc phải dùng ODBC/JDBC.
 
+**Câu 2.** Một doanh nghiệp chọn kiến trúc 1 tầng cho phần mềm cá nhân chạy offline. Quyết định này hợp lý nhất khi điều kiện nào đúng?
 
-**Câu 2.** Ví dụ nào sau đây phù hợp nhất với kiến trúc 1 tầng?
+A. Có hàng nghìn người dùng đồng thời từ Internet.
+B. Dữ liệu cần được nhiều chi nhánh cập nhật liên tục.
+C. Hệ thống nhỏ, một hoặc rất ít người dùng và không cần chia sẻ qua mạng.
+D. Cần tách logic nghiệp vụ khỏi mọi máy người dùng.
 
-A. Hệ thống thương mại điện tử lớn  
-B. Ứng dụng MS Access chạy trên máy cá nhân  
-C. Hệ thống ngân hàng trực tuyến  
-D. Hệ thống mạng xã hội  
+**Câu 3.** Một máy tính chạy ứng dụng 1 tầng bị sao chép toàn bộ thư mục ứng dụng và dữ liệu bởi người không được phép. Rủi ro này phản ánh rõ nhất nhược điểm nào?
 
-
-**Câu 3.** Nhược điểm lớn của kiến trúc 1 tầng là gì?
-
-A. Quá phức tạp  
-B. Không thể lưu dữ liệu  
-C. Khó hỗ trợ nhiều người dùng  
-D. Không thể chạy trên máy cá nhân  
+A. Khó tạo giao diện người dùng.
+B. Bảo mật và kiểm soát truy cập bị hạn chế do dữ liệu nằm cục bộ cùng ứng dụng.
+C. Không thể thực hiện truy vấn dữ liệu.
+D. Không thể sao lưu dữ liệu.
 
 
 ---
@@ -157,7 +155,7 @@ Phía server chịu trách nhiệm:
 - Quản lý giao dịch.
 - Lưu trữ dữ liệu.
 - Trả kết quả về cho client.
-![alt text](images/image-2.png)
+![alt text](image-2.png)
 ### 4.2. Ví dụ
 
 Một ví dụ điển hình của kiến trúc 2 tầng là **hệ thống quản lý thư viện** trong trường học hoặc tổ chức nhỏ.
@@ -222,28 +220,26 @@ Khi người dùng tìm kiếm một cuốn sách, tầng client gửi yêu cầ
 
 ### Quiz nhanh: Kiến trúc 2 tầng
 
-**Câu 1.** Kiến trúc 2 tầng gồm hai tầng chính nào?
+**Câu 1.** Một ứng dụng desktop tại thư viện gửi yêu cầu tìm sách trực tiếp đến database server trong mạng nội bộ. Khi thay đổi quy tắc tính tiền phạt, đội kỹ thuật phải cập nhật nhiều máy client. Điều này phản ánh nhược điểm nào của kiến trúc 2 tầng?
 
-A. Client và database server  
-B. Client và trình duyệt web  
-C. Database và hệ điều hành  
-D. Ứng dụng và tệp văn bản  
+A. Database server không thể lưu dữ liệu.
+B. Client và database có mức liên kết chặt, làm việc bảo trì/triển khai trên nhiều client phức tạp hơn.
+C. Client không thể gửi truy vấn qua mạng.
+D. Hệ thống thiếu hoàn toàn tầng giao diện.
 
+**Câu 2.** Một database server bắt đầu chậm khi số lượng ứng dụng client kết nối trực tiếp tăng mạnh. Nguyên nhân phù hợp nhất là gì?
 
-**Câu 2.** Trong kiến trúc 2 tầng, client thường giao tiếp với cơ sở dữ liệu thông qua công nghệ nào?
+A. Server phải xử lý nhiều kết nối và yêu cầu trực tiếp từ client.
+B. Client đã bị loại khỏi kiến trúc.
+C. Tầng ứng dụng trung gian đang xử lý quá tải.
+D. Dữ liệu không còn được lưu trên server.
 
-A. HTML và CSS  
-B. ODBC hoặc JDBC  
-C. Bluetooth  
-D. FTP  
+**Câu 3.** Vì sao kiến trúc 2 tầng thường phù hợp hơn với hệ thống nội bộ nhỏ hoặc vừa so với một website Internet lớn?
 
-
-**Câu 3.** Nhược điểm bảo mật của kiến trúc 2 tầng là gì?
-
-A. Không lưu được dữ liệu  
-B. Client kết nối trực tiếp với cơ sở dữ liệu  
-C. Không có giao diện người dùng  
-D. Không thể xử lý truy vấn  
+A. Vì 2 tầng không dùng mạng.
+B. Vì database server không cần bảo mật.
+C. Vì client chỉ chạy được trên một máy duy nhất.
+D. Mô hình đơn giản và trực tiếp, nhưng việc để nhiều client kết nối thẳng vào database khó mở rộng và kiểm soát hơn ở quy mô lớn.
 
 
 ---
@@ -271,7 +267,7 @@ Trong mô hình này, client không giao tiếp trực tiếp với cơ sở d�
 Tầng trung gian đóng vai trò là cầu nối giữa người dùng và cơ sở dữ liệu.
 
 Kiến trúc này thường được sử dụng trong các ứng dụng web lớn, hệ thống doanh nghiệp, thương mại điện tử, ngân hàng trực tuyến và các hệ thống cần nhiều người dùng truy cập đồng thời.
-![alt text](image.png)
+![alt text](image-3.png)
 ### 5.2. Ví dụ: Cửa hàng thương mại điện tử
 
 Giả sử người dùng truy cập một cửa hàng trực tuyến.
@@ -344,28 +340,26 @@ Cơ sở dữ liệu lưu trữ:
 
 ### Quiz nhanh: Kiến trúc 3 tầng
 
-**Câu 1.** Ba tầng chính trong kiến trúc 3 tầng là gì?
+**Câu 1.** Trong website thương mại điện tử, thao tác “kiểm tra tồn kho, áp mã giảm giá, xác thực người dùng rồi mới gửi yêu cầu lưu đơn hàng” nên nằm chủ yếu ở đâu?
 
-A. File, folder, disk  
-B. Client, application server, database server  
-C. RAM, CPU, hard disk  
-D. User, password, table  
+A. Tầng ứng dụng / business logic.
+B. Tầng trình bày trên trình duyệt.
+C. Tầng cơ sở dữ liệu duy nhất.
+D. Thiết bị mạng của người dùng.
 
+**Câu 2.** Một công ty muốn thay đổi quy tắc miễn phí vận chuyển mà không phát hành lại ứng dụng mobile cho toàn bộ khách hàng. Lợi ích kiến trúc 3 tầng nào hỗ trợ tốt nhất?
 
-**Câu 2.** Trong kiến trúc 3 tầng, client có kết nối trực tiếp với database không?
+A. Client có thể ghi trực tiếp vào database.
+B. Logic nghiệp vụ được tách ở tầng ứng dụng nên có thể cập nhật tập trung.
+C. Database không còn cần lưu dữ liệu.
+D. Hệ thống không còn cần quản lý quyền truy cập.
 
-A. Có  
-B. Không  
-C. Chỉ khi database nhỏ  
-D. Chỉ khi dùng MS Access  
+**Câu 3.** Đổi lại cho lợi ích mở rộng và bảo mật, kiến trúc 3 tầng thường phát sinh chi phí hoặc độ phức tạp nào?
 
-
-**Câu 3.** Lợi ích bảo mật chính của kiến trúc 3 tầng là gì?
-
-A. Không cần mật khẩu  
-B. Client không truy cập trực tiếp vào cơ sở dữ liệu  
-C. Không cần máy chủ  
-D. Dữ liệu được lưu trên giấy  
+A. Không thể triển khai trên mạng.
+B. Không thể dùng cho ứng dụng web.
+C. Phải thiết kế, vận hành và giám sát thêm tầng ứng dụng cùng giao tiếp giữa các tầng.
+D. Client buộc phải truy cập trực tiếp database.
 
 
 ---
@@ -390,105 +384,76 @@ D. Dữ liệu được lưu trên giấy
 
 ### 7.1. Câu hỏi trắc nghiệm
 
-**Câu 1.** Kiến trúc DBMS mô tả điều gì?
+**Câu 1.** Một ứng dụng desktop nội bộ được triển khai cho 20 nhân viên. Mỗi client kết nối trực tiếp database server. Khi thay đổi cách kiểm tra dữ liệu, đội kỹ thuật phải cập nhật từng máy. Kiến trúc hiện tại có khả năng cao là:
 
-A. Cách thiết kế giao diện đồ họa  
-B. Cách người dùng và ứng dụng tương tác với cơ sở dữ liệu  
-C. Cách lắp ráp phần cứng máy tính  
-D. Cách định dạng văn bản  
+A. 1 tầng.
+B. 3 tầng.
+C. 2 tầng.
+D. File-based system không có server.
 
+**Câu 2.** Một hệ thống có client, application server và database server. Nếu database schema thay đổi nhưng API của application server được giữ ổn định, bên nào thường ít bị ảnh hưởng trực tiếp nhất?
 
----
+A. Client/presentation layer.
+B. Database server.
+C. Tầng ứng dụng.
+D. Toàn bộ client bắt buộc phải sửa ngay.
 
-**Câu 2.** Kiến trúc nào phù hợp nhất với ứng dụng cá nhân, không cần mạng?
+**Câu 3.** Một nhóm đề xuất cho trình duyệt web kết nối thẳng database server để “bỏ bớt một tầng cho nhanh”. Rủi ro chính cần đánh giá là gì?
 
-A. 1 tầng  
-B. 2 tầng  
-C. 3 tầng  
-D. Nhiều tầng  
+A. Trình duyệt sẽ không hiển thị HTML.
+B. Database không thể xử lý truy vấn.
+C. Không thể triển khai website trên Internet.
+D. Khó kiểm soát bảo mật, logic nghiệp vụ và kết nối trực tiếp từ số lượng lớn client.
 
+**Câu 4.** Một hệ thống 3 tầng có response time tăng. Kết luận nào hợp lý nhất?
 
----
+A. Cần đo từng tầng; độ trễ có thể đến từ client, mạng, application server hoặc database.
+B. Kiến trúc 3 tầng luôn chậm hơn 2 tầng và không thể tối ưu.
+C. Database chắc chắn là nguyên nhân duy nhất.
+D. Chỉ cần bỏ toàn bộ tầng ứng dụng.
 
-**Câu 3.** Trong kiến trúc 2 tầng, tầng client thường chứa thành phần nào?
+**Câu 5.** Lý do nào giải thích đúng nhất vì sao tầng ứng dụng giúp tăng bảo mật trong 3 tầng?
 
-A. Giao diện người dùng và chương trình ứng dụng  
-B. Chỉ dữ liệu thô  
-C. Chỉ ổ cứng  
-D. Chỉ hệ điều hành  
+A. Nó loại bỏ mọi nhu cầu xác thực người dùng.
+B. Nó che database hoàn toàn khỏi đội vận hành.
+C. Nó làm database không còn lưu dữ liệu nhạy cảm.
+D. Nó tạo điểm kiểm soát trung tâm để xác thực, phân quyền và giới hạn yêu cầu trước khi truy cập database.
 
+**Câu 6.** Một cửa hàng nhỏ chỉ có chủ cửa hàng dùng một máy tính, không cần truy cập từ xa, muốn chi phí thấp và triển khai nhanh. Lựa chọn hợp lý nhất là:
 
----
+A. Kiến trúc 3 tầng có nhiều application server.
+B. Kiến trúc 1 tầng.
+C. Kiến trúc 2 tầng với nhiều database replicas.
+D. Microservices bắt buộc.
 
-**Câu 4.** Trong kiến trúc 3 tầng, tầng nào thường xử lý logic nghiệp vụ?
+**Câu 7.** Khi chọn giữa 2 tầng và 3 tầng, tiêu chí nào có giá trị nhất?
 
-A. Tầng trình bày  
-B. Tầng ứng dụng  
-C. Tầng cơ sở dữ liệu  
-D. Tầng lưu trữ vật lý  
+A. Chỉ dựa vào số màu của giao diện.
+B. Quy mô người dùng, yêu cầu bảo mật, mức độ thay đổi logic nghiệp vụ, khả năng mở rộng và năng lực vận hành.
+C. Chỉ dựa vào loại hệ điều hành client.
+D. Luôn chọn 3 tầng vì có nhiều tầng hơn.
 
+**Câu 8.** Trong kiến trúc 2 tầng, ODBC/JDBC đóng vai trò gần đúng nhất là gì?
 
----
+A. Công cụ vẽ giao diện người dùng.
+B. Hệ thống backup vật lý.
+C. Cơ chế/kết nối giúp ứng dụng client giao tiếp với database server.
+D. Một loại database server.
 
-**Câu 5.** Nhược điểm chính của kiến trúc 1 tầng là gì?
+**Câu 9.** Một thay đổi trong quy tắc tính khuyến mãi cần được áp dụng đồng nhất cho web, mobile và desktop clients. Kiến trúc nào hỗ trợ điều này tự nhiên nhất?
 
-A. Không có khả năng lưu trữ dữ liệu  
-B. Khó hỗ trợ nhiều người dùng và bảo mật thấp  
-C. Luôn cần nhiều máy chủ  
-D. Không thể dùng cho ứng dụng nhỏ  
+A. 1 tầng, vì mỗi máy giữ logic riêng.
+B. 2 tầng, vì mọi client sửa logic độc lập.
+C. 3 tầng, vì quy tắc có thể tập trung tại application/business logic layer.
+D. Không kiến trúc nào hỗ trợ.
 
+**Câu 10.** Phát biểu nào là đánh giá cân bằng nhất về kiến trúc 3 tầng?
 
----
+A. Luôn rẻ hơn và đơn giản hơn 1 tầng.
+B. Không cần database server.
+C. Thường dễ mở rộng và kiểm soát hơn, nhưng cần đầu tư thêm cho tầng ứng dụng, vận hành và giao tiếp giữa các tầng.
+D. Chỉ phù hợp cho ứng dụng offline một người dùng.
 
-**Câu 6.** Lý do kiến trúc 3 tầng có khả năng bảo mật tốt hơn là gì?
-
-A. Vì không cần database  
-B. Vì client không truy cập trực tiếp vào database  
-C. Vì dữ liệu không được lưu trữ  
-D. Vì không có tầng ứng dụng  
-
-
----
-
-**Câu 7.** Ví dụ nào phù hợp nhất với kiến trúc 3 tầng?
-
-A. File Excel lưu trên máy cá nhân  
-B. MS Access dùng cho một người  
-C. Website thương mại điện tử  
-D. Tệp văn bản lưu trong USB  
-
-
----
-
-**Câu 8.** Trong kiến trúc 2 tầng, khi số lượng người dùng tăng mạnh, vấn đề nào có thể xảy ra?
-
-A. Server bị quá tải do nhiều kết nối trực tiếp  
-B. Client không còn giao diện  
-C. Database tự động biến mất  
-D. Không thể tạo bảng  
-
-
----
-
-**Câu 9.** ODBC và JDBC thường được dùng trong kiến trúc nào?
-
-A. 1 tầng  
-B. 2 tầng  
-C. 3 tầng  
-D. Không liên quan đến DBMS  
-
-
----
-
-**Câu 10.** Kiến trúc nào thường phù hợp nhất cho hệ thống doanh nghiệp lớn?
-
-A. 1 tầng  
-B. 2 tầng  
-C. 3 tầng  
-D. File-based system  
-
-
----
 
 ### 7.2. Câu hỏi tự luận ngắn
 
@@ -571,31 +536,35 @@ Hãy đề xuất kiến trúc DBMS phù hợp và giải thích lý do.
 
 ### Quiz nhanh: Kiến trúc 1 tầng
 
-- **Câu 1.** C
-- **Câu 2.** B
-- **Câu 3.** C
-### Quiz nhanh: Kiến trúc 2 tầng
-
 - **Câu 1.** A
-- **Câu 2.** B
+- **Câu 2.** C
 - **Câu 3.** B
-### Quiz nhanh: Kiến trúc 3 tầng
 
-- **Câu 1.** B
-- **Câu 2.** B
-- **Câu 3.** B
-### Câu hỏi ôn tập - Trắc nghiệm
+### Quiz nhanh: Kiến trúc 2 tầng
 
 - **Câu 1.** B
 - **Câu 2.** A
-- **Câu 3.** A
-- **Câu 4.** B
-- **Câu 5.** B
+- **Câu 3.** D
+
+### Quiz nhanh: Kiến trúc 3 tầng
+
+- **Câu 1.** A
+- **Câu 2.** B
+- **Câu 3.** C
+
+### Câu hỏi ôn tập - Trắc nghiệm
+
+- **Câu 1.** C
+- **Câu 2.** A
+- **Câu 3.** D
+- **Câu 4.** A
+- **Câu 5.** D
 - **Câu 6.** B
-- **Câu 7.** C
-- **Câu 8.** A
-- **Câu 9.** B
+- **Câu 7.** B
+- **Câu 8.** C
+- **Câu 9.** C
 - **Câu 10.** C
+
 ### Câu hỏi ôn tập - Tự luận ngắn
 
 #### Câu 1.
