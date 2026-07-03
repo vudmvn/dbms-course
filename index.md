@@ -154,6 +154,7 @@ Phần này trình bày chuẩn hóa dữ liệu, các dạng chuẩn và cách 
 | Second Normal Form (2NF) trong DBMS | [Markdown](normalization/2nd-normal-form/2nd-normal-form.md) | <span class="missing">—</span> | Phụ thuộc đầy đủ vào khóa chính |
 | Third Normal Form (3NF) trong DBMS | [Markdown](normalization/3rd-normal-form/3rd-normal-form.md) | <span class="missing">—</span> | Loại bỏ phụ thuộc bắc cầu |
 | Fourth Normal Form (4NF) trong DBMS | [Markdown](normalization/4th-normal-form/4th-normal-form.md) | <span class="missing">—</span> | Xử lý phụ thuộc đa trị |
+
 ## MySQL Server
 
 Phần này trình bày quá trình cài đặt, kết nối và vận hành MySQL Server trước khi làm việc với SQL. Nội dung bao gồm môi trường làm việc, dịch vụ MySQL, cơ sở dữ liệu mẫu, storage engine và các thành phần server thường gặp.
@@ -251,6 +252,7 @@ Phần programmability trình bày các đối tượng dùng để đóng gói 
 | MySQL Triggers: UPDATE, DELETE, validation và audit | [Markdown](MySQL/programmability/trigger/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE và AFTER DELETE |
 | MySQL Triggers: multiple triggers, metadata và best practices | [Markdown](MySQL/programmability/trigger/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA và restrictions |
 | MySQL Events và Event Scheduler | [Markdown](MySQL/programmability/events/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS và DROP EVENT |
+
 ## Tham khảo
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
@@ -337,6 +339,7 @@ Phần này trình bày chuẩn hóa dữ liệu, các dạng chuẩn và cách 
 | Second Normal Form (2NF) in DBMS | [Markdown](normalization/2nd-normal-form/2nd-normal-form.md) | <span class="missing">—</span> | Full dependency on the primary key |
 | Third Normal Form (3NF) in DBMS | [Markdown](normalization/3rd-normal-form/3rd-normal-form.md) | <span class="missing">—</span> | Removes transitive dependencies |
 | Fourth Normal Form (4NF) in DBMS | [Markdown](normalization/4th-normal-form/4th-normal-form.md) | <span class="missing">—</span> | Handles multivalued dependencies |
+
 ## MySQL Server
 
 Phần này trình bày quá trình cài đặt, kết nối và vận hành MySQL Server trước khi làm việc với SQL. Nội dung bao gồm môi trường làm việc, dịch vụ MySQL, cơ sở dữ liệu mẫu, storage engine và các thành phần server thường gặp.
@@ -434,6 +437,7 @@ Phần programmability trình bày các đối tượng dùng để đóng gói 
 | MySQL Triggers: UPDATE, DELETE, Validation, and Audit | [Markdown](MySQL/programmability/trigger/triggers-2.md) | <span class="missing">—</span> | BEFORE UPDATE, AFTER UPDATE, BEFORE DELETE, and AFTER DELETE |
 | MySQL Triggers: Multiple Triggers, Metadata, and Best Practices | [Markdown](MySQL/programmability/trigger/triggers-3.md) | <span class="missing">—</span> | PRECEDES, FOLLOWS, INFORMATION_SCHEMA, and restrictions |
 | MySQL Events and Event Scheduler | [Markdown](MySQL/programmability/events/event.md) | <span class="missing">—</span> | CREATE EVENT, ALTER EVENT, SHOW EVENTS, and DROP EVENT |
+
 ## References
 
 - GeeksforGeeks: [Database Management System Tutorial](https://www.geeksforgeeks.org/dbms/dbms/)
