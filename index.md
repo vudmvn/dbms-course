@@ -159,7 +159,7 @@ Phần này trình bày quá trình cài đặt, kết nối và vận hành MyS
 
 | Bài học | Bài giảng Markdown | Slides PDF | Ghi chú |
 |---|---|---|---|
-| Giới thiệu MySQL | [Markdown](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | Tổng quan MySQL và hệ sinh thái |
+| Giới thiệu MySQL | [Markdown](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.md) | [PDF](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.pdf) | Tổng quan MySQL và hệ sinh thái |
 | Cài đặt MySQL trên Windows | [Markdown](lectures/MySQL/mysql-server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | Cài đặt server trên Windows |
 | Cài đặt MySQL Workbench trên Windows | [Markdown](lectures/MySQL/mysql-server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | Công cụ GUI cho MySQL |
 | Kết nối MySQL bằng command options | [Markdown](lectures/MySQL/mysql-server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | Kết nối bằng command line |
@@ -344,7 +344,7 @@ Phần này trình bày quá trình cài đặt, kết nối và vận hành MyS
 
 | Lesson | Markdown Lecture | Slides PDF | Notes |
 |---|---|---|---|
-| Introduction to MySQL | [Markdown](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.md) | <span class="missing">—</span> | MySQL overview and ecosystem |
+| Introduction to MySQL | [Markdown](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.md) | [PDF](lectures/MySQL/mysql-server/gioi-thieu-mysql/gioi-thieu-mysql.pdf) | MySQL overview and ecosystem |
 | Install MySQL on Windows | [Markdown](lectures/MySQL/mysql-server/huong_dan_cai_dat_mysql_windows/huong_dan_cai_dat_mysql_windows.md) | <span class="missing">—</span> | Installing the server on Windows |
 | Install MySQL Workbench on Windows | [Markdown](lectures/MySQL/mysql-server/huong_dan_cai_dat_mysql_workbench_windows/huong_dan_cai_dat_mysql_workbench_windows.md) | <span class="missing">—</span> | GUI tooling for MySQL |
 | Connect to MySQL with Command Options | [Markdown](lectures/MySQL/mysql-server/huong_dan_ket_noi_mysql_command_options/huong_dan_ket_noi_mysql_command_options.md) | <span class="missing">—</span> | Command-line connection options |
