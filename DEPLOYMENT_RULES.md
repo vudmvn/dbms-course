@@ -1,11 +1,11 @@
-﻿# Deployment rules
+# Deployment rules
 
 Site dich: https://vudmvn.github.io/dbms-course
 
 ## Dieu kien deploy
 
 - Workflow chay khi push len nhanh `master` hoac `main`.
-- Workflow chi tu dong chay khi co thay doi trong `introduction/**`, `entity-relationship-model/**`, `relational-model-and-functional-dependencies/**`, `normalization/**`, `MySQL/**`, `index.md`, `_config.yml`, `DEPLOYMENT_RULES.md`, hoac `.github/workflows/pages.yml`.
+- Workflow chi tu dong chay khi co thay doi trong `lectures/**`, `index.md`, `_config.yml`, `DEPLOYMENT_RULES.md`, hoac `.github/workflows/pages.yml`.
 - Co the deploy thu cong bang nut `Run workflow` trong tab GitHub Actions.
 
 ## Remote va branch dang dung
@@ -23,7 +23,7 @@ git push course HEAD:main
 
 ## Cach day noi dung
 
-1. Them hoac sua tai lieu trong `introduction/`, `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, `normalization/` hoac `MySQL/`.
+1. Them hoac sua tai lieu trong `lectures/` (vi du `lectures/introduction/`, `lectures/entity-relationship-model/`, `lectures/relational-model-and-functional-dependencies/`, `lectures/normalization/` hoac `lectures/MySQL/`).
 2. Neu them bai moi, cap nhat lien ket trong `index.md`.
 3. Kiem tra pham vi thay doi truoc khi stage:
 

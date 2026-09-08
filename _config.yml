@@ -21,7 +21,7 @@ relative_links:
 
 include:
   - DBMS_Basic
-  - MySQL
+  - lectures
 
 exclude:
   - TEMP_MARKDOWN_INPUT.md

@@ -1,0 +1,424 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{AnnArbor}
+\usecolortheme{dolphin}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{caption}[numbered]
+
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\title[DBMS]{Hệ quản trị cơ sở dữ liệu và MySQL}
+\subtitle{Course Roadmap \& Learning Overview}
+\author{Vu Duc Minh}
+\institute{National Economics University, Hanoi, Vietnam}
+\date{\today}
+
+\definecolor{dbblue}{RGB}{20,74,135}
+\definecolor{dblight}{RGB}{232,242,255}
+\definecolor{dbgreen}{RGB}{28,120,90}
+\definecolor{dborange}{RGB}{210,120,30}
+
+\setbeamercolor{structure}{fg=dbblue}
+\setbeamercolor{title}{fg=white,bg=dbblue}
+\setbeamercolor{frametitle}{fg=dbblue}
+\setbeamercolor{block title}{fg=white,bg=dbblue}
+\setbeamercolor{block body}{bg=dblight,fg=black}
+
+\newcommand{\kw}[1]{\textcolor{dbblue}{\textbf{#1}}}
+\newcommand{\smallgap}{\vspace{0.4em}}
+
+\begin{document}
+
+%------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mục tiêu của học phần}
+Sau học phần, người học cần có thể:
+\begin{itemize}
+  \item Giải thích vai trò của \kw{cơ sở dữ liệu} và \kw{DBMS} trong hệ thống thông tin.
+  \item Thiết kế mô hình dữ liệu ở mức khái niệm bằng \kw{ER/EER model}.
+  \item Chuyển mô hình ER sang \kw{lược đồ quan hệ} và phân tích khóa, phụ thuộc hàm.
+  \item Áp dụng \kw{chuẩn hóa} để giảm dư thừa và bất nhất dữ liệu.
+  \item Sử dụng \kw{MySQL} để quản trị, truy vấn, tối ưu và lập trình trong cơ sở dữ liệu.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Bức tranh tổng thể của học phần}
+\centering
+\begin{tikzpicture}[
+  node distance=1.05cm and 1.5cm,
+  box/.style={rounded corners, draw=dbblue, thick, fill=dblight, minimum width=3.1cm, minimum height=0.85cm, align=center, font=\small},
+  arr/.style={-Latex, thick, draw=dbblue}
+]
+\node[box] (intro) {Nền tảng DBMS\\kiến trúc, abstraction};
+\node[box, right=of intro] (er) {ER / EER Model\\thiết kế khái niệm};
+\node[box, right=of er] (rel) {Relational Model\\khóa, FD, schema};
+\node[box, below=of rel] (norm) {Normalization\\1NF--4NF};
+\node[box, left=of norm] (mysql) {MySQL Server\\cài đặt, vận hành};
+\node[box, left=of mysql] (sql) {SQL \& Admin\\query, index, transaction};
+\draw[arr] (intro) -- (er);
+\draw[arr] (er) -- (rel);
+\draw[arr] (rel) -- (norm);
+\draw[arr] (norm) -- (mysql);
+\draw[arr] (mysql) -- (sql);
+\end{tikzpicture}
+
+\smallgap
+\textit{Tư duy chính: đi từ mô hình hóa dữ liệu đến triển khai và khai thác dữ liệu bằng MySQL.}
+\end{frame}
+
+%------------------------------------------------
+\section{Introduction}
+\begin{frame}{Phần 1: Introduction to DBMS}
+\begin{block}{Nội dung chính}
+\begin{itemize}
+  \item Cơ sở dữ liệu và hệ quản trị cơ sở dữ liệu.
+  \item Nhu cầu sử dụng DBMS trong hệ thống thực tế.
+  \item Kiến trúc 1-tier, 2-tier, 3-tier.
+  \item Trừu tượng hóa dữ liệu và độc lập dữ liệu.
+  \item Schema, instance và mô hình dữ liệu.
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Câu hỏi dẫn nhập}
+Tại sao một ứng dụng kinh doanh không nên lưu dữ liệu quan trọng bằng các file rời rạc?
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{DBMS giải quyết vấn đề gì?}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Khi không dùng DBMS}
+\begin{itemize}
+  \item Dữ liệu trùng lặp, khó kiểm soát.
+  \item Khó đảm bảo tính nhất quán.
+  \item Bảo mật và phân quyền thủ công.
+  \item Khó sao lưu, phục hồi, mở rộng.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Khi dùng DBMS}
+\begin{itemize}
+  \item Quản lý dữ liệu tập trung.
+  \item Ràng buộc toàn vẹn dữ liệu.
+  \item Truy vấn bằng SQL.
+  \item Hỗ trợ giao dịch, bảo mật, backup.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\section{ER Model}
+\begin{frame}{Phần 2: Entity Relationship Model}
+\begin{block}{Vai trò}
+ER model giúp mô tả dữ liệu ở mức \kw{khái niệm}, trước khi chuyển thành các bảng trong cơ sở dữ liệu quan hệ.
+\end{block}
+
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\textbf{Thực thể}\
+Khách hàng, đơn hàng, sản phẩm.
+\column{0.32\textwidth}
+\textbf{Thuộc tính}\
+Mã khách hàng, ngày đặt, giá bán.
+\column{0.32\textwidth}
+\textbf{Mối quan hệ}\
+Khách hàng đặt đơn hàng; đơn hàng gồm sản phẩm.
+\end{columns}
+
+\smallgap
+\begin{alertblock}{Thực hành}
+Xác định entities, attributes, keys và relationships cho một hệ thống bán hàng nhỏ.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Từ bài toán thực tế đến ERD}
+\centering
+\begin{tikzpicture}[
+  node distance=0.9cm,
+  process/.style={draw=dbblue, rounded corners, fill=dblight, align=center, minimum width=4.0cm, minimum height=0.82cm, font=\small},
+  arr/.style={-Latex, thick, draw=dbblue}
+]
+\node[process] (req) {Mô tả nghiệp vụ\\yêu cầu dữ liệu};
+\node[process, below=of req] (entity) {Xác định thực thể\\và thuộc tính};
+\node[process, below=of entity] (rel) {Xác định quan hệ\\và lực lượng tham gia};
+\node[process, below=of rel] (erd) {Vẽ ERD\\kiểm tra ràng buộc};
+\draw[arr] (req) -- (entity);
+\draw[arr] (entity) -- (rel);
+\draw[arr] (rel) -- (erd);
+\end{tikzpicture}
+\end{frame}
+
+%------------------------------------------------
+\section{Relational Model}
+\begin{frame}{Phần 3: Relational Model and Functional Dependencies}
+\begin{block}{Nội dung chính}
+\begin{itemize}
+  \item Relation, attribute, tuple và relational schema.
+  \item Super key, candidate key, primary key, foreign key.
+  \item Mapping từ ER model sang relational model.
+  \item Functional dependency: determinant và dependent attribute.
+  \item Attribute closure và chiến lược thiết kế schema.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Ví dụ}
+Nếu \texttt{StudentID} xác định duy nhất \texttt{StudentName}, ta có phụ thuộc hàm:
+\[
+\texttt{StudentID} \rightarrow \texttt{StudentName}.
+\]
+\end{exampleblock}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Mapping ER sang quan hệ}
+\begin{columns}[T,onlytextwidth]
+\column{0.52\textwidth}
+\begin{itemize}
+  \item Mỗi entity mạnh thường trở thành một bảng.
+  \item Khóa chính của entity trở thành primary key của bảng.
+  \item Quan hệ 1--N thường được biểu diễn bằng foreign key ở phía N.
+  \item Quan hệ N--N thường được tách thành bảng trung gian.
+\end{itemize}
+\column{0.44\textwidth}
+\begin{block}{Ví dụ}
+\texttt{Customer(CustomerID, Name)}\\
+\texttt{Order(OrderID, OrderDate, CustomerID)}
+\end{block}
+\end{columns}
+
+\begin{alertblock}{Điểm cần kiểm tra}
+Một thiết kế tốt phải bảo toàn ý nghĩa nghiệp vụ, khóa và ràng buộc quan hệ.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{Normalization}
+\begin{frame}{Phần 4: Normalization}
+\begin{block}{Mục tiêu}
+Chuẩn hóa giúp giảm dư thừa dữ liệu và tránh các lỗi cập nhật, chèn, xóa.
+\end{block}
+
+\begin{center}
+\begin{tabular}{>{\bfseries}p{0.16\textwidth} p{0.72\textwidth}}
+\toprule
+1NF & Mỗi ô chứa giá trị nguyên tử, không có nhóm lặp.\\
+2NF & Không có phụ thuộc bộ phận vào một phần của khóa ghép.\\
+3NF & Không có phụ thuộc bắc cầu giữa các thuộc tính không khóa.\\
+4NF & Xử lý phụ thuộc đa trị độc lập.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Tư duy chuẩn hóa}
+\centering
+\begin{tikzpicture}[
+  node distance=1.1cm,
+  box/.style={draw=dbblue, rounded corners, fill=dblight, align=center, minimum width=3.7cm, minimum height=0.85cm, font=\small},
+  arr/.style={-Latex, thick, draw=dbblue}
+]
+\node[box] (raw) {Bảng ban đầu\\có thể dư thừa};
+\node[box, right=of raw] (fd) {Phân tích khóa\\và phụ thuộc hàm};
+\node[box, right=of fd] (decomp) {Tách bảng\\theo dạng chuẩn};
+\node[box, below=of fd] (check) {Kiểm tra lossless join\\và bảo toàn phụ thuộc};
+\draw[arr] (raw) -- (fd);
+\draw[arr] (fd) -- (decomp);
+\draw[arr] (decomp) -- (check);
+\draw[arr] (check) -- (fd);
+\end{tikzpicture}
+\end{frame}
+
+%------------------------------------------------
+\section{MySQL Server}
+\begin{frame}{Phần 5: MySQL Server}
+\begin{block}{Nội dung triển khai}
+\begin{itemize}
+  \item Giới thiệu MySQL và hệ sinh thái công cụ.
+  \item Cài đặt MySQL Server và MySQL Workbench trên Windows.
+  \item Kết nối bằng command line và VS Code.
+  \item Start, stop, restart MySQL service.
+  \item Nạp cơ sở dữ liệu mẫu \texttt{classicmodels}.
+  \item Storage engine, option file, system variables và data directory.
+\end{itemize}
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ thao tác cơ bản với MySQL}
+\begin{block}{Tạo và chọn database}
+\begin{verbatim}
+CREATE DATABASE shop_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE shop_db;
+SHOW TABLES;
+\end{verbatim}
+\end{block}
+
+\begin{alertblock}{Checklist an toàn}
+Trước khi \texttt{DROP DATABASE} hoặc \texttt{DROP TABLE}, cần kiểm tra đúng môi trường, đúng tên database và đã có backup nếu dữ liệu quan trọng.
+\end{alertblock}
+\end{frame}
+
+%------------------------------------------------
+\section{SQL}
+\begin{frame}{Phần 6: SQL Statements in MySQL}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Data Definition}
+\begin{itemize}
+  \item Data types.
+  \item CREATE TABLE.
+  \item Constraints.
+  \item ALTER, RENAME, DROP, TRUNCATE.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Querying Data}
+\begin{itemize}
+  \item SELECT cơ bản.
+  \item JOIN, GROUP BY, HAVING.
+  \item Subquery, CTE.
+  \item Set operations, window functions.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}[fragile]{Ví dụ SELECT trên cơ sở dữ liệu mẫu}
+\begin{block}{Tổng doanh thu theo khách hàng}
+\begin{verbatim}
+SELECT c.customerName,
+       SUM(od.quantityOrdered * od.priceEach) AS revenue
+FROM customers c
+JOIN orders o ON c.customerNumber = o.customerNumber
+JOIN orderdetails od ON o.orderNumber = od.orderNumber
+GROUP BY c.customerNumber, c.customerName
+ORDER BY revenue DESC;
+\end{verbatim}
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Index, tối ưu truy vấn và transaction}
+\begin{block}{Index Optimization}
+\begin{itemize}
+  \item Tạo, xóa và xem thông tin index.
+  \item Composite index, unique index, prefix index, invisible index.
+  \item Đọc \texttt{EXPLAIN} và sử dụng index hints khi cần.
+\end{itemize}
+\end{block}
+
+\begin{block}{Data Modification \& Transactions}
+\begin{itemize}
+  \item INSERT, UPDATE, DELETE và thao tác nâng cao.
+  \item START TRANSACTION, COMMIT, ROLLBACK, SAVEPOINT.
+  \item Locking, row lock, metadata lock và deadlock.
+\end{itemize}
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\section{Programmability}
+\begin{frame}{Phần 7: View, Procedure, Function, Trigger, Event}
+\begin{block}{Ý tưởng chung}
+Các đối tượng này giúp đóng gói logic xử lý trong database, giảm lặp code ở tầng ứng dụng và hỗ trợ tự động hóa một số tác vụ.
+\end{block}
+
+\begin{columns}[T,onlytextwidth]
+\column{0.5\textwidth}
+\begin{itemize}
+  \item \kw{View}: đóng gói truy vấn.
+  \item \kw{Stored procedure}: đóng gói quy trình xử lý.
+  \item \kw{Stored function}: trả về một giá trị.
+\end{itemize}
+\column{0.5\textwidth}
+\begin{itemize}
+  \item \kw{Trigger}: tự động chạy khi INSERT/UPDATE/DELETE.
+  \item \kw{Event}: tác vụ định kỳ trong MySQL.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Lộ trình học gợi ý}
+\centering
+\begin{tikzpicture}[
+  node distance=0.65cm,
+  week/.style={draw=dbblue, rounded corners, fill=dblight, align=left, minimum width=9.7cm, minimum height=0.62cm, font=\small},
+]
+\node[week] (w1) {Tuần 1--2: DBMS fundamentals, architecture, abstraction, independence};
+\node[week, below=of w1] (w2) {Tuần 3--4: ER/EER modeling và bài thực hành ERD};
+\node[week, below=of w2] (w3) {Tuần 5--6: Relational model, keys, ER-to-relational mapping};
+\node[week, below=of w3] (w4) {Tuần 7--8: Functional dependencies, closure, normalization};
+\node[week, below=of w4] (w5) {Tuần 9--11: MySQL Server, administration, SELECT, JOIN, aggregate};
+\node[week, below=of w5] (w6) {Tuần 12--14: Index, transactions, views, procedures, triggers, events};
+\end{tikzpicture}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Hoạt động học tập và đánh giá}
+\begin{columns}[T,onlytextwidth]
+\column{0.47\textwidth}
+\begin{block}{Hoạt động}
+\begin{itemize}
+  \item Đọc lecture note trước buổi học.
+  \item Làm lab trên MySQL và classicmodels.
+  \item Vẽ ERD từ tình huống kinh doanh.
+  \item Viết truy vấn và giải thích kết quả.
+\end{itemize}
+\end{block}
+\column{0.47\textwidth}
+\begin{block}{Sản phẩm đầu ra}
+\begin{itemize}
+  \item ERD và relational schema.
+  \item Script SQL tạo bảng và ràng buộc.
+  \item Bộ truy vấn phân tích dữ liệu.
+  \item Báo cáo ngắn về thiết kế và tối ưu.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Tài liệu tham khảo chính}
+\begin{itemize}
+  \item Carlos Coronel, Steven Morris. \textit{Database Systems: Design, Implementation, and Management}, 14th Edition. Cengage, 2023.
+  \item Elvis C. Foster, Shripad Godbole. \textit{Database Systems: A Pragmatic Approach}, 3rd Edition. CRC Press / Taylor \& Francis, 2022.
+  \item MySQL Tutorial: tài liệu thực hành về MySQL, SQL và các chủ đề nâng cao.
+  \item GeeksforGeeks DBMS and SQL tutorials: tài liệu bổ trợ theo chủ đề.
+  \item Roadmap.sh SQL Roadmap: lộ trình tự học SQL.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}
+\centering
+\Huge \textbf{Thank you!}
+
+\vspace{1em}
+\Large Questions \& Discussion
+\end{frame}
+
+\end{document}

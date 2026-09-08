@@ -1,4 +1,4 @@
-﻿# Repository Summary
+# Repository Summary
 
 Last reviewed: 2026-07-03
 
@@ -29,9 +29,8 @@ Important Jekyll settings:
 - `baseurl`: `/dbms-course`
 - `markdown`: `kramdown`
 - `permalink`: `pretty`
-- Explicitly included folders: `introduction`, `MySQL`
-- `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, and `normalization/` are published as normal top-level content folders and are also
-  covered by the Pages workflow trigger paths.
+- Explicitly included folders: `DBMS_Basic`, `lectures`
+- Course content is organized under `lectures/` (`lectures/introduction/`, `lectures/entity-relationship-model/`, `lectures/relational-model-and-functional-dependencies/`, `lectures/normalization/`, and `lectures/MySQL/`) and covered by the Pages workflow trigger paths (`lectures/**`).
 - Excluded temporary/build files include `TEMP_MARKDOWN_INPUT.md`, `node_modules`,
   and common LaTeX/log output files.
 
@@ -47,28 +46,13 @@ Important Jekyll settings:
   - `assets/files/` contains course files such as the syllabus PDF.
   - `assets/images/` contains shared images such as book covers.
 
-- `introduction/`
-  - Core DBMS lessons.
-  - Each lesson generally lives in its own folder.
-  - Some lessons include generated/source formats such as `.html`, `.tex`, and `.pdf`
-    in addition to the publishable `.md` file.
-  - `introduction/data-independence/` includes bilingual Beamer source `.tex`
-    files and generated Vietnamese/English PDF slides.
-
-- `entity-relationship-model/`
-  - Conceptual modeling lessons and ER labs.
-  - Current lessons include `data-modeling`, `er-model`, `enhanced-er-model`, `recursive-relationship`, and generalization/specialization/aggregation.
-  - `entity-relationship-model/er-model/` includes Vietnamese/English Beamer source `.tex` files and generated PDF slides.
-
-- `relational-model-and-functional-dependencies/`
-  - Relational schema, ER-to-relational mapping, keys, functional dependency, attribute closure, and schema design lessons.
-
-- `normalization/`
-  - Normal forms overview plus 1NF, 2NF, 3NF, and 4NF lessons.
-- `MySQL/`
-  - MySQL lessons and how-to guides organized by topic folder.
-  - Topic folders include `mysql-server`, `database-administration`, `data-definition`, `querying-data`, `index-optimization`, `data-modification-transactions`, and `programmability`.
-  - Most lesson folders contain one `.md` lesson plus an `images/` folder.
+- `lectures/`
+  - Contains all lecture modules:
+    - `lectures/introduction/`: Core DBMS introduction lessons.
+    - `lectures/entity-relationship-model/`: Conceptual modeling lessons and ER labs.
+    - `lectures/relational-model-and-functional-dependencies/`: Relational schema, ER-to-relational mapping, keys, functional dependency, attribute closure, and schema design lessons.
+    - `lectures/normalization/`: Normal forms overview plus 1NF, 2NF, 3NF, and 4NF lessons.
+    - `lectures/MySQL/`: MySQL lessons and how-to guides organized by topic folder (`mysql-server`, `database-administration`, `data-definition`, `querying-data`, `index-optimization`, `data-modification-transactions`, and `programmability`).
 - `_config.yml`
   - Jekyll/GitHub Pages configuration.
 
@@ -219,7 +203,7 @@ gh run list --repo vudmvn/dbms-course --limit 5
 
 General content flow:
 
-1. Add or edit Markdown content under `introduction/`, `entity-relationship-model/`, `relational-model-and-functional-dependencies/`, `normalization/`, or `MySQL/`.
+1. Add or edit Markdown content under `lectures/` (e.g. `lectures/introduction/`, `lectures/entity-relationship-model/`, `lectures/relational-model-and-functional-dependencies/`, `lectures/normalization/`, or `lectures/MySQL/`).
 2. Add any lesson images inside that lesson folder, usually under `images/`.
 3. Update `index.md` if the lesson should appear on the homepage.
 4. Commit and push to `course/main`.
@@ -227,9 +211,7 @@ General content flow:
 
 Workflow trigger paths:
 
-- `introduction/**`
-- `entity-relationship-model/**`, `relational-model-and-functional-dependencies/**`, `normalization/**`
-- `MySQL/**`
+- `lectures/**`
 - `index.md`
 - `_config.yml`
 - `DEPLOYMENT_RULES.md`
