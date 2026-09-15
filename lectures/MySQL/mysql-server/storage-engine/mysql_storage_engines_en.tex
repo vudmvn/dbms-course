@@ -1,0 +1,862 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{AnnArbor}
+\usecolortheme{dolphin}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\definecolor{sqlbg}{RGB}{248,248,248}
+\definecolor{sqlkw}{RGB}{0,70,140}
+\definecolor{sqlcm}{RGB}{90,90,90}
+\definecolor{myblue}{RGB}{32,83,150}
+\definecolor{myorange}{RGB}{202,100,30}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{sqlkw}\bfseries,
+  commentstyle=\color{sqlcm}\itshape,
+  stringstyle=\color{myorange},
+  backgroundcolor=\color{sqlbg},
+  frame=single,
+  rulecolor=\color{black!20},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=2
+}
+\lstset{style=sqlstyle}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}}
+\newcommand{\tinyitem}{\setlength{\itemsep}{1pt}}
+
+\title[MySQL Storage Engines]{MySQL Storage Engines}
+\subtitle{Concepts, Verification, Selection, and Practical Applications}
+\author{DSAI1002 -- Database Tutorial}
+\date{Updated: June 4, 2026}
+
+\begin{document}
+
+% 1
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% 2
+\begin{frame}{Learning Objectives}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{After this lesson, learners can}
+\begin{enumerate}\smallitem
+  \item Explain the concept of a \alert{storage engine} in MySQL.
+  \item Describe the engine's role in storing and processing table data.
+  \item Inspect available engines using \code{SHOW ENGINES} and \code{information\_schema.engines}.
+\end{enumerate}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Practical Skills}
+\begin{enumerate}\smallitem
+  \setcounter{enumi}{3}
+  \item Specify an engine when creating tables using \code{ENGINE}.
+  \item Differentiate commonly used storage engines.
+  \item Choose the appropriate engine for real-world scenarios.
+\end{enumerate}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 3
+\begin{frame}{High-Level Overview}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{In MySQL}
+Each table is managed by a specific \alert{storage engine}.
+\end{block}
+\begin{itemize}\smallitem
+  \item The engine governs how table data is stored, read, written, locked, and recovered.
+  \item Not all engines support the same set of capabilities.
+  \item For example: \code{InnoDB} supports transactions and foreign keys; \code{MEMORY} stores data entirely in RAM.
+\end{itemize}
+\column{0.46\textwidth}
+\begin{block}{Two Primary Layers}
+\begin{description}\smallitem
+  \item[SQL Layer] Receives statements, parses syntax, and optimizes query execution plans.
+  \item[Engine Layer] Manages physical storage and data retrieval for each table.
+\end{description}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 4
+\begin{frame}{MySQL Server and Storage Engines}
+\centering
+\begin{tikzpicture}[node distance=0.95cm, every node/.style={font=\small}]
+\node[draw, rounded corners, fill=blue!8, minimum width=7.9cm, minimum height=0.70cm] (client) {Client / Application sends SQL queries};
+\node[draw, rounded corners, fill=green!8, below=of client, minimum width=7.9cm, minimum height=0.70cm] (sql) {SQL Layer: parser, optimizer, execution coordinator};
+\node[draw, rounded corners, fill=orange!10, below=of sql, minimum width=7.9cm, minimum height=0.70cm] (engine) {Storage Engine of the target table};
+\node[draw, rounded corners, fill=gray!12, below=of engine, minimum width=7.9cm, minimum height=0.70cm] (data) {Physical Data: pages, indexes, logs, files, RAM};
+\draw[-{Latex[length=2.4mm]}] (client) -- (sql);
+\draw[-{Latex[length=2.4mm]}] (sql) -- (engine);
+\draw[-{Latex[length=2.4mm]}] (engine) -- (data);
+\end{tikzpicture}
+\vspace{0.15cm}
+
+\footnotesize Storage engines operate beneath the SQL layer and directly manage table-level data storage.
+\end{frame}
+
+% 5
+\begin{frame}{What is a Storage Engine?}
+\begin{block}{Definition}
+A \alert{storage engine} is a software module within MySQL responsible for handling data storage, retrieval, and management for individual tables.
+\end{block}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Determines Storage Format}
+\begin{itemize}\smallitem
+  \item Whether data resides on disk or in system memory.
+  \item How indexing, caching, and crash recovery are organized.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Determines Feature Support}
+\begin{itemize}\smallitem
+  \item Whether transactions (ACID) are supported.
+  \item Whether foreign keys and row-level locking are available.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 6
+\begin{frame}[fragile]{Default Storage Engine}
+\begin{itemize}\smallitem
+  \item Since MySQL 5.5, \code{InnoDB} has been the default storage engine.
+  \item If a \code{CREATE TABLE} statement omits the \code{ENGINE} clause, MySQL applies the server default.
+\end{itemize}
+\begin{lstlisting}
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100)
+);
+\end{lstlisting}
+\begin{block}{Interpretation}
+If the default engine is \code{InnoDB}, the \code{students} table will be created using \code{InnoDB} automatically.
+\end{block}
+\end{frame}
+
+% 7
+\begin{frame}[fragile]{Specifying the Storage Engine at Creation}
+\begin{block}{General Syntax}
+\begin{lstlisting}
+CREATE TABLE table_name (
+    column_list
+) ENGINE = engine_name;
+\end{lstlisting}
+\end{block}
+\begin{block}{Example: Creating a Table with InnoDB}
+\begin{lstlisting}
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    phone VARCHAR(20)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+% 8
+\begin{frame}{SQL Processing Flow with Storage Engines}
+\begin{enumerate}\smallitem
+  \item \textbf{Receive SQL statement:} Client issues \code{SELECT}, \code{INSERT}, \code{UPDATE}, \code{DELETE}, or \code{CREATE TABLE}.
+  \item \textbf{Parse and optimize:} MySQL validates syntax, permissions, and formulates an execution plan.
+  \item \textbf{Call storage engine:} MySQL delegates read/write requests down to the table's designated engine.
+  \item \textbf{Access data:} The engine reads, writes, locks, recovers, or indexes data via its internal mechanisms.
+  \item \textbf{Return results:} MySQL receives the data records from the engine and returns the response to the client.
+\end{enumerate}
+\end{frame}
+
+% 9
+\begin{frame}[fragile]{Checking Available Storage Engines}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Method 1: \code{SHOW ENGINES}}
+\begin{lstlisting}
+SHOW ENGINES;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Method 2: System Table}
+\begin{lstlisting}
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\vspace{0.25cm}
+\begin{alertblock}{Key Takeaway}
+These queries identify which engines are supported, which one is set as default, or if any are disabled.
+\end{alertblock}
+\end{frame}
+
+% 10
+\begin{frame}{Support Values in \code{SHOW ENGINES}}
+\begin{center}
+\begin{tabularx}{0.88\textwidth}{>{\ttfamily}l X}
+\toprule
+\textbf{Value} & \textbf{Meaning} \\
+\midrule
+YES & Engine is supported on this server. \\
+NO & Engine is not supported. \\
+DEFAULT & Engine is supported and currently configured as default. \\
+DISABLED & Engine exists in the binary but is currently disabled. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\begin{block}{Key Evaluation Criteria}
+Transactions, foreign keys, crash recovery, persistence, and read/write optimization profiles.
+\end{block}
+\end{frame}
+
+% 11
+\begin{frame}{Major Storage Engines in MySQL}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Common Engines}
+\begin{itemize}\smallitem
+  \item \code{InnoDB}: Default engine, transaction-safe (ACID).
+  \item \code{MyISAM}: Legacy engine, read-heavy, non-transactional.
+  \item \code{MEMORY}: Fast in-memory volatile storage.
+  \item \code{ARCHIVE}: Compressed historical archive storage.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Specialized Engines}
+\begin{itemize}\smallitem
+  \item \code{CSV}: Stores data as plain text CSV files.
+  \item \code{BLACKHOLE}: Accepts incoming data without storing it.
+  \item \code{MERGE/MRG\_MyISAM}: Unions identical MyISAM tables.
+  \item \code{FEDERATED}: Connects to remote MySQL servers.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 12
+\begin{frame}{InnoDB: The Default and Standard Engine}
+\begin{block}{Concept}
+\code{InnoDB} is the safest and most capable choice for enterprise systems due to its robust transactional support, referential integrity, and crash resilience.
+\end{block}
+\begin{columns}[T,onlytextwidth]
+\column{0.24\textwidth}
+\begin{block}{Transactions}
+\small Supports \code{COMMIT}, \code{ROLLBACK}, and ACID properties.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Foreign Keys}
+\small Enforces referential integrity constraints.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Row Locking}
+\small Reduces lock contention in concurrent multi-user workloads.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Crash Recovery}
+\small Automatic recovery using write-ahead redo logging.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 13
+\begin{frame}[fragile]{Example: Creating an \code{InnoDB} Table}
+\begin{lstlisting}
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date DATE,
+    total_amount DECIMAL(12, 2)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\begin{block}{Recommended Use Cases for \code{InnoDB}}
+\begin{itemize}\smallitem
+  \item E-commerce, billing, and sales order processing systems.
+  \item Financial accounting, payments, and user identity tables.
+  \item Any table demanding strict data integrity, foreign keys, and error rollbacks.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% 14
+\begin{frame}[fragile]{MyISAM}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{Characteristics}
+\begin{itemize}\smallitem
+  \item Default engine prior to MySQL 5.5.
+  \item Can be fast in specific read-heavy scenarios.
+  \item Does not support ACID transactions.
+  \item Does not support foreign key constraints.
+\end{itemize}
+\end{block}
+\column{0.46\textwidth}
+\begin{block}{Example}
+\begin{lstlisting}
+CREATE TABLE article_archive (
+    article_id INT PRIMARY KEY,
+    title VARCHAR(255),
+    content TEXT
+) ENGINE = MyISAM;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 15
+\begin{frame}[fragile]{MEMORY}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{Characteristics}
+\begin{itemize}\smallitem
+  \item Stores all table data in RAM.
+  \item Ideal for temporary caching and lookup tables.
+  \item Extremely low-latency reads and writes.
+  \item Volatile: data is wiped when MySQL Server stops or restarts.
+\end{itemize}
+\end{block}
+\column{0.46\textwidth}
+\begin{block}{Example}
+\begin{lstlisting}
+CREATE TABLE session_cache (
+    session_id VARCHAR(100) PRIMARY KEY,
+    user_id INT,
+    created_at DATETIME
+) ENGINE = MEMORY;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 16
+\begin{frame}[fragile]{ARCHIVE and CSV}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{ARCHIVE}
+\small Stores large volumes of unindexed, append-only historical records in a compressed format; ideal for audit logs.
+\begin{lstlisting}
+CREATE TABLE audit_logs (
+    log_id INT,
+    action_name VARCHAR(100),
+    action_time DATETIME
+) ENGINE = ARCHIVE;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{CSV}
+\small Stores data directly in text files using comma-separated values; easy for file exchange but lacks indexing and constraints.
+\begin{lstlisting}
+CREATE TABLE export_customers (
+    customer_id INT NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL
+) ENGINE = CSV;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 17
+\begin{frame}{BLACKHOLE, MERGE, and FEDERATED}
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\begin{block}{BLACKHOLE}
+\small Discards written data while maintaining binary logs. Used in replication relaying and testing.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{MERGE / MRG\_MyISAM}
+\small Combines multiple identically structured \code{MyISAM} tables into one logical view.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{FEDERATED}
+\small Queries tables on remote MySQL instances without holding physical table data locally.
+\end{block}
+\end{columns}
+\vspace{0.25cm}
+\begin{alertblock}{Note}
+These engines serve specific architectural needs and are not intended for general application tables.
+\end{alertblock}
+\end{frame}
+
+% 18
+\begin{frame}{Principles for Choosing a Storage Engine}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Data Integrity Requirements}
+If tables have foreign key relations, require rollbacks, or process financial data, select \code{InnoDB}.
+\end{block}
+\begin{block}{Data Durability Needs}
+If records must persist across server restarts, never use \code{MEMORY} for persistent data.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Performance Goals}
+Temporary calculation tables benefit from \code{MEMORY}; robust concurrent read/write workloads belong on \code{InnoDB}.
+\end{block}
+\begin{block}{Nature of Data}
+High-volume write-once audit logs suit \code{ARCHIVE}; external exports may use \code{CSV}.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 19
+\begin{frame}{Practical Use Cases}
+\begin{center}
+\begin{tabularx}{0.96\textwidth}{p{0.28\textwidth} X}
+\toprule
+\textbf{Scenario} & \textbf{Suitable Engine} \\
+\midrule
+Sales \& E-commerce & \code{InnoDB}: Demands transactions, rollback, foreign keys, and ACID guarantees. \\
+Temporary Caching & \code{MEMORY}: Fast short-lived intermediate data storage. \\
+Log Archiving & \code{ARCHIVE}: High-volume historical records, minimal updates, compact storage. \\
+Data Interchange & \code{CSV}: Easily read by spreadsheet applications and external export scripts. \\
+Special Testing & \code{BLACKHOLE}: Captures write commands without consuming disk capacity. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{frame}
+
+% 20
+\begin{frame}{Role in Database Administration}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Database Design}
+Select engines tailored to each table's role; primary business tables should consistently use \code{InnoDB}.
+\end{block}
+\begin{block}{Performance Tuning}
+Understanding engine mechanics assists in diagnosing slow queries, lock contention, and I/O bottlenecks.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Backup and Recovery}
+Different engines use distinct on-disk formats, requiring customized backup and restore workflows.
+\end{block}
+\begin{block}{System Operations}
+During version upgrades or server migrations, DBAs must verify supported and default engines.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 21
+\begin{frame}{Quick Comparison: Common Engines}
+\scriptsize
+\begin{tabularx}{0.95\textwidth}{p{0.24\textwidth}*{4}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Criteria} & \textbf{InnoDB} & \textbf{MyISAM} & \textbf{MEMORY} & \textbf{ARCHIVE} \\
+\midrule
+Transactions & Yes & No & No & No \\
+Foreign Keys & Yes & No & No & No \\
+Data Durability & Yes & Yes & No & Yes \\
+Primary Business Data & Yes & Limited & No & Limited \\
+Primary Use Case & OLTP / Business & Read-heavy / legacy & Staging tables & Logs / history \\
+\bottomrule
+\end{tabularx}
+\vspace{0.35cm}
+\begin{block}{Practical Guideline}
+For the vast majority of modern applications, \code{InnoDB} is the safest and recommended default.
+\end{block}
+\end{frame}
+
+% 22
+\begin{frame}{Quick Comparison: Specialized Engines}
+\scriptsize
+\begin{tabularx}{0.95\textwidth}{p{0.27\textwidth}*{3}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Criteria} & \textbf{CSV} & \textbf{BLACKHOLE} & \textbf{FEDERATED} \\
+\midrule
+Transactions & No & No & No \\
+Foreign Keys & No & No & No \\
+Data Durability & Yes & No & Depends on remote server \\
+Primary Business Data & No & No & Limited \\
+Primary Use Case & CSV file export & Discard writes / replication & Remote table access \\
+\bottomrule
+\end{tabularx}
+\vspace{0.35cm}
+\begin{alertblock}{Caution}
+Specialized engines should only be deployed when there is an explicit architectural justification.
+\end{alertblock}
+\end{frame}
+
+% 22
+\begin{frame}{Quick Quiz 1}
+\begin{block}{Question 1}
+To which entity is a MySQL storage engine directly attached?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] User account
+  \item[B.] Table
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] Database password
+  \item[D.] SQL comment
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 23
+\begin{frame}{Quick Quiz 2}
+\begin{block}{Question 2}
+Why is understanding storage engines essential?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] Because the engine defines the entire SQL syntax.
+  \item[B.] Because each engine has distinct storage characteristics and capabilities.
+  \item[C.] Because MySQL supports only a single storage engine.
+  \item[D.] Because engines are only used for renaming tables.
+\end{itemize}
+\end{frame}
+
+% 24
+\begin{frame}{Quick Quiz 3}
+\begin{block}{Question 3}
+Which storage engine is default in modern MySQL releases?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] MyISAM
+  \item[B.] MEMORY
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] InnoDB
+  \item[D.] CSV
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 25
+\begin{frame}{Quick Quiz 4}
+\begin{block}{Question 4}
+Which clause is used to specify the storage engine when creating a table?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] \code{USING}
+  \item[B.] \code{ENGINE}
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] \code{STORAGE PATH}
+  \item[D.] \code{TABLE TYPE ONLY}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 26
+\begin{frame}{Quick Quiz 5}
+\begin{block}{Question 5}
+Which command lists all available storage engines on the server?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] \code{SHOW TABLES;}
+  \item[B.] \code{SHOW ENGINES;}
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] \code{SHOW DATABASES;}
+  \item[D.] \code{SHOW USERS;}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 27
+\begin{frame}{Quick Quiz 6}
+\begin{block}{Question 6}
+What does the value \code{DEFAULT} signify in \code{SHOW ENGINES}?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] The engine is disabled.
+  \item[B.] The engine does not exist.
+  \item[C.] The engine is currently configured as the server default.
+  \item[D.] The engine is used exclusively for backups.
+\end{itemize}
+\end{frame}
+
+% 28
+\begin{frame}{Quick Quiz 7}
+\begin{block}{Question 7}
+Which type of system is \code{InnoDB} best suited for?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] Systems requiring transactions, rollbacks, and foreign keys.
+  \item[B.] Tables used only to discard write data.
+  \item[C.] CSV files opened directly in Excel.
+  \item[D.] Ephemeral tables that lose data upon server shutdown.
+\end{itemize}
+\end{frame}
+
+% 29
+\begin{frame}{Quick Quiz 8}
+\begin{block}{Question 8}
+Which storage engine stores all its data directly in RAM?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] MEMORY
+  \item[B.] CSV
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] BLACKHOLE
+  \item[D.] FEDERATED
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 30
+\begin{frame}{Quick Quiz 9}
+\begin{block}{Question 9}
+Which engine receives data without persisting it to disk or memory?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] InnoDB
+  \item[B.] BLACKHOLE
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] MyISAM
+  \item[D.] ARCHIVE
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 31
+\begin{frame}{Quick Quiz 10}
+\begin{block}{Question 10}
+If a table requires foreign key integrity, which engine is most suitable?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] InnoDB
+  \item[B.] MEMORY
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] BLACKHOLE
+  \item[D.] CSV
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 32
+\begin{frame}{Quick Quiz 11}
+\begin{block}{Question 11}
+Which engine is well-suited for large, append-only, infrequently updated logs?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] ARCHIVE
+  \item[B.] BLACKHOLE
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] FEDERATED
+  \item[D.] MEMORY
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 26
+\begin{frame}{Review Questions}
+\begin{enumerate}\smallitem
+  \item What purpose does a storage engine serve in MySQL?
+  \item Why is \code{InnoDB} generally recommended for core business entities?
+  \item Differentiate \code{InnoDB} and \code{MEMORY} regarding data persistence.
+  \item Provide a realistic scenario where \code{ARCHIVE} is an optimal choice.
+  \item Why should \code{BLACKHOLE} never be chosen for data requiring storage?
+\end{enumerate}
+\end{frame}
+
+% 27
+\begin{frame}{Practical Exercises 1--2}
+\begin{block}{Exercise 1}
+Write an SQL statement to list all storage engines available on your MySQL Server.
+\end{block}
+\begin{block}{Exercise 2}
+Create a table named \code{students} with columns \code{student\_id}, \code{student\_name}, and \code{email}. The table must explicitly use \code{InnoDB}.
+\end{block}
+\begin{alertblock}{Requirement}
+Use standard SQL syntax and explicitly specify the engine when creating the table.
+\end{alertblock}
+\end{frame}
+
+% 28
+\begin{frame}{Practical Exercises 3--4}
+\begin{block}{Exercise 3}
+Create a table named \code{temp\_report} with columns \code{report\_id}, \code{report\_name}, and \code{created\_at} using \code{MEMORY}. Explain its major operational limitation.
+\end{block}
+\begin{block}{Exercise 4}
+An e-commerce system needs to store customers, orders, and payments. It requires transaction rollbacks on errors and strict foreign key integrity.
+\end{block}
+\begin{alertblock}{Requirement}
+Select the most suitable storage engine and justify your technical rationale.
+\end{alertblock}
+\end{frame}
+
+% 29
+\begin{frame}{Lesson Summary}
+\begin{itemize}\smallitem
+  \item Storage engines determine how MySQL stores, formats, and retrieves data per table.
+  \item \code{InnoDB} is the default engine and standard choice for modern business applications.
+  \item \code{InnoDB} provides ACID transactions, foreign keys, row locking, and automatic crash recovery.
+  \item \code{MEMORY} delivers high-speed in-RAM access but is volatile across server restarts.
+  \item \code{ARCHIVE} is specialized for compressed, append-only historical log datasets.
+  \item \code{CSV}, \code{BLACKHOLE}, \code{MERGE}, and \code{FEDERATED} address specialized technical needs.
+\end{itemize}
+\end{frame}
+
+% 30
+\begin{frame}{Key Terms}
+\begin{columns}[T,onlytextwidth]
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item MySQL
+  \item Storage engine
+  \item InnoDB
+  \item MyISAM
+  \item MEMORY
+\end{itemize}
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item ARCHIVE
+  \item CSV
+  \item BLACKHOLE
+  \item MERGE
+  \item FEDERATED
+\end{itemize}
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item Transaction
+  \item Foreign key
+  \item \code{SHOW ENGINES}
+  \item \code{CREATE TABLE}
+  \item \code{ENGINE}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 32
+\begin{frame}{Quick Quiz Answer Key}
+\begin{center}
+\begin{tabular}{ccccccccccc}
+\toprule
+\textbf{Q1} & \textbf{Q2} & \textbf{Q3} & \textbf{Q4} & \textbf{Q5} & \textbf{Q6} & \textbf{Q7} & \textbf{Q8} & \textbf{Q9} & \textbf{Q10} & \textbf{Q11} \\
+\midrule
+B & B & C & B & B & C & A & A & B & A & A \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.35cm}
+\begin{block}{Self-Check Guidance}
+For any incorrect answer, review the corresponding slide to clarify the underlying concept: default engines, \code{ENGINE} syntax, durability, transactions, or foreign keys.
+\end{block}
+\end{frame}
+
+% 33
+\begin{frame}[fragile]{Exercise 1 Solution}
+\begin{block}{Method 1}
+\begin{lstlisting}
+SHOW ENGINES;
+\end{lstlisting}
+\end{block}
+\begin{block}{Method 2}
+\begin{lstlisting}
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+% 34
+\begin{frame}[fragile]{Exercise 2 Solution}
+\begin{lstlisting}
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    email VARCHAR(100)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\begin{block}{Best Practice}
+For production tables, explicitly declaring \code{ENGINE = InnoDB} avoids unexpected behavior if server default configurations change.
+\end{block}
+\end{frame}
+
+% 33
+\begin{frame}[fragile]{Exercise 3 Solution}
+\begin{lstlisting}
+CREATE TABLE temp_report (
+    report_id INT PRIMARY KEY,
+    report_name VARCHAR(100),
+    created_at DATETIME
+) ENGINE = MEMORY;
+\end{lstlisting}
+\begin{alertblock}{Limitation}
+Data in \code{MEMORY} tables is volatile and will be lost whenever MySQL Server restarts or shuts down.
+\end{alertblock}
+\end{frame}
+
+% 34
+\begin{frame}{Exercise 4 Solution}
+\begin{block}{Recommended Storage Engine}
+Select \code{InnoDB}.
+\end{block}
+\begin{block}{Rationale}
+\begin{itemize}\smallitem
+  \item The workload requires ACID transactions with rollbacks upon execution errors.
+  \item Orders must reference valid customers through foreign key constraints.
+  \item Customer, order, and payment data require strict relational consistency.
+  \item \code{InnoDB} provides crash recovery through redo logging for mission-critical business data.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

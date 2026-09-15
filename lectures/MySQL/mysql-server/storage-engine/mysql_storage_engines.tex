@@ -1,0 +1,862 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{AnnArbor}
+\usecolortheme{dolphin}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+
+\definecolor{sqlbg}{RGB}{248,248,248}
+\definecolor{sqlkw}{RGB}{0,70,140}
+\definecolor{sqlcm}{RGB}{90,90,90}
+\definecolor{myblue}{RGB}{32,83,150}
+\definecolor{myorange}{RGB}{202,100,30}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{sqlkw}\bfseries,
+  commentstyle=\color{sqlcm}\itshape,
+  stringstyle=\color{myorange},
+  backgroundcolor=\color{sqlbg},
+  frame=single,
+  rulecolor=\color{black!20},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=2
+}
+\lstset{style=sqlstyle}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\smallitem}{\setlength{\itemsep}{2pt}}
+\newcommand{\tinyitem}{\setlength{\itemsep}{1pt}}
+
+\title[MySQL Storage Engines]{MySQL Storage Engines}
+\subtitle{Khái niệm, kiểm tra, lựa chọn và ứng dụng}
+\author{DSAI1002 -- Database Tutorial}
+\date{Cập nhật: 04/06/2026}
+
+\begin{document}
+
+% 1
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% 2
+\begin{frame}{Mục tiêu bài giảng}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Sau bài học, người học có thể}
+\begin{enumerate}\smallitem
+  \item Giải thích khái niệm \alert{storage engine} trong MySQL.
+  \item Trình bày vai trò của engine trong lưu trữ và xử lý dữ liệu bảng.
+  \item Kiểm tra engine bằng \code{SHOW ENGINES} và \code{information\_schema.engines}.
+\end{enumerate}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Kỹ năng thực hành}
+\begin{enumerate}\smallitem
+  \setcounter{enumi}{3}
+  \item Chỉ định engine khi tạo bảng bằng \code{ENGINE}.
+  \item Phân biệt các engine phổ biến.
+  \item Chọn engine phù hợp cho tình huống thực tế.
+\end{enumerate}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 3
+\begin{frame}{Ý tưởng tổng quan}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{Trong MySQL}
+Mỗi bảng được quản lý bởi một \alert{storage engine}.
+\end{block}
+\begin{itemize}\smallitem
+  \item Engine quyết định cách bảng được lưu trữ, đọc, ghi, khóa và phục hồi.
+  \item Không phải engine nào cũng hỗ trợ cùng một tính năng.
+  \item Ví dụ: \code{InnoDB} hỗ trợ giao dịch và khóa ngoại; \code{MEMORY} lưu dữ liệu trong RAM.
+\end{itemize}
+\column{0.46\textwidth}
+\begin{block}{Hai tầng chính}
+\begin{description}\smallitem
+  \item[Tầng SQL] Nhận câu lệnh, phân tích cú pháp, tối ưu truy vấn.
+  \item[Tầng Engine] Lưu trữ và truy xuất dữ liệu vật lý cho từng bảng.
+\end{description}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 4
+\begin{frame}{MySQL Server và Storage Engine}
+\centering
+\begin{tikzpicture}[node distance=0.95cm, every node/.style={font=\small}]
+\node[draw, rounded corners, fill=blue!8, minimum width=7.9cm, minimum height=0.70cm] (client) {Client / Application gửi câu lệnh SQL};
+\node[draw, rounded corners, fill=green!8, below=of client, minimum width=7.9cm, minimum height=0.70cm] (sql) {Tầng SQL: parser, optimizer, execution coordinator};
+\node[draw, rounded corners, fill=orange!10, below=of sql, minimum width=7.9cm, minimum height=0.70cm] (engine) {Storage Engine của bảng};
+\node[draw, rounded corners, fill=gray!12, below=of engine, minimum width=7.9cm, minimum height=0.70cm] (data) {Dữ liệu vật lý: page, index, log, file, RAM};
+\draw[-{Latex[length=2.4mm]}] (client) -- (sql);
+\draw[-{Latex[length=2.4mm]}] (sql) -- (engine);
+\draw[-{Latex[length=2.4mm]}] (engine) -- (data);
+\end{tikzpicture}
+\vspace{0.15cm}
+
+\footnotesize Storage engine nằm bên dưới tầng SQL và trực tiếp quản lý cách bảng lưu trữ dữ liệu.
+\end{frame}
+
+% 5
+\begin{frame}{Storage engine là gì?}
+\begin{block}{Định nghĩa}
+\alert{Storage engine} là thành phần phần mềm trong MySQL chịu trách nhiệm quản lý cách dữ liệu của bảng được lưu trữ và truy xuất.
+\end{block}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Quyết định cách lưu trữ}
+\begin{itemize}\smallitem
+  \item Dữ liệu lưu trên đĩa hay trong bộ nhớ.
+  \item Cách tổ chức chỉ mục và phục hồi dữ liệu.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Quyết định tính năng}
+\begin{itemize}\smallitem
+  \item Có hỗ trợ giao dịch hay không.
+  \item Có hỗ trợ khóa ngoại và cơ chế khóa phù hợp hay không.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 6
+\begin{frame}[fragile]{Engine mặc định}
+\begin{itemize}\smallitem
+  \item Từ MySQL 5.5 trở đi, \code{InnoDB} là storage engine mặc định.
+  \item Nếu \code{CREATE TABLE} không chỉ định \code{ENGINE}, MySQL dùng engine mặc định của server.
+\end{itemize}
+\begin{lstlisting}
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100)
+);
+\end{lstlisting}
+\begin{block}{Cách hiểu}
+Nếu engine mặc định là \code{InnoDB}, bảng \code{students} sẽ được tạo bằng \code{InnoDB}.
+\end{block}
+\end{frame}
+
+% 7
+\begin{frame}[fragile]{Chỉ định storage engine khi tạo bảng}
+\begin{block}{Cú pháp tổng quát}
+\begin{lstlisting}
+CREATE TABLE table_name (
+    column_list
+) ENGINE = engine_name;
+\end{lstlisting}
+\end{block}
+\begin{block}{Ví dụ: tạo bảng bằng InnoDB}
+\begin{lstlisting}
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    phone VARCHAR(20)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+% 8
+\begin{frame}{Luồng xử lý SQL với Storage Engine}
+\begin{enumerate}\smallitem
+  \item \textbf{Nhận câu lệnh SQL:} client gửi \code{SELECT}, \code{INSERT}, \code{UPDATE}, \code{DELETE} hoặc \code{CREATE TABLE}.
+  \item \textbf{Phân tích và tối ưu:} MySQL kiểm tra cú pháp, quyền truy cập và lập kế hoạch thực thi.
+  \item \textbf{Gọi storage engine:} MySQL chuyển yêu cầu đọc/ghi xuống engine của bảng.
+  \item \textbf{Truy cập dữ liệu:} engine đọc, ghi, khóa, phục hồi hoặc tổ chức dữ liệu theo cơ chế riêng.
+  \item \textbf{Trả kết quả:} MySQL nhận dữ liệu từ engine và trả về cho client.
+\end{enumerate}
+\end{frame}
+
+% 9
+\begin{frame}[fragile]{Kiểm tra danh sách engine có sẵn}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Cách 1: \code{SHOW ENGINES}}
+\begin{lstlisting}
+SHOW ENGINES;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Cách 2: bảng hệ thống}
+\begin{lstlisting}
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\vspace{0.25cm}
+\begin{alertblock}{Ghi nhớ}
+Lệnh này giúp biết engine nào đang được hỗ trợ, engine nào là mặc định, hoặc engine nào bị vô hiệu hóa.
+\end{alertblock}
+\end{frame}
+
+% 10
+\begin{frame}{Trạng thái hỗ trợ trong \code{SHOW ENGINES}}
+\begin{center}
+\begin{tabularx}{0.88\textwidth}{>{\ttfamily}l X}
+\toprule
+\textbf{Giá trị} & \textbf{Ý nghĩa} \\
+\midrule
+YES & Engine được hỗ trợ. \\
+NO & Engine không được hỗ trợ. \\
+DEFAULT & Engine được hỗ trợ và đang là mặc định. \\
+DISABLED & Engine có trong MySQL nhưng đang bị vô hiệu hóa. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\begin{block}{Cần chú ý khi so sánh engine}
+Giao dịch, khóa ngoại, phục hồi sau sự cố, độ bền dữ liệu và mục tiêu đọc/ghi.
+\end{block}
+\end{frame}
+
+% 11
+\begin{frame}{Các storage engine chính trong MySQL}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Nhóm thường gặp}
+\begin{itemize}\smallitem
+  \item \code{InnoDB}: engine mặc định, hỗ trợ giao dịch.
+  \item \code{MyISAM}: engine cũ, đọc nhiều, không giao dịch.
+  \item \code{MEMORY}: lưu dữ liệu trong RAM.
+  \item \code{ARCHIVE}: lưu trữ dữ liệu nén.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Nhóm đặc thù}
+\begin{itemize}\smallitem
+  \item \code{CSV}: lưu dữ liệu dạng CSV.
+  \item \code{BLACKHOLE}: nhận dữ liệu nhưng không lưu.
+  \item \code{MERGE/MRG\_MyISAM}: gộp bảng MyISAM cùng cấu trúc.
+  \item \code{FEDERATED}: truy cập server MySQL từ xa.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 12
+\begin{frame}{InnoDB: engine mặc định và phổ biến nhất}
+\begin{block}{Khái niệm}
+\code{InnoDB} là lựa chọn an toàn cho phần lớn hệ thống nghiệp vụ vì hỗ trợ giao dịch, khóa ngoại, khóa mức dòng và phục hồi sau sự cố.
+\end{block}
+\begin{columns}[T,onlytextwidth]
+\column{0.24\textwidth}
+\begin{block}{Giao dịch}
+\small Hỗ trợ \code{COMMIT}, \code{ROLLBACK}, ACID.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Khóa ngoại}
+\small Đảm bảo dữ liệu tham chiếu hợp lệ.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Khóa dòng}
+\small Giảm xung đột khi nhiều người dùng thao tác.
+\end{block}
+\column{0.24\textwidth}
+\begin{block}{Phục hồi}
+\small Ghi log và phục hồi sau sự cố server.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 13
+\begin{frame}[fragile]{Ví dụ tạo bảng \code{InnoDB}}
+\begin{lstlisting}
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date DATE,
+    total_amount DECIMAL(12, 2)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\begin{block}{Nên dùng \code{InnoDB} cho}
+\begin{itemize}\smallitem
+  \item Hệ thống bán hàng và quản lý đơn hàng.
+  \item Ứng dụng ngân hàng, thanh toán, quản lý người dùng.
+  \item Bảng cần tính toàn vẹn dữ liệu và rollback khi lỗi.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% 14
+\begin{frame}[fragile]{MyISAM}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{Đặc điểm}
+\begin{itemize}\smallitem
+  \item Từng là engine mặc định trước MySQL 5.5.
+  \item Có thể nhanh trong một số tình huống đọc nhiều.
+  \item Không hỗ trợ giao dịch.
+  \item Không hỗ trợ khóa ngoại.
+\end{itemize}
+\end{block}
+\column{0.46\textwidth}
+\begin{block}{Ví dụ}
+\begin{lstlisting}
+CREATE TABLE article_archive (
+    article_id INT PRIMARY KEY,
+    title VARCHAR(255),
+    content TEXT
+) ENGINE = MyISAM;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 15
+\begin{frame}[fragile]{MEMORY}
+\begin{columns}[T,onlytextwidth]
+\column{0.50\textwidth}
+\begin{block}{Đặc điểm}
+\begin{itemize}\smallitem
+  \item Lưu dữ liệu trong RAM.
+  \item Phù hợp với bảng tạm hoặc dữ liệu trung gian.
+  \item Truy xuất nhanh trong một số tình huống.
+  \item Dữ liệu có thể mất khi MySQL Server dừng hoặc khởi động lại.
+\end{itemize}
+\end{block}
+\column{0.46\textwidth}
+\begin{block}{Ví dụ}
+\begin{lstlisting}
+CREATE TABLE session_cache (
+    session_id VARCHAR(100) PRIMARY KEY,
+    user_id INT,
+    created_at DATETIME
+) ENGINE = MEMORY;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 16
+\begin{frame}[fragile]{ARCHIVE và CSV}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{ARCHIVE}
+\small Dùng để lưu lượng lớn dữ liệu lịch sử ở dạng nén, phù hợp với log hoặc dữ liệu ít thay đổi.
+\begin{lstlisting}
+CREATE TABLE audit_logs (
+    log_id INT,
+    action_name VARCHAR(100),
+    action_time DATETIME
+) ENGINE = ARCHIVE;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{CSV}
+\small Lưu dữ liệu dưới dạng file CSV, thuận tiện cho trao đổi dữ liệu nhưng hạn chế về hiệu năng và ràng buộc.
+\begin{lstlisting}
+CREATE TABLE export_customers (
+    customer_id INT NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL
+) ENGINE = CSV;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 17
+\begin{frame}{BLACKHOLE, MERGE và FEDERATED}
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\begin{block}{BLACKHOLE}
+\small Nhận dữ liệu ghi vào nhưng không lưu dữ liệu. Dùng trong kiểm thử hoặc replication đặc biệt.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{MERGE / MRG\_MyISAM}
+\small Kết hợp nhiều bảng \code{MyISAM} cùng cấu trúc thành một bảng logic.
+\end{block}
+\column{0.32\textwidth}
+\begin{block}{FEDERATED}
+\small Truy cập dữ liệu từ một MySQL Server từ xa mà không lưu dữ liệu thật trong bảng cục bộ.
+\end{block}
+\end{columns}
+\vspace{0.25cm}
+\begin{alertblock}{Lưu ý}
+Các engine này phục vụ nhu cầu đặc thù, không phải lựa chọn mặc định cho bảng nghiệp vụ chính.
+\end{alertblock}
+\end{frame}
+
+% 18
+\begin{frame}{Nguyên lý lựa chọn Storage Engine}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Tính toàn vẹn dữ liệu}
+Nếu dữ liệu có quan hệ chặt chẽ, cần khóa ngoại hoặc rollback, ưu tiên \code{InnoDB}.
+\end{block}
+\begin{block}{Độ bền dữ liệu}
+Nếu dữ liệu phải tồn tại sau khi server khởi động lại, không dùng \code{MEMORY} cho dữ liệu chính.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Mục tiêu hiệu năng}
+Bảng tạm cần truy xuất nhanh có thể dùng \code{MEMORY}; dữ liệu giao dịch ổn định thường dùng \code{InnoDB}.
+\end{block}
+\begin{block}{Tính chất dữ liệu}
+Log lớn, ít cập nhật có thể dùng \code{ARCHIVE}; dữ liệu trao đổi có thể cân nhắc \code{CSV}.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 19
+\begin{frame}{Ứng dụng thực tế}
+\begin{center}
+\begin{tabularx}{0.96\textwidth}{p{0.28\textwidth} X}
+\toprule
+\textbf{Tình huống} & \textbf{Engine phù hợp} \\
+\midrule
+Hệ thống bán hàng & \code{InnoDB}: cần giao dịch, rollback, khóa ngoại và tính nhất quán. \\
+Bảng dữ liệu tạm & \code{MEMORY}: lưu kết quả trung gian trong thời gian ngắn. \\
+Lưu trữ log & \code{ARCHIVE}: lưu lượng lớn dữ liệu lịch sử, ít cập nhật. \\
+Trao đổi dữ liệu & \code{CSV}: dữ liệu dễ đọc bởi bảng tính hoặc quy trình import/export đơn giản. \\
+Kiểm thử đặc biệt & \code{BLACKHOLE}: ghi nhận câu lệnh ghi nhưng không lưu dữ liệu thật. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{frame}
+
+% 20
+\begin{frame}{Vai trò trong quản trị cơ sở dữ liệu}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Thiết kế cơ sở dữ liệu}
+Chọn engine phù hợp với tính chất bảng; bảng nghiệp vụ chính thường dùng \code{InnoDB}.
+\end{block}
+\begin{block}{Tối ưu hiệu năng}
+Hiểu engine giúp phân tích truy vấn chậm, xung đột khóa và đặc điểm đọc/ghi.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Sao lưu và phục hồi}
+Mỗi engine có đặc điểm lưu trữ khác nhau, nên chiến lược backup/restore cũng khác nhau.
+\end{block}
+\begin{block}{Vận hành hệ thống}
+Khi nâng cấp hoặc di chuyển server, DBA cần biết engine nào được hỗ trợ và engine nào là mặc định.
+\end{block}
+\end{columns}
+\end{frame}
+
+% 21
+\begin{frame}{Bảng so sánh nhanh: nhóm thường gặp}
+\scriptsize
+\begin{tabularx}{0.95\textwidth}{p{0.24\textwidth}*{4}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Tiêu chí} & \textbf{InnoDB} & \textbf{MyISAM} & \textbf{MEMORY} & \textbf{ARCHIVE} \\
+\midrule
+Giao dịch & Có & Không & Không & Không \\
+Khóa ngoại & Có & Không & Không & Không \\
+Dữ liệu bền vững & Có & Có & Không & Có \\
+Dữ liệu chính & Có & Hạn chế & Không & Hạn chế \\
+Mục tiêu chính & Nghiệp vụ & Đọc nhiều/cũ & Bảng tạm & Log/lịch sử \\
+\bottomrule
+\end{tabularx}
+\vspace{0.35cm}
+\begin{block}{Kết luận thực hành}
+Trong phần lớn hệ thống hiện đại, \code{InnoDB} là lựa chọn mặc định an toàn nhất.
+\end{block}
+\end{frame}
+
+% 22
+\begin{frame}{Bảng so sánh nhanh: nhóm đặc thù}
+\scriptsize
+\begin{tabularx}{0.95\textwidth}{p{0.27\textwidth}*{3}{>{\centering\arraybackslash}X}}
+\toprule
+\textbf{Tiêu chí} & \textbf{CSV} & \textbf{BLACKHOLE} & \textbf{FEDERATED} \\
+\midrule
+Giao dịch & Không & Không & Không \\
+Khóa ngoại & Không & Không & Không \\
+Dữ liệu bền vững & Có & Không & Phụ thuộc server từ xa \\
+Dữ liệu chính & Không & Không & Hạn chế \\
+Mục tiêu chính & Trao đổi file CSV & Bỏ dữ liệu ghi vào & Truy cập dữ liệu từ xa \\
+\bottomrule
+\end{tabularx}
+\vspace{0.35cm}
+\begin{alertblock}{Lưu ý}
+Các engine đặc thù chỉ nên dùng khi có lý do kỹ thuật rõ ràng.
+\end{alertblock}
+\end{frame}
+
+% 22
+\begin{frame}{Quiz nhanh 1}
+\begin{block}{Câu 1}
+Storage engine trong MySQL gắn trực tiếp với đối tượng nào?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] User
+  \item[B.] Table
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] Database password
+  \item[D.] SQL comment
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 23
+\begin{frame}{Quiz nhanh 2}
+\begin{block}{Câu 2}
+Vì sao cần hiểu storage engine?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] Vì engine quyết định toàn bộ cú pháp SQL.
+  \item[B.] Vì mỗi engine có đặc điểm lưu trữ và tính năng khác nhau.
+  \item[C.] Vì MySQL chỉ có một engine.
+  \item[D.] Vì engine chỉ dùng để đổi tên bảng.
+\end{itemize}
+\end{frame}
+
+% 24
+\begin{frame}{Quiz nhanh 3}
+\begin{block}{Câu 3}
+Engine nào là mặc định trong các phiên bản MySQL hiện đại?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] MyISAM
+  \item[B.] MEMORY
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] InnoDB
+  \item[D.] CSV
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 25
+\begin{frame}{Quiz nhanh 4}
+\begin{block}{Câu 4}
+Mệnh đề nào dùng để chỉ định storage engine khi tạo bảng?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] \code{USING}
+  \item[B.] \code{ENGINE}
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] \code{STORAGE PATH}
+  \item[D.] \code{TABLE TYPE ONLY}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 26
+\begin{frame}{Quiz nhanh 5}
+\begin{block}{Câu 5}
+Lệnh nào dùng để xem danh sách storage engine?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] \code{SHOW TABLES;}
+  \item[B.] \code{SHOW ENGINES;}
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] \code{SHOW DATABASES;}
+  \item[D.] \code{SHOW USERS;}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 27
+\begin{frame}{Quiz nhanh 6}
+\begin{block}{Câu 6}
+Giá trị \code{DEFAULT} trong \code{SHOW ENGINES} nghĩa là gì?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] Engine bị vô hiệu hóa.
+  \item[B.] Engine không tồn tại.
+  \item[C.] Engine đang là mặc định.
+  \item[D.] Engine chỉ dùng cho backup.
+\end{itemize}
+\end{frame}
+
+% 28
+\begin{frame}{Quiz nhanh 7}
+\begin{block}{Câu 7}
+\code{InnoDB} phù hợp nhất với hệ thống nào?
+\end{block}
+\vspace{0.2cm}
+\begin{itemize}\smallitem
+  \item[A.] Hệ thống cần giao dịch và khóa ngoại.
+  \item[B.] Bảng chỉ dùng để bỏ dữ liệu đi.
+  \item[C.] File CSV mở bằng Excel.
+  \item[D.] Bảng tạm mất dữ liệu khi server dừng.
+\end{itemize}
+\end{frame}
+
+% 29
+\begin{frame}{Quiz nhanh 8}
+\begin{block}{Câu 8}
+Engine nào lưu dữ liệu trong RAM?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] MEMORY
+  \item[B.] CSV
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] BLACKHOLE
+  \item[D.] FEDERATED
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 30
+\begin{frame}{Quiz nhanh 9}
+\begin{block}{Câu 9}
+Engine nào nhận dữ liệu nhưng không lưu lại dữ liệu?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] InnoDB
+  \item[B.] BLACKHOLE
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] MyISAM
+  \item[D.] ARCHIVE
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 31
+\begin{frame}{Quiz nhanh 10}
+\begin{block}{Câu 10}
+Nếu cần khóa ngoại, engine nào thường phù hợp nhất?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] InnoDB
+  \item[B.] MEMORY
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] BLACKHOLE
+  \item[D.] CSV
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 32
+\begin{frame}{Quiz nhanh 11}
+\begin{block}{Câu 11}
+Dữ liệu log lớn, ít cập nhật có thể cân nhắc engine nào?
+\end{block}
+\vspace{0.2cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[A.] ARCHIVE
+  \item[B.] BLACKHOLE
+\end{itemize}
+\column{0.48\textwidth}
+\begin{itemize}\smallitem
+  \item[C.] FEDERATED
+  \item[D.] MEMORY
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 26
+\begin{frame}{Câu hỏi ôn tập}
+\begin{enumerate}\smallitem
+  \item Storage engine trong MySQL dùng để làm gì?
+  \item Vì sao \code{InnoDB} thường được khuyến nghị cho bảng nghiệp vụ chính?
+  \item Phân biệt \code{InnoDB} và \code{MEMORY} theo độ bền dữ liệu.
+  \item Nêu một tình huống phù hợp để dùng \code{ARCHIVE}.
+  \item Vì sao không nên dùng \code{BLACKHOLE} cho dữ liệu cần lưu trữ?
+\end{enumerate}
+\end{frame}
+
+% 27
+\begin{frame}{Bài tập vận dụng 1--2}
+\begin{block}{Bài tập 1}
+Viết câu lệnh SQL để liệt kê tất cả storage engine có trên MySQL Server.
+\end{block}
+\begin{block}{Bài tập 2}
+Tạo bảng \code{students} gồm các cột \code{student\_id}, \code{student\_name}, \code{email}. Bảng phải dùng \code{InnoDB}.
+\end{block}
+\begin{alertblock}{Yêu cầu}
+Sử dụng đúng cú pháp SQL và chỉ định engine rõ ràng khi tạo bảng.
+\end{alertblock}
+\end{frame}
+
+% 28
+\begin{frame}{Bài tập vận dụng 3--4}
+\begin{block}{Bài tập 3}
+Tạo bảng \code{temp\_report} gồm \code{report\_id}, \code{report\_name}, \code{created\_at}. Bảng phải dùng \code{MEMORY} và giải thích hạn chế.
+\end{block}
+\begin{block}{Bài tập 4}
+Một hệ thống bán hàng cần lưu khách hàng, đơn hàng và thanh toán. Hệ thống cần rollback khi giao dịch lỗi và cần đảm bảo đơn hàng luôn tham chiếu đến khách hàng hợp lệ.
+\end{block}
+\begin{alertblock}{Yêu cầu}
+Chọn storage engine phù hợp và giải thích lý do.
+\end{alertblock}
+\end{frame}
+
+% 29
+\begin{frame}{Tóm tắt bài học}
+\begin{itemize}\smallitem
+  \item Storage engine quyết định cách MySQL lưu trữ và truy xuất dữ liệu trong bảng.
+  \item \code{InnoDB} là engine mặc định và phù hợp với phần lớn ứng dụng hiện đại.
+  \item \code{InnoDB} hỗ trợ giao dịch, khóa ngoại, khóa mức dòng và phục hồi sau sự cố.
+  \item \code{MEMORY} nhanh nhưng không phù hợp để lưu dữ liệu lâu dài.
+  \item \code{ARCHIVE} phù hợp cho dữ liệu lịch sử hoặc log lớn, ít cập nhật.
+  \item \code{CSV}, \code{BLACKHOLE}, \code{MERGE} và \code{FEDERATED} phục vụ nhu cầu đặc thù.
+\end{itemize}
+\end{frame}
+
+% 30
+\begin{frame}{Từ khóa chính}
+\begin{columns}[T,onlytextwidth]
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item MySQL
+  \item Storage engine
+  \item InnoDB
+  \item MyISAM
+  \item MEMORY
+\end{itemize}
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item ARCHIVE
+  \item CSV
+  \item BLACKHOLE
+  \item MERGE
+  \item FEDERATED
+\end{itemize}
+\column{0.33\textwidth}
+\begin{itemize}\smallitem
+  \item Transaction
+  \item Foreign key
+  \item \code{SHOW ENGINES}
+  \item \code{CREATE TABLE}
+  \item \code{ENGINE}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% 32
+\begin{frame}{Đáp án quiz nhanh}
+\begin{center}
+\begin{tabular}{ccccccccccc}
+\toprule
+\textbf{C1} & \textbf{C2} & \textbf{C3} & \textbf{C4} & \textbf{C5} & \textbf{C6} & \textbf{C7} & \textbf{C8} & \textbf{C9} & \textbf{C10} & \textbf{C11} \\
+\midrule
+B & B & C & B & B & C & A & A & B & A & A \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.35cm}
+\begin{block}{Gợi ý cách tự kiểm tra}
+Với mỗi câu trả lời sai, quay lại slide tương ứng và xác định khái niệm bị nhầm: engine mặc định, cú pháp \code{ENGINE}, độ bền dữ liệu, giao dịch hoặc khóa ngoại.
+\end{block}
+\end{frame}
+
+% 33
+\begin{frame}[fragile]{Gợi ý bài tập 1}
+\begin{block}{Cách 1}
+\begin{lstlisting}
+SHOW ENGINES;
+\end{lstlisting}
+\end{block}
+\begin{block}{Cách 2}
+\begin{lstlisting}
+SELECT
+    engine,
+    support
+FROM information_schema.engines
+ORDER BY engine;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+% 34
+\begin{frame}[fragile]{Gợi ý bài tập 2}
+\begin{lstlisting}
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    student_name VARCHAR(100),
+    email VARCHAR(100)
+) ENGINE = InnoDB;
+\end{lstlisting}
+\begin{block}{Ghi nhớ}
+Với bảng nghiệp vụ thông thường, nên chỉ định rõ \code{ENGINE = InnoDB} nếu muốn tránh phụ thuộc vào cấu hình mặc định của server.
+\end{block}
+\end{frame}
+
+% 33
+\begin{frame}[fragile]{Gợi ý bài tập 3}
+\begin{lstlisting}
+CREATE TABLE temp_report (
+    report_id INT PRIMARY KEY,
+    report_name VARCHAR(100),
+    created_at DATETIME
+) ENGINE = MEMORY;
+\end{lstlisting}
+\begin{alertblock}{Hạn chế}
+Dữ liệu trong bảng \code{MEMORY} không phù hợp để lưu lâu dài vì có thể mất khi MySQL Server dừng hoặc khởi động lại.
+\end{alertblock}
+\end{frame}
+
+% 34
+\begin{frame}{Gợi ý bài tập 4}
+\begin{block}{Storage engine phù hợp}
+Nên chọn \code{InnoDB}.
+\end{block}
+\begin{block}{Lý do}
+\begin{itemize}\smallitem
+  \item Hệ thống cần giao dịch và rollback khi lỗi.
+  \item Đơn hàng cần tham chiếu đến khách hàng hợp lệ thông qua khóa ngoại.
+  \item Dữ liệu khách hàng, đơn hàng và thanh toán cần tính toàn vẹn cao.
+  \item \code{InnoDB} hỗ trợ phục hồi sau sự cố tốt hơn cho bảng nghiệp vụ chính.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}
