@@ -1,0 +1,764 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.88]
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+
+\definecolor{NEUBlue}{HTML}{1F4E79}
+\definecolor{NEULight}{HTML}{EAF3FF}
+\definecolor{SQLBg}{HTML}{F8FAFC}
+\definecolor{SQLKey}{HTML}{1D4ED8}
+\definecolor{SQLComment}{HTML}{64748B}
+\definecolor{SQLString}{HTML}{047857}
+\setbeamercolor{structure}{fg=NEUBlue}
+\setbeamercolor{frametitle}{fg=white,bg=NEUBlue}
+\setbeamercolor{title}{fg=white,bg=NEUBlue}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+
+\lstdefinelanguage{SQL}{
+  morekeywords={SELECT,FROM,WHERE,INNER,JOIN,LEFT,RIGHT,ON,AS,ORDER,BY,DESC,ASC,LIMIT,IS,NULL,AND,OR,NOT,IN,BETWEEN,LIKE,USE,SHOW,TABLES,DESC,DESCRIBE,COUNT,SUM,AVG,MIN,MAX,GROUP,HAVING},
+  sensitive=false,
+  morecomment=[l]{--},
+  morestring=[b]',
+}
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{SQLKey}\bfseries,
+  commentstyle=\color{SQLComment},
+  stringstyle=\color{SQLString},
+  backgroundcolor=\color{SQLBg},
+  frame=single,
+  rulecolor=\color{black!15},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  aboveskip=0.6em,
+  belowskip=0.4em
+}
+
+\newcommand{\tbl}[1]{\texttt{#1}}
+\newcommand{\col}[1]{\texttt{#1}}
+\newcommand{\kw}[1]{\textbf{\texttt{#1}}}
+\newcommand{\hint}[1]{\begin{block}{Ghi nhớ}#1\end{block}}
+\newcommand{\sourceurl}{\footnotesize Nguồn: \texttt{vudmvn.github.io/dbms-course/.../select-statement-2}}
+
+\title[SELECT và JOIN]{Tutorial: Sử dụng \texttt{SELECT} và \texttt{JOIN} với \texttt{classicmodels}}
+\subtitle{MySQL Querying Data -- Select Statement 2}
+\author{DBMS Course}
+\institute{Smart Logistics and Supply Chain Management Lab}
+\date{\today}
+
+\begin{document}
+
+% 1
+\begin{frame}
+  \titlepage
+  \vspace{-0.7em}
+  \begin{center}
+    \sourceurl
+  \end{center}
+\end{frame}
+
+% 2
+\begin{frame}{Mục tiêu học tập}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Nhắc lại truy vấn một bảng}
+\begin{itemize}
+  \item Viết \kw{SELECT ... FROM ...}
+  \item Lọc bằng \kw{WHERE}
+  \item Sắp xếp bằng \kw{ORDER BY}
+  \item Giới hạn kết quả bằng \kw{LIMIT}
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Kết hợp dữ liệu nhiều bảng}
+\begin{itemize}
+  \item Hiểu khóa chính -- khóa ngoại
+  \item Viết \kw{INNER JOIN}, \kw{LEFT JOIN}
+  \item Nối 3, 4, 5 bảng
+  \item Viết \kw{SELF JOIN} đơn giản
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 3
+\begin{frame}{CSDL mẫu \texttt{classicmodels}}
+\begin{tabularx}{\textwidth}{>{\ttfamily}l X >{\ttfamily}l X}
+\toprule
+productlines & Dòng sản phẩm & products & Thông tin sản phẩm \\offices & Văn phòng & employees & Nhân viên \\customers & Khách hàng & payments & Thanh toán \\orders & Đơn hàng & orderdetails & Chi tiết đơn hàng \\
+\bottomrule
+\end{tabularx}
+\vspace{0.8em}
+\hint{Trong bài này, \texttt{classicmodels} được dùng để luyện cách đọc dữ liệu từ nhiều bảng có quan hệ với nhau.}
+\end{frame}
+
+% 4
+\begin{frame}[fragile]{Chuẩn bị môi trường}
+\begin{lstlisting}
+USE classicmodels;
+SHOW TABLES;
+DESC products;
+DESC customers;
+DESC orderdetails;
+\end{lstlisting}
+\begin{itemize}
+  \item \kw{USE}: chọn cơ sở dữ liệu đang làm việc.
+  \item \kw{SHOW TABLES}: xem danh sách bảng.
+  \item \kw{DESC}: xem cấu trúc bảng, tên cột, kiểu dữ liệu, khóa.
+\end{itemize}
+\end{frame}
+
+% 5
+\begin{frame}{Các quan hệ chính cần nhớ}
+\scriptsize
+\begin{tabularx}{\textwidth}{l l l l}
+\toprule
+Bảng con & Khóa ngoại & Bảng cha & Khóa chính \\
+\midrule
+products & productLine & productlines & productLine \\
+employees & officeCode & offices & officeCode \\
+employees & reportsTo & employees & employeeNumber \\
+customers & salesRepEmployeeNumber & employees & employeeNumber \\
+payments & customerNumber & customers & customerNumber \\
+orders & customerNumber & customers & customerNumber \\
+orderdetails & orderNumber & orders & orderNumber \\
+orderdetails & productCode & products & productCode \\
+\bottomrule
+\end{tabularx}
+\vspace{0.5em}
+\centering
+\texttt{customers -> orders -> orderdetails -> products -> productlines}
+\end{frame}
+
+% 6
+\begin{frame}{Tư duy khi viết JOIN}
+\begin{enumerate}
+  \item Muốn lấy thông tin gì?
+  \item Các cột đó nằm ở bảng nào?
+  \item Cặp khóa nào nối hai bảng?
+  \item Cần giữ dòng không khớp hay chỉ lấy dòng khớp?
+\end{enumerate}
+\vspace{0.7em}
+\begin{block}{Công thức thực hành}
+\centering
+\texttt{SELECT columns -> FROM main\_table -> JOIN related\_table -> ON key\_pair}
+\end{block}
+\end{frame}
+
+% 7
+\begin{frame}[fragile]{Nhắc lại \texttt{SELECT} cơ bản}
+\begin{lstlisting}
+SELECT customerNumber, customerName, city, country
+FROM customers;
+\end{lstlisting}
+\begin{lstlisting}
+SELECT productCode, productName, productLine, MSRP
+FROM products;
+\end{lstlisting}
+\begin{itemize}
+  \item Chỉ chọn các cột cần dùng.
+  \item Khi nhiều bảng có cùng tên cột, cần ghi rõ \texttt{table.column} hoặc \texttt{alias.column}.
+\end{itemize}
+\end{frame}
+
+% 8
+\begin{frame}[fragile]{Lọc dữ liệu bằng \texttt{WHERE}}
+\begin{lstlisting}
+SELECT customerNumber, customerName, city, country
+FROM customers
+WHERE country = 'USA';
+\end{lstlisting}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+WHERE status = 'Cancelled';
+\end{lstlisting}
+\hint{\kw{WHERE} lọc dòng. Với \texttt{JOIN}, có thể lọc theo cột của bất kỳ bảng nào đã nối.}
+\end{frame}
+
+% 9
+\begin{frame}[fragile]{Sắp xếp và giới hạn kết quả}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP DESC
+LIMIT 5;
+\end{lstlisting}
+\begin{itemize}
+  \item \kw{ORDER BY}: sắp xếp kết quả.
+  \item \kw{DESC}: giảm dần; \kw{ASC}: tăng dần.
+  \item \kw{LIMIT}: giới hạn số dòng trả về.
+\end{itemize}
+\end{frame}
+
+% 10
+\begin{frame}{Vì sao cần \texttt{JOIN}?}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Dữ liệu được tách bảng}
+\begin{itemize}
+  \item \tbl{orders} chỉ lưu \col{customerNumber}.
+  \item Tên khách hàng nằm trong \tbl{customers}.
+  \item Chi tiết sản phẩm nằm trong \tbl{products}.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{JOIN ghép lại thông tin}
+\begin{itemize}
+  \item Đơn hàng + tên khách hàng.
+  \item Chi tiết đơn hàng + tên sản phẩm.
+  \item Khách hàng + nhân viên phụ trách.
+\end{itemize}
+\end{block}
+\end{columns}
+\vspace{0.5em}
+\centering
+\texttt{orders.customerNumber = customers.customerNumber}
+\end{frame}
+
+% 11
+\begin{frame}[fragile]{Cú pháp tổng quát của \texttt{INNER JOIN}}
+\begin{lstlisting}
+SELECT table1.column1, table2.column2
+FROM table1
+INNER JOIN table2
+    ON table1.key_column = table2.key_column;
+\end{lstlisting}
+\begin{itemize}
+  \item \kw{FROM table1}: bảng bắt đầu truy vấn.
+  \item \kw{INNER JOIN table2}: bảng cần nối thêm.
+  \item \kw{ON}: điều kiện nối hai bảng.
+  \item Chỉ giữ các dòng có dữ liệu khớp ở cả hai bảng.
+\end{itemize}
+\end{frame}
+
+% 12
+\begin{frame}[fragile]{Ví dụ: \texttt{orders} JOIN \texttt{customers}}
+\begin{lstlisting}
+SELECT
+    orders.orderNumber,
+    orders.orderDate,
+    orders.status,
+    customers.customerName
+FROM orders
+INNER JOIN customers
+    ON orders.customerNumber = customers.customerNumber;
+\end{lstlisting}
+\begin{block}{Ý nghĩa}
+Mỗi đơn hàng được bổ sung tên khách hàng tương ứng thông qua \col{customerNumber}.
+\end{block}
+\end{frame}
+
+% 13
+\begin{frame}[fragile]{Đặt bí danh cho bảng}
+\begin{lstlisting}
+SELECT
+    o.orderNumber,
+    o.orderDate,
+    o.status,
+    c.customerName
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber;
+\end{lstlisting}
+\begin{itemize}
+  \item Bí danh làm câu lệnh ngắn và dễ đọc.
+  \item Có thể bỏ \kw{AS}: \texttt{FROM orders o JOIN customers c ...}
+  \item Khi mới học, nên dùng \kw{AS} để rõ nghĩa.
+\end{itemize}
+\end{frame}
+
+% 14
+\begin{frame}[fragile]{JOIN \texttt{products} và \texttt{productlines}}
+\begin{lstlisting}
+SELECT
+    p.productCode,
+    p.productName,
+    p.productLine,
+    pl.textDescription
+FROM products AS p
+INNER JOIN productlines AS pl
+    ON p.productLine = pl.productLine;
+\end{lstlisting}
+\begin{block}{Cặp khóa}
+\centering \texttt{products.productLine = productlines.productLine}
+\end{block}
+\end{frame}
+
+% 15
+\begin{frame}[fragile]{JOIN + \texttt{WHERE} + \texttt{ORDER BY} + \texttt{LIMIT}}
+\begin{lstlisting}
+SELECT
+    p.productCode,
+    p.productName,
+    p.productLine,
+    p.MSRP
+FROM products AS p
+INNER JOIN productlines AS pl
+    ON p.productLine = pl.productLine
+WHERE p.productLine = 'Classic Cars'
+ORDER BY p.MSRP DESC
+LIMIT 10;
+\end{lstlisting}
+\end{frame}
+
+% 16
+\begin{frame}[fragile]{JOIN \texttt{employees} và \texttt{offices}}
+\begin{lstlisting}
+SELECT
+    e.employeeNumber,
+    e.lastName,
+    e.firstName,
+    e.jobTitle,
+    o.city,
+    o.country
+FROM employees AS e
+INNER JOIN offices AS o
+    ON e.officeCode = o.officeCode;
+\end{lstlisting}
+\begin{block}{Cặp khóa}
+\centering \texttt{employees.officeCode = offices.officeCode}
+\end{block}
+\end{frame}
+
+% 17
+\begin{frame}[fragile]{JOIN \texttt{customers} và \texttt{employees}}
+\begin{lstlisting}
+SELECT
+    c.customerNumber,
+    c.customerName,
+    c.country,
+    e.employeeNumber,
+    e.lastName,
+    e.firstName
+FROM customers AS c
+INNER JOIN employees AS e
+    ON c.salesRepEmployeeNumber = e.employeeNumber;
+\end{lstlisting}
+\hint{\texttt{INNER JOIN} chỉ trả về khách hàng đã có nhân viên bán hàng phụ trách.}
+\end{frame}
+
+% 18
+\begin{frame}[fragile]{JOIN \texttt{orderdetails} và \texttt{products}}
+\begin{lstlisting}
+SELECT
+    od.orderNumber,
+    od.productCode,
+    p.productName,
+    od.quantityOrdered,
+    od.priceEach
+FROM orderdetails AS od
+INNER JOIN products AS p
+    ON od.productCode = p.productCode;
+\end{lstlisting}
+\begin{block}{Cặp khóa}
+\centering \texttt{orderdetails.productCode = products.productCode}
+\end{block}
+\end{frame}
+
+% 19
+\begin{frame}[fragile]{Tạo cột tính toán khi JOIN}
+\begin{lstlisting}
+SELECT
+    od.orderNumber,
+    p.productName,
+    od.quantityOrdered,
+    od.priceEach,
+    od.quantityOrdered * od.priceEach AS lineTotal
+FROM orderdetails AS od
+INNER JOIN products AS p
+    ON od.productCode = p.productCode;
+\end{lstlisting}
+\hint{Có thể dùng biểu thức trong \kw{SELECT} để tạo cột mới trong kết quả.}
+\end{frame}
+
+% 20
+\begin{frame}[fragile]{Nối ba bảng}
+\begin{lstlisting}
+SELECT
+    o.orderNumber,
+    o.orderDate,
+    o.status,
+    c.customerName,
+    od.productCode,
+    od.quantityOrdered,
+    od.priceEach
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber
+INNER JOIN orderdetails AS od
+    ON o.orderNumber = od.orderNumber;
+\end{lstlisting}
+\end{frame}
+
+% 21
+\begin{frame}{Ý nghĩa của truy vấn nối ba bảng}
+\begin{enumerate}
+  \item Nối \tbl{orders} với \tbl{customers} để biết đơn hàng thuộc khách hàng nào.
+  \item Nối tiếp với \tbl{orderdetails} để biết đơn hàng có những dòng sản phẩm nào.
+  \item Mỗi lần thêm bảng cần thêm một điều kiện \kw{ON} rõ ràng.
+\end{enumerate}
+\vspace{0.5em}
+\centering
+\texttt{orders -> customers}\quad và\quad \texttt{orders -> orderdetails}
+\end{frame}
+
+% 22
+\begin{frame}[fragile]{Nối bốn bảng: thêm \texttt{products}}
+\begin{lstlisting}
+SELECT
+    o.orderNumber,
+    o.orderDate,
+    c.customerName,
+    p.productName,
+    od.quantityOrdered,
+    od.priceEach
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber
+INNER JOIN orderdetails AS od
+    ON o.orderNumber = od.orderNumber
+INNER JOIN products AS p
+    ON od.productCode = p.productCode;
+\end{lstlisting}
+\end{frame}
+
+% 23
+\begin{frame}[fragile]{Nối năm bảng: thêm \texttt{productlines}}
+\begin{lstlisting}
+SELECT
+    o.orderNumber,
+    o.orderDate,
+    c.customerName,
+    p.productName,
+    p.productLine,
+    pl.textDescription,
+    od.quantityOrdered,
+    od.priceEach
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber
+INNER JOIN orderdetails AS od
+    ON o.orderNumber = od.orderNumber
+INNER JOIN products AS p
+    ON od.productCode = p.productCode
+INNER JOIN productlines AS pl
+    ON p.productLine = pl.productLine;
+\end{lstlisting}
+\end{frame}
+
+% 24
+\begin{frame}{Chuỗi nối nhiều bảng}
+\begin{block}{Chuỗi dữ liệu thường dùng}
+\centering
+\texttt{customers -> orders -> orderdetails -> products -> productlines}
+\end{block}
+\begin{itemize}
+  \item Khi thêm bảng, phải biết bảng mới nối với bảng nào đã xuất hiện trong truy vấn.
+  \item Không nhất thiết bảng mới phải nối trực tiếp với bảng đầu tiên trong \kw{FROM}.
+  \item Mỗi bảng nên có bí danh ngắn: \texttt{o}, \texttt{c}, \texttt{od}, \texttt{p}, \texttt{pl}.
+\end{itemize}
+\end{frame}
+
+% 25
+\begin{frame}[fragile]{Cú pháp \texttt{LEFT JOIN}}
+\begin{lstlisting}
+SELECT table1.column1, table2.column2
+FROM table1
+LEFT JOIN table2
+    ON table1.key_column = table2.key_column;
+\end{lstlisting}
+\begin{itemize}
+  \item Giữ lại toàn bộ dòng của bảng bên trái.
+  \item Nếu không có dòng khớp ở bảng bên phải, các cột bên phải là \kw{NULL}.
+  \item Dùng khi muốn tìm dữ liệu thiếu hoặc giữ bảng chính đầy đủ.
+\end{itemize}
+\end{frame}
+
+% 26
+\begin{frame}[fragile]{Ví dụ \texttt{LEFT JOIN}: khách hàng và nhân viên}
+\begin{lstlisting}
+SELECT
+    c.customerNumber,
+    c.customerName,
+    c.salesRepEmployeeNumber,
+    e.employeeNumber,
+    e.lastName,
+    e.firstName
+FROM customers AS c
+LEFT JOIN employees AS e
+    ON c.salesRepEmployeeNumber = e.employeeNumber;
+\end{lstlisting}
+\hint{Khách hàng chưa có nhân viên phụ trách vẫn xuất hiện, nhưng phần nhân viên là \kw{NULL}.}
+\end{frame}
+
+% 27
+\begin{frame}[fragile]{Tìm dòng không có dữ liệu liên quan}
+\begin{lstlisting}
+SELECT
+    c.customerNumber,
+    c.customerName,
+    c.salesRepEmployeeNumber
+FROM customers AS c
+LEFT JOIN employees AS e
+    ON c.salesRepEmployeeNumber = e.employeeNumber
+WHERE e.employeeNumber IS NULL;
+\end{lstlisting}
+\begin{itemize}
+  \item \kw{LEFT JOIN} giữ toàn bộ khách hàng.
+  \item \kw{WHERE e.employeeNumber IS NULL} giữ các dòng không có nhân viên khớp.
+\end{itemize}
+\end{frame}
+
+% 28
+\begin{frame}{So sánh \texttt{INNER JOIN} và \texttt{LEFT JOIN}}
+\scriptsize
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+Tiêu chí & \texttt{INNER JOIN} & \texttt{LEFT JOIN} \\
+\midrule
+Kết quả trả về & Chỉ dòng khớp ở cả hai bảng & Tất cả dòng bảng trái, kèm dòng khớp nếu có \\
+Dòng không có liên hệ & Bị loại khỏi kết quả & Vẫn xuất hiện \\
+Cột từ bảng phải nếu không khớp & Không có dòng đó & Có giá trị \texttt{NULL} \\
+Dùng khi & Chỉ cần dữ liệu đã có liên hệ & Muốn giữ toàn bộ dữ liệu của bảng chính \\
+Ví dụ & Đơn hàng kèm khách hàng & Tất cả khách hàng, kể cả chưa có đơn hàng \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+% 29
+\begin{frame}[fragile]{\texttt{SELF JOIN}: nối bảng với chính nó}
+\begin{lstlisting}
+SELECT
+    e.employeeNumber AS employeeId,
+    e.lastName AS employeeLastName,
+    e.firstName AS employeeFirstName,
+    m.employeeNumber AS managerId,
+    m.lastName AS managerLastName,
+    m.firstName AS managerFirstName
+FROM employees AS e
+LEFT JOIN employees AS m
+    ON e.reportsTo = m.employeeNumber;
+\end{lstlisting}
+\begin{itemize}
+  \item \texttt{e}: nhân viên.
+  \item \texttt{m}: quản lý trực tiếp.
+\end{itemize}
+\end{frame}
+
+% 30
+\begin{frame}{Khi nào dùng \texttt{SELF JOIN}?}
+\begin{block}{Điều kiện}
+Một bảng có cột tham chiếu đến khóa chính của chính bảng đó.
+\end{block}
+\begin{itemize}
+  \item Trong \texttt{classicmodels}: \col{employees.reportsTo} tham chiếu đến \col{employees.employeeNumber}.
+  \item Dùng hai bí danh khác nhau cho cùng một bảng.
+  \item \kw{LEFT JOIN} giúp giữ cả nhân viên không có quản lý trực tiếp.
+\end{itemize}
+\end{frame}
+
+% 31
+\begin{frame}[fragile]{Kết hợp \texttt{JOIN} với các mệnh đề khác}
+\begin{lstlisting}
+SELECT ...
+FROM table1 AS a
+JOIN table2 AS b
+    ON a.key = b.key
+WHERE ...
+ORDER BY ...
+LIMIT ...;
+\end{lstlisting}
+\begin{block}{Thứ tự thường viết}
+\centering
+\kw{SELECT} $\rightarrow$ \kw{FROM/JOIN/ON} $\rightarrow$ \kw{WHERE} $\rightarrow$ \kw{ORDER BY} $\rightarrow$ \kw{LIMIT}
+\end{block}
+\end{frame}
+
+% 32
+\begin{frame}[fragile]{Ví dụ tổng hợp: top 10 dòng đơn hàng}
+\begin{lstlisting}
+SELECT
+    o.orderNumber,
+    c.customerName,
+    p.productName,
+    od.quantityOrdered,
+    od.priceEach,
+    od.quantityOrdered * od.priceEach AS lineTotal
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber
+INNER JOIN orderdetails AS od
+    ON o.orderNumber = od.orderNumber
+INNER JOIN products AS p
+    ON od.productCode = p.productCode
+ORDER BY lineTotal DESC
+LIMIT 10;
+\end{lstlisting}
+\end{frame}
+
+% 33
+\begin{frame}[fragile]{Lỗi 1: Quên điều kiện \texttt{ON}}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Sai}
+\begin{lstlisting}
+SELECT o.orderNumber, c.customerName
+FROM orders AS o
+INNER JOIN customers AS c;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Đúng}
+\begin{lstlisting}
+SELECT o.orderNumber, c.customerName
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 34
+\begin{frame}[fragile]{Lỗi 2: Nối sai cột}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Sai}
+\begin{lstlisting}
+SELECT o.orderNumber, c.customerName
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.orderNumber = c.customerNumber;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Đúng}
+\begin{lstlisting}
+SELECT o.orderNumber, c.customerName
+FROM orders AS o
+INNER JOIN customers AS c
+    ON o.customerNumber = c.customerNumber;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 35
+\begin{frame}[fragile]{Lỗi 3: Tên cột bị mơ hồ}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Dễ lỗi / khó đọc}
+\begin{lstlisting}
+SELECT customerNumber, orderNumber
+FROM customers AS c
+INNER JOIN orders AS o
+    ON c.customerNumber = o.customerNumber;
+\end{lstlisting}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Rõ ràng}
+\begin{lstlisting}
+SELECT c.customerNumber, o.orderNumber
+FROM customers AS c
+INNER JOIN orders AS o
+    ON c.customerNumber = o.customerNumber;
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% 36
+\begin{frame}[fragile]{Lỗi 4: \texttt{WHERE} làm mất ý nghĩa \texttt{LEFT JOIN}}
+\begin{lstlisting}
+-- May remove customers without orders
+SELECT c.customerNumber, c.customerName, o.orderNumber
+FROM customers AS c
+LEFT JOIN orders AS o
+    ON c.customerNumber = o.customerNumber
+WHERE o.status = 'Shipped';
+\end{lstlisting}
+\begin{lstlisting}
+-- Keep all customers, filter orders in ON
+SELECT c.customerNumber, c.customerName, o.orderNumber, o.status
+FROM customers AS c
+LEFT JOIN orders AS o
+    ON c.customerNumber = o.customerNumber
+   AND o.status = 'Shipped';
+\end{lstlisting}
+\end{frame}
+
+% 37
+\begin{frame}{Bài tập thực hành theo nhóm}
+\scriptsize
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+Phần & Nội dung luyện tập \\
+\midrule
+2--8 & CSDL mẫu, môi trường, quan hệ bảng, SELECT/WHERE/ORDER/LIMIT \\
+9--10 & Cú pháp INNER JOIN và bí danh bảng \\
+11--15 & JOIN hai bảng phổ biến \\
+16--18 & Nối 3, 4, 5 bảng \\
+19--21 & LEFT JOIN, tìm dòng không liên hệ, so sánh với INNER JOIN \\
+22 & SELF JOIN \\
+23--25 & Kết hợp mệnh đề, sửa lỗi JOIN, bài tổng hợp \\
+\bottomrule
+\end{tabularx}
+\end{frame}
+
+% 38
+\begin{frame}{Chiến lược giải bài JOIN}
+\begin{enumerate}
+  \item Viết truy vấn đơn giản trước: \texttt{SELECT ... FROM main\_table}.
+  \item Thêm từng \kw{JOIN} một, kiểm tra cặp khóa trong \kw{ON}.
+  \item Chỉ sau khi nối đúng mới thêm \kw{WHERE}.
+  \item Với \kw{LEFT JOIN}, cẩn thận khi lọc cột của bảng bên phải trong \kw{WHERE}.
+  \item Dùng bí danh bảng để tránh tên cột mơ hồ.
+\end{enumerate}
+\end{frame}
+
+% 39
+\begin{frame}{Tóm tắt}
+\begin{block}{Ý chính}
+\begin{itemize}
+  \item \kw{INNER JOIN}: chỉ lấy dòng khớp ở cả hai bảng.
+  \item \kw{LEFT JOIN}: giữ toàn bộ dòng của bảng trái.
+  \item \kw{SELF JOIN}: nối một bảng với chính nó bằng hai bí danh.
+  \item \kw{ON}: nơi khai báo quan hệ nối bảng.
+  \item \kw{WHERE}: nơi lọc dòng sau khi đã nối.
+\end{itemize}
+\end{block}
+\end{frame}
+
+% 40
+\begin{frame}{Câu hỏi kiểm tra nhanh}
+\begin{enumerate}
+  \item Khi nào nên dùng \kw{LEFT JOIN} thay vì \kw{INNER JOIN}?
+  \item Vì sao cần đặt bí danh bảng khi truy vấn có nhiều bảng?
+  \item Muốn lấy tên sản phẩm trong chi tiết đơn hàng, cần nối bảng nào?
+  \item Vì sao điều kiện lọc ở \kw{WHERE} có thể làm mất ý nghĩa của \kw{LEFT JOIN}?
+  \item \kw{SELF JOIN} khác gì so với \kw{INNER JOIN} thông thường?
+\end{enumerate}
+\end{frame}
+
+\end{document}

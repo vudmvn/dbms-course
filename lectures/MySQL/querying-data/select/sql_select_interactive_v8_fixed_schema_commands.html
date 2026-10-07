@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SQL SELECT — Interactive Tutorial</title>
+<style>
+:root{--bg:#f6f8fb;--panel:#fff;--text:#172033;--muted:#65758b;--line:#dce3ec;--accent:#1f5fbf;--ok:#067647;--bad:#b42318;--code:#ffffff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:18px}header{background:linear-gradient(135deg,#102a56,#1f5fbf);color:#fff;padding:30px 0}h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.05;margin:.2rem 0}h2{margin:0 0 12px}h3{margin:0 0 8px}.muted{color:var(--muted)}
+.chips,.toolbar{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:6px 10px;border-radius:999px;background:#ffffff20;border:1px solid #ffffff35}
+nav{position:sticky;top:0;z-index:10;background:#f6f8fbef;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}nav .wrap{display:flex;gap:8px;overflow:auto;padding-top:9px;padding-bottom:9px}nav a{white-space:nowrap;text-decoration:none;color:var(--text);background:#fff;border:1px solid var(--line);padding:7px 11px;border-radius:999px;font-size:.9rem}
+section{margin:28px 0}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+.card,.ex,.exercise{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 8px 24px #1522380d}
+pre{background:#fff;color:#172033;padding:13px;border:1px solid var(--line);border-radius:11px;overflow:auto;margin:10px 0;tab-size:2}code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}pre code{font-size:.9rem;line-height:1.65}.sql-kw{color:#155eef;font-weight:750}.sql-fn{color:#7a5af8;font-weight:700}.sql-str{color:#067647}.sql-num{color:#b54708}.sql-comment{color:#667085;font-style:italic}.sql-op{color:#344054;font-weight:700}
+.examples{display:grid;grid-template-columns:1fr;gap:12px}.ex{display:grid;grid-template-columns:minmax(150px,220px) minmax(170px,1fr) minmax(280px,2fr) auto;gap:12px;align-items:center}.ex h3,.ex p,.ex pre{margin:0}.ex p{font-size:.9rem;color:var(--muted)}.ex pre{min-width:0}.ex button{white-space:nowrap}@media(max-width:820px){.ex{grid-template-columns:1fr}.ex button{justify-self:start}}
+button,select,textarea{font:inherit}button{border:0;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:white}.secondary{background:#eef2f7;color:var(--text);border:1px solid var(--line)}.success{background:#0d7a5f;color:#fff}
+button:disabled{opacity:.55;cursor:not-allowed}select{border:1px solid var(--line);border-radius:10px;padding:9px;background:white}textarea{width:100%;min-height:190px;background:#fff;color:#172033;border:1px solid #cbd5e1;border-radius:12px;padding:14px;resize:vertical;font:15px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:2;box-shadow:inset 0 1px 2px rgba(16,24,40,.04)}textarea:focus{border-color:#84adff;outline:3px solid #dbeafe}
+.status{min-height:24px;margin-top:8px;font-size:.92rem}.ok{color:var(--ok)}.err{color:var(--bad)}.result{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{background:#f1f5f9;position:sticky;top:0}.callout{border-left:4px solid var(--accent);background:#edf4ff;padding:12px 14px;border-radius:10px}
+.exercise+.exercise{margin-top:10px}.head{display:flex;justify-content:space-between;gap:10px}.badge{font-size:.76rem;background:#eef2f7;padding:4px 8px;border-radius:999px;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+details{border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}.score{display:flex;justify-content:space-between;gap:10px}.bar{height:10px;background:#e6ebf2;border-radius:999px;overflow:hidden}.bar>div{height:100%;width:0;background:#0d7a5f;transition:.2s}
+
+footer{border-top:1px solid var(--line);color:var(--muted);padding:22px 0 38px;margin-top:34px}
+@media(max-width:900px){.c4,.c5,.c6,.c7,.c8{grid-column:span 12}}
+@media(max-width:620px){.examples{grid-template-columns:1fr}.wrap{padding:13px}}
+
+    .schema-panel{margin:16px 0}
+    .schema-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+    .schema-toolbar select{min-height:42px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font:inherit}
+    .schema-compact{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+    .schema-compact table{min-width:520px}
+    .schema-note{font-size:.88rem;color:var(--muted);margin:8px 0 0}
+
+
+.exercise-group{background:#fff;border:1px solid var(--line);border-radius:14px;margin:10px 0;padding:0;box-shadow:0 5px 18px #1522380a}
+.exercise-group>summary{cursor:pointer;list-style:none;padding:13px 15px;font-weight:800;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.exercise-group>summary::-webkit-details-marker{display:none}
+.exercise-group>summary:before{content:"▸";color:var(--accent);margin-right:7px}
+.exercise-group[open]>summary:before{content:"▾"}
+.exercise-group-body{padding:0 12px 12px}
+.group-score{font-size:.82rem;color:var(--muted);font-weight:700;white-space:nowrap}
+.exercise-group .exercise{box-shadow:none}
+
+</style>
+</head>
+<body>
+<header><div class="wrap"><div style="font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem">DBMS • SQL fundamentals</div><h1>SELECT trong SQL</h1><p>Học cú pháp và chạy truy vấn trực tiếp trên trình duyệt với một phiên bản thu gọn của <b>classicmodels</b>.</p><div class="chips"><span class="chip">SELECT / FROM</span><span class="chip">WHERE</span><span class="chip">LIKE / IN / BETWEEN</span><span class="chip">DISTINCT</span><span class="chip">ORDER BY</span><span class="chip">LIMIT</span></div></div></header>
+<nav><div class="wrap"><a href="#intro">Tổng quan</a><a href="#examples">Ví dụ</a><a href="#schema">Cấu trúc bảng</a><a href="#play">SQL Playground</a><a href="#practice">Bài tập</a></div></nav>
+<main class="wrap">
+<section id="intro"><div class="grid">
+<div class="card c7"><h2>Mục tiêu học tập</h2><p>✓ Lấy toàn bộ hoặc một số cột &nbsp; ✓ Dùng <code>AS</code> &nbsp; ✓ Tạo cột tính toán</p><p>✓ Lọc bằng <code>WHERE</code> &nbsp; ✓ <code>AND/OR/NOT</code> &nbsp; ✓ <code>LIKE, IN, BETWEEN, NULL</code></p><p>✓ <code>DISTINCT</code> &nbsp; ✓ <code>ORDER BY</code> &nbsp; ✓ <code>LIMIT</code></p></div>
+<div class="card c5"><h2>Cú pháp cốt lõi</h2><pre><code>SELECT column1, column2, ...
+FROM table_name
+WHERE condition
+ORDER BY column
+LIMIT n;</code></pre></div>
+<div class="card c12"><div class="callout"><b>Môi trường thực hành:</b> SQL chạy bằng SQLite ngay trong trình duyệt. Các cú pháp SELECT trong bài tương thích với MySQL. Trang cũng mô phỏng <code>USE classicmodels</code>, <code>SHOW TABLES</code> và <code>DESC table</code>.</div></div>
+</div></section>
+
+<section id="examples"><h2>Ví dụ từ cơ bản đến nâng cao</h2><div id="examplesGrid" class="examples"></div></section>
+
+
+<section id="schema">
+  <h2>Cấu trúc bảng</h2>
+  <div class="card schema-panel">
+    <div class="schema-toolbar">
+      <label for="schemaSelect"><b>Chọn bảng:</b></label>
+      <select id="schemaSelect" aria-label="Chọn bảng để xem cấu trúc">
+        <option value="products">products</option>
+        <option value="customers">customers</option>
+        <option value="employees">employees</option>
+        <option value="orders">orders</option>
+        <option value="offices">offices</option>
+        <option value="payments">payments</option>
+        <option value="orderdetails">orderdetails</option>
+        <option value="productlines">productlines</option>
+      </select>
+    </div>
+    <div id="schemaCompact" class="schema-compact">
+      <div style="padding:14px" class="muted">Đang tải cấu trúc bảng…</div>
+    </div>
+    <p class="schema-note">Chỉ hiển thị cấu trúc bảng (tên cột, kiểu dữ liệu, NULL, khóa chính), không hiển thị dữ liệu mẫu.</p>
+  </div>
+</section>
+
+<section id="play"><h2>SQL Playground — Ví dụ</h2><div class="grid">
+<div class="card c8"><div class="toolbar"><button id="run" class="primary">▶ Chạy SQL</button><button id="clear" class="secondary">Xóa</button><button id="reset" class="secondary">Khôi phục dữ liệu</button><select id="preset"><option value="">— Chọn ví dụ —</option></select></div><p class="muted" style="font-size:.88rem">Phím tắt: Ctrl+Enter hoặc ⌘+Enter</p><textarea id="sql">SELECT productCode, productName, productLine, MSRP
+FROM products
+ORDER BY MSRP DESC
+LIMIT 5;</textarea><div id="status" class="status" aria-live="polite">Đang tải SQL engine…</div></div>
+<div class="card c4"><h3>Trình tự viết truy vấn</h3><p><b>1.</b> Chọn cột với <code>SELECT</code>.</p><p><b>2.</b> Chọn bảng với <code>FROM</code>.</p><p><b>3.</b> Lọc với <code>WHERE</code>.</p><p><b>4.</b> Sắp xếp / giới hạn bằng <code>ORDER BY</code>, <code>LIMIT</code>.</p><div class="callout">Khi có lỗi, kiểm tra tên cột, tên bảng, dấu phẩy và dấu nháy quanh chuỗi.</div></div>
+<div class="card c12"><h3>Kết quả</h3><div id="meta" class="muted" style="font-size:.88rem">Chưa có truy vấn.</div><div id="result" class="result"><div style="padding:14px" class="muted">Kết quả sẽ xuất hiện ở đây.</div></div></div>
+</div></section>
+
+
+<section id="practice">
+<h2>Bài tập thực hành</h2><div class="callout" style="margin-bottom:12px"><b>110 bài có chấm tự động</b> — từ Bài 2.1 đến Bài 23.5. Các bài được nhóm theo từng phần để trang gọn hơn.</div>
+
+<div class="card">
+  <div class="score"><b>Tiến độ</b><span id="score">0 / 110 bài đúng</span></div>
+  <div class="bar"><div id="bar"></div></div>
+</div>
+
+<div class="grid" style="margin-top:12px">
+  <div class="card c8">
+    <h3>Practice SQL</h3>
+    <div class="toolbar">
+      <button id="practiceRun" class="primary" type="button">▶ Run</button>
+      <button id="practiceCheck" class="success" type="button">✓ Check</button>
+      <button id="practiceClear" class="secondary" type="button">Xóa</button>
+      <select id="practiceSelect" aria-label="Chọn bài tập">
+        <option value="">— Chọn bài tập —</option>
+      </select>
+    </div>
+    <p class="muted" style="font-size:.88rem">
+      Khung SQL riêng cho 110 bài tập. Chọn bài trong menu hoặc từ danh sách bên dưới. Phím tắt: Ctrl+Enter hoặc ⌘+Enter để chạy.
+    </p>
+    <textarea id="practiceSql" spellcheck="false">-- Chọn một bài tập ở danh sách bên dưới hoặc menu phía trên
+SELECT * FROM offices;</textarea>
+    <div id="practiceStatus" class="status" aria-live="polite">SQL engine dùng chung với Playground phía trên.</div>
+  </div>
+
+  <div class="card c4">
+    <h3>Bài đang làm</h3>
+    <div id="practiceCurrent" class="callout">Chưa chọn bài tập. Chọn một bài ở danh sách bên dưới.</div>
+    <p class="muted" style="font-size:.9rem">
+      <b>Run</b> chỉ chạy câu SQL và xem kết quả.<br>
+      <b>Check</b> so sánh kết quả với yêu cầu của bài đang chọn.
+    </p>
+  </div>
+
+  <div class="card c12">
+    <h3>Kết quả thực hành</h3>
+    <div id="practiceMeta" class="muted" style="font-size:.88rem">Chưa có truy vấn.</div>
+    <div id="practiceResult" class="result">
+      <div style="padding:14px" class="muted">Kết quả của khung thực hành sẽ xuất hiện ở đây.</div>
+    </div>
+  </div>
+</div>
+
+<div id="exercises" style="margin-top:12px"></div>
+</section>
+</main>
+<footer><div class="wrap"><b>SQL SELECT — Interactive Tutorial</b><br>Bộ máy SQL chạy cục bộ trong trình duyệt. Dữ liệu được tạo lại mỗi lần tải trang hoặc khi nhấn “Khôi phục dữ liệu”.</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
+<script>
+(()=>{"use strict";
+const $=s=>document.querySelector(s),
+editor=$("#sql"),status=$("#status"),result=$("#result"),meta=$("#meta"),
+practiceEditor=$("#practiceSql"),practiceStatus=$("#practiceStatus"),
+practiceResult=$("#practiceResult"),practiceMeta=$("#practiceMeta"),
+practiceSelect=$("#practiceSelect"),practiceCurrent=$("#practiceCurrent"),
+schemaSelect=$("#schemaSelect"),schemaCompact=$("#schemaCompact");
+let SQL=null,db=null;const solved=new Set();let currentExercise=null;
+const examples=[
+["SELECT *","Lấy toàn bộ cột.","SELECT * FROM products;"],
+["Chọn cột","Chỉ lấy cột cần thiết.","SELECT productCode, productName, MSRP\nFROM products;"],
+["AS","Đặt bí danh cho cột.","SELECT productName AS TenSanPham, MSRP AS GiaDeXuat\nFROM products;"],
+["Cột tính toán","Tính ngay trong SELECT.","SELECT productName, MSRP, buyPrice,\n       MSRP-buyPrice AS priceDifference\nFROM products;"],
+["WHERE","Lọc theo điều kiện.","SELECT productName, productLine, MSRP\nFROM products\nWHERE productLine='Motorcycles';"],
+["AND / OR","Kết hợp điều kiện.","SELECT productName, MSRP\nFROM products\nWHERE productLine='Classic Cars' AND MSRP>100;"],
+["LIKE","Tìm theo mẫu chuỗi.","SELECT customerName, city, country\nFROM customers\nWHERE customerName LIKE '%Mini%';"],
+["IN","So sánh với một tập giá trị.","SELECT customerName, country\nFROM customers\nWHERE country IN ('USA','France','Japan');"],
+["BETWEEN","Lọc trong một khoảng.","SELECT productName, MSRP\nFROM products\nWHERE MSRP BETWEEN 70 AND 110;"],
+["IS NULL","Kiểm tra NULL.","SELECT orderNumber, status, comments\nFROM orders\nWHERE comments IS NULL;"],
+["DISTINCT","Loại bỏ giá trị trùng.","SELECT DISTINCT country\nFROM customers\nORDER BY country;"],
+["ORDER BY + LIMIT","Sắp xếp rồi giới hạn.","SELECT productName, MSRP\nFROM products\nORDER BY MSRP DESC\nLIMIT 5;"]
+];
+const exercises=[{"id":"2.1","q":"Xem danh sách các bảng chính trong classicmodels.","a":"SHOW TABLES;","l":"Schema","checker":"command"},{"id":"2.2","q":"Xác định bảng lưu thông tin sản phẩm và xem cấu trúc của bảng đó.","a":"DESC products;","l":"Schema","checker":"command"},{"id":"2.3","q":"Xác định bảng lưu thông tin khách hàng và xem cấu trúc để tìm các cột địa chỉ.","a":"DESC customers;","l":"Schema","checker":"command"},{"id":"2.4","q":"Xác định bảng lưu thông tin đơn hàng và xem cấu trúc để tìm các cột ngày tháng.","a":"DESC orders;","l":"Schema","checker":"command"},{"id":"2.5","q":"Xác định một bảng có khóa chính gồm nhiều cột và xem cấu trúc của bảng đó.","a":"DESC payments;","l":"Schema","checker":"alternatives","alternatives":["DESC payments;","DESC orderdetails;"]},{"id":"3.1","q":"Viết lệnh chọn cơ sở dữ liệu classicmodels để bắt đầu thực hành.","a":"USE classicmodels;","l":"Môi trường","checker":"command"},{"id":"3.2","q":"Viết lệnh xem danh sách tất cả bảng trong cơ sở dữ liệu hiện tại.","a":"SHOW TABLES;","l":"Môi trường","checker":"command"},{"id":"3.3","q":"Viết lệnh xem cấu trúc bảng products.","a":"DESC products;","l":"Môi trường","checker":"command"},{"id":"3.4","q":"Viết lệnh xem cấu trúc bảng customers.","a":"DESC customers;","l":"Môi trường","checker":"command"},{"id":"3.5","q":"Viết lệnh xem cấu trúc bảng orders và xác định cột nào có thể nhận NULL.","a":"DESC orders;","l":"Môi trường","checker":"command"},{"id":"4.1","q":"Viết khung truy vấn SELECT ... FROM ... để lấy dữ liệu từ bảng employees.","a":"SELECT * FROM employees;","l":"SELECT cơ bản","checker":"result"},{"id":"4.2","q":"Lấy cột customerName từ bảng customers.","a":"SELECT customerName FROM customers;","l":"SELECT cơ bản","checker":"result"},{"id":"4.3","q":"Lấy cột orderNumber từ bảng orders.","a":"SELECT orderNumber FROM orders;","l":"SELECT cơ bản","checker":"result"},{"id":"4.4","q":"Lấy cột productLine từ bảng productlines.","a":"SELECT productLine FROM productlines;","l":"SELECT cơ bản","checker":"result"},{"id":"4.5","q":"Lấy cột amount từ bảng payments.","a":"SELECT amount FROM payments;","l":"SELECT cơ bản","checker":"result"},{"id":"5.1","q":"Lấy toàn bộ dữ liệu từ bảng offices.","a":"SELECT * FROM offices;","l":"SELECT *","checker":"result"},{"id":"5.2","q":"Lấy toàn bộ dữ liệu từ bảng productlines.","a":"SELECT * FROM productlines;","l":"SELECT *","checker":"result"},{"id":"5.3","q":"Lấy toàn bộ dữ liệu từ bảng employees.","a":"SELECT * FROM employees;","l":"SELECT *","checker":"result"},{"id":"5.4","q":"Lấy toàn bộ dữ liệu từ bảng orders.","a":"SELECT * FROM orders;","l":"SELECT *","checker":"result"},{"id":"5.5","q":"Lấy toàn bộ dữ liệu từ bảng payments.","a":"SELECT * FROM payments;","l":"SELECT *","checker":"result"},{"id":"6.1","q":"Lấy productCode, productName, productLine, MSRP từ bảng products.","a":"SELECT productCode, productName, productLine, MSRP FROM products;","l":"Chọn cột","checker":"result"},{"id":"6.2","q":"Lấy customerNumber, customerName, city, country từ bảng customers.","a":"SELECT customerNumber, customerName, city, country FROM customers;","l":"Chọn cột","checker":"result"},{"id":"6.3","q":"Lấy employeeNumber, lastName, firstName, jobTitle từ bảng employees.","a":"SELECT employeeNumber, lastName, firstName, jobTitle FROM employees;","l":"Chọn cột","checker":"result"},{"id":"6.4","q":"Lấy orderNumber, orderDate, status, customerNumber từ bảng orders.","a":"SELECT orderNumber, orderDate, status, customerNumber FROM orders;","l":"Chọn cột","checker":"result"},{"id":"6.5","q":"Lấy checkNumber, paymentDate, amount từ bảng payments.","a":"SELECT checkNumber, paymentDate, amount FROM payments;","l":"Chọn cột","checker":"result"},{"id":"7.1","q":"Lấy customerName, city, country từ customers và đặt bí danh tiếng Việt không dấu cho các cột.","a":"SELECT customerName AS TenKhachHang, city AS ThanhPho, country AS QuocGia FROM customers;","l":"AS","checker":"alias_any","base":"SELECT customerName, city, country FROM customers;","minAliases":3},{"id":"7.2","q":"Lấy productCode, productName, MSRP từ products và đặt bí danh MaSanPham, TenSanPham, GiaBanDeXuat.","a":"SELECT productCode AS MaSanPham, productName AS TenSanPham, MSRP AS GiaBanDeXuat FROM products;","l":"AS","checker":"result"},{"id":"7.3","q":"Lấy employeeNumber, lastName, firstName, email từ employees và đặt bí danh dễ đọc cho từng cột.","a":"SELECT employeeNumber AS MaNhanVien, lastName AS Ho, firstName AS Ten, email AS Email FROM employees;","l":"AS","checker":"alias_any","base":"SELECT employeeNumber, lastName, firstName, email FROM employees;","minAliases":4},{"id":"7.4","q":"Lấy orderNumber, orderDate, requiredDate, status từ orders và đặt bí danh dễ đọc.","a":"SELECT orderNumber AS MaDonHang, orderDate AS NgayDat, requiredDate AS NgayYeuCau, status AS TrangThai FROM orders;","l":"AS","checker":"alias_any","base":"SELECT orderNumber, orderDate, requiredDate, status FROM orders;","minAliases":4},{"id":"7.5","q":"Lấy officeCode, city, phone, country từ offices và đặt bí danh cho kết quả.","a":"SELECT officeCode AS MaVanPhong, city AS ThanhPho, phone AS DienThoai, country AS QuocGia FROM offices;","l":"AS","checker":"alias_any","base":"SELECT officeCode, city, phone, country FROM offices;","minAliases":4},{"id":"8.1","q":"Lấy productCode, productName, buyPrice, MSRP và tạo profitEstimate = MSRP - buyPrice.","a":"SELECT productCode, productName, buyPrice, MSRP, MSRP - buyPrice AS profitEstimate FROM products;","l":"Biểu thức","checker":"result"},{"id":"8.2","q":"Lấy productCode, productName, quantityInStock, buyPrice và tạo inventoryValue = quantityInStock * buyPrice.","a":"SELECT productCode, productName, quantityInStock, buyPrice, quantityInStock * buyPrice AS inventoryValue FROM products;","l":"Biểu thức","checker":"result"},{"id":"8.3","q":"Lấy orderNumber, productCode, quantityOrdered, priceEach và tạo lineTotal = quantityOrdered * priceEach.","a":"SELECT orderNumber, productCode, quantityOrdered, priceEach, quantityOrdered * priceEach AS lineTotal FROM orderdetails;","l":"Biểu thức","checker":"result"},{"id":"8.4","q":"Lấy customerNumber, checkNumber, amount và tạo amountInThousands = amount / 1000.","a":"SELECT customerNumber, checkNumber, amount, amount / 1000.0 AS amountInThousands FROM payments;","l":"Biểu thức","checker":"result"},{"id":"8.5","q":"Lấy productCode, productName, MSRP và tạo discountPrice = MSRP * 0.9.","a":"SELECT productCode, productName, MSRP, MSRP * 0.9 AS discountPrice FROM products;","l":"Biểu thức","checker":"result"},{"id":"9.1","q":"Lấy các sản phẩm thuộc dòng Motorcycles.","a":"SELECT productCode, productName, productLine FROM products WHERE productLine = 'Motorcycles';","l":"WHERE","checker":"result"},{"id":"9.2","q":"Lấy các khách hàng ở USA.","a":"SELECT customerNumber, customerName, city, country FROM customers WHERE country = 'USA';","l":"WHERE","checker":"result"},{"id":"9.3","q":"Lấy các đơn hàng có trạng thái Shipped.","a":"SELECT orderNumber, orderDate, status, customerNumber FROM orders WHERE status = 'Shipped';","l":"WHERE","checker":"result"},{"id":"9.4","q":"Lấy các nhân viên có jobTitle là Sales Rep.","a":"SELECT employeeNumber, lastName, firstName, jobTitle FROM employees WHERE jobTitle = 'Sales Rep';","l":"WHERE","checker":"result"},{"id":"9.5","q":"Lấy các văn phòng có country là USA.","a":"SELECT officeCode, city, phone, country FROM offices WHERE country = 'USA';","l":"WHERE","checker":"result"},{"id":"10.1","q":"Lấy các sản phẩm có MSRP lớn hơn 150.","a":"SELECT productCode, productName, MSRP FROM products WHERE MSRP > 150;","l":"So sánh","checker":"result"},{"id":"10.2","q":"Lấy các sản phẩm có quantityInStock nhỏ hơn 1000.","a":"SELECT productCode, productName, quantityInStock FROM products WHERE quantityInStock < 1000;","l":"So sánh","checker":"result"},{"id":"10.3","q":"Lấy các khách hàng có creditLimit lớn hơn hoặc bằng 100000.","a":"SELECT customerNumber, customerName, creditLimit FROM customers WHERE creditLimit >= 100000;","l":"So sánh","checker":"result"},{"id":"10.4","q":"Lấy các khoản thanh toán có amount lớn hơn 50000.","a":"SELECT customerNumber, checkNumber, paymentDate, amount FROM payments WHERE amount > 50000;","l":"So sánh","checker":"result"},{"id":"10.5","q":"Lấy các dòng orderdetails có quantityOrdered từ 50 trở lên.","a":"SELECT orderNumber, productCode, quantityOrdered, priceEach FROM orderdetails WHERE quantityOrdered >= 50;","l":"So sánh","checker":"result"},{"id":"11.1","q":"Lấy khách hàng ở USA và creditLimit > 100000.","a":"SELECT customerNumber, customerName, country, creditLimit FROM customers WHERE country = 'USA' AND creditLimit > 100000;","l":"AND","checker":"result"},{"id":"11.2","q":"Lấy sản phẩm thuộc Classic Cars và MSRP > 100.","a":"SELECT productCode, productName, productLine, MSRP FROM products WHERE productLine = 'Classic Cars' AND MSRP > 100;","l":"AND","checker":"result"},{"id":"11.3","q":"Lấy đơn hàng status = 'Shipped' và shippedDate sau 2005-01-01.","a":"SELECT orderNumber, orderDate, shippedDate, status FROM orders WHERE status = 'Shipped' AND shippedDate > '2005-01-01';","l":"AND","checker":"result"},{"id":"11.4","q":"Lấy sản phẩm buyPrice > 50 và quantityInStock > 5000.","a":"SELECT productCode, productName, buyPrice, quantityInStock FROM products WHERE buyPrice > 50 AND quantityInStock > 5000;","l":"AND","checker":"result"},{"id":"11.5","q":"Lấy khách hàng ở France và salesRepEmployeeNumber khác NULL.","a":"SELECT customerNumber, customerName, country, salesRepEmployeeNumber FROM customers WHERE country = 'France' AND salesRepEmployeeNumber IS NOT NULL;","l":"AND","checker":"result"},{"id":"12.1","q":"Lấy khách hàng ở France hoặc Germany.","a":"SELECT customerNumber, customerName, country FROM customers WHERE country = 'France' OR country = 'Germany';","l":"OR","checker":"result"},{"id":"12.2","q":"Lấy sản phẩm thuộc Planes hoặc Ships.","a":"SELECT productCode, productName, productLine FROM products WHERE productLine = 'Planes' OR productLine = 'Ships';","l":"OR","checker":"result"},{"id":"12.3","q":"Lấy đơn hàng có trạng thái Cancelled hoặc Disputed.","a":"SELECT orderNumber, orderDate, status FROM orders WHERE status = 'Cancelled' OR status = 'Disputed';","l":"OR","checker":"result"},{"id":"12.4","q":"Lấy văn phòng ở USA hoặc France.","a":"SELECT officeCode, city, country FROM offices WHERE country = 'USA' OR country = 'France';","l":"OR","checker":"result"},{"id":"12.5","q":"Lấy nhân viên có jobTitle là Sales Rep hoặc VP Sales.","a":"SELECT employeeNumber, lastName, firstName, jobTitle FROM employees WHERE jobTitle = 'Sales Rep' OR jobTitle = 'VP Sales';","l":"OR","checker":"result"},{"id":"13.1","q":"Lấy khách hàng không ở USA.","a":"SELECT customerNumber, customerName, country FROM customers WHERE NOT country = 'USA';","l":"NOT","checker":"result"},{"id":"13.2","q":"Lấy đơn hàng không có trạng thái Shipped.","a":"SELECT orderNumber, orderDate, status FROM orders WHERE status <> 'Shipped';","l":"NOT","checker":"result"},{"id":"13.3","q":"Lấy sản phẩm không thuộc dòng Classic Cars.","a":"SELECT productCode, productName, productLine FROM products WHERE productLine <> 'Classic Cars';","l":"NOT","checker":"result"},{"id":"13.4","q":"Lấy văn phòng không thuộc USA.","a":"SELECT officeCode, city, country FROM offices WHERE country <> 'USA';","l":"NOT","checker":"result"},{"id":"13.5","q":"Lấy khách hàng không có creditLimit lớn hơn 100000.","a":"SELECT customerNumber, customerName, creditLimit FROM customers WHERE NOT creditLimit > 100000;","l":"NOT","checker":"result"},{"id":"14.1","q":"Lấy đơn hàng có trạng thái Cancelled, On Hold hoặc Disputed.","a":"SELECT orderNumber, orderDate, status FROM orders WHERE status IN ('Cancelled','On Hold','Disputed');","l":"IN","checker":"result"},{"id":"14.2","q":"Lấy khách hàng ở USA, France hoặc Germany.","a":"SELECT customerNumber, customerName, country FROM customers WHERE country IN ('USA','France','Germany');","l":"IN","checker":"result"},{"id":"14.3","q":"Lấy sản phẩm thuộc Classic Cars, Motorcycles hoặc Planes.","a":"SELECT productCode, productName, productLine FROM products WHERE productLine IN ('Classic Cars','Motorcycles','Planes');","l":"IN","checker":"result"},{"id":"14.4","q":"Lấy văn phòng có territory thuộc NA hoặc EMEA.","a":"SELECT officeCode, city, territory FROM offices WHERE territory IN ('NA','EMEA');","l":"IN","checker":"result"},{"id":"14.5","q":"Lấy nhân viên có jobTitle thuộc Sales Rep, Sales Manager (NA), VP Sales.","a":"SELECT employeeNumber, lastName, firstName, jobTitle FROM employees WHERE jobTitle IN ('Sales Rep','Sales Manager (NA)','VP Sales');","l":"IN","checker":"result"},{"id":"15.1","q":"Lấy sản phẩm có buyPrice từ 50 đến 80.","a":"SELECT productCode, productName, buyPrice FROM products WHERE buyPrice BETWEEN 50 AND 80;","l":"BETWEEN","checker":"result"},{"id":"15.2","q":"Lấy sản phẩm có MSRP từ 100 đến 150.","a":"SELECT productCode, productName, MSRP FROM products WHERE MSRP BETWEEN 100 AND 150;","l":"BETWEEN","checker":"result"},{"id":"15.3","q":"Lấy các khoản thanh toán có paymentDate trong năm 2004.","a":"SELECT customerNumber, checkNumber, paymentDate, amount FROM payments WHERE paymentDate BETWEEN '2004-01-01' AND '2004-12-31';","l":"BETWEEN","checker":"result"},{"id":"15.4","q":"Lấy đơn hàng có orderDate từ 2005-01-01 đến 2005-03-31.","a":"SELECT orderNumber, orderDate, status FROM orders WHERE orderDate BETWEEN '2005-01-01' AND '2005-03-31';","l":"BETWEEN","checker":"result"},{"id":"15.5","q":"Lấy các dòng orderdetails có quantityOrdered từ 20 đến 40.","a":"SELECT orderNumber, productCode, quantityOrdered, priceEach FROM orderdetails WHERE quantityOrdered BETWEEN 20 AND 40;","l":"BETWEEN","checker":"result"},{"id":"16.1","q":"Lấy sản phẩm có tên chứa từ Ford.","a":"SELECT productCode, productName FROM products WHERE productName LIKE '%Ford%';","l":"LIKE","checker":"result"},{"id":"16.2","q":"Lấy khách hàng có customerName bắt đầu bằng Mini.","a":"SELECT customerNumber, customerName FROM customers WHERE customerName LIKE 'Mini%';","l":"LIKE","checker":"result"},{"id":"16.3","q":"Lấy nhân viên có email kết thúc bằng classicmodelcars.com.","a":"SELECT employeeNumber, lastName, firstName, email FROM employees WHERE email LIKE '%classicmodelcars.com';","l":"LIKE","checker":"result"},{"id":"16.4","q":"Lấy sản phẩm có productName chứa từ Harley.","a":"SELECT productCode, productName FROM products WHERE productName LIKE '%Harley%';","l":"LIKE","checker":"result"},{"id":"16.5","q":"Lấy văn phòng có phone chứa ký tự +1.","a":"SELECT officeCode, city, phone FROM offices WHERE phone LIKE '%+1%';","l":"LIKE","checker":"result"},{"id":"17.1","q":"Lấy khách hàng chưa có nhân viên bán hàng phụ trách.","a":"SELECT customerNumber, customerName, salesRepEmployeeNumber FROM customers WHERE salesRepEmployeeNumber IS NULL;","l":"NULL","checker":"result"},{"id":"17.2","q":"Lấy đơn hàng chưa có shippedDate.","a":"SELECT orderNumber, orderDate, shippedDate, status FROM orders WHERE shippedDate IS NULL;","l":"NULL","checker":"result"},{"id":"17.3","q":"Lấy khách hàng chưa có state.","a":"SELECT customerNumber, customerName, state FROM customers WHERE state IS NULL;","l":"NULL","checker":"result"},{"id":"17.4","q":"Lấy văn phòng chưa có addressLine2.","a":"SELECT officeCode, city, addressLine2 FROM offices WHERE addressLine2 IS NULL;","l":"NULL","checker":"result"},{"id":"17.5","q":"Lấy nhân viên không có quản lý trực tiếp.","a":"SELECT employeeNumber, lastName, firstName, reportsTo FROM employees WHERE reportsTo IS NULL;","l":"NULL","checker":"result"},{"id":"18.1","q":"Xem các quốc gia khác nhau trong customers.","a":"SELECT DISTINCT country FROM customers;","l":"DISTINCT","checker":"result"},{"id":"18.2","q":"Xem các trạng thái đơn hàng khác nhau trong orders.","a":"SELECT DISTINCT status FROM orders;","l":"DISTINCT","checker":"result"},{"id":"18.3","q":"Xem các dòng sản phẩm khác nhau trong products.","a":"SELECT DISTINCT productLine FROM products;","l":"DISTINCT","checker":"result"},{"id":"18.4","q":"Xem các chức danh khác nhau trong employees.","a":"SELECT DISTINCT jobTitle FROM employees;","l":"DISTINCT","checker":"result"},{"id":"18.5","q":"Xem các territory khác nhau trong offices.","a":"SELECT DISTINCT territory FROM offices;","l":"DISTINCT","checker":"result"},{"id":"19.1","q":"Lấy productCode, productName, MSRP và sắp xếp theo MSRP giảm dần.","a":"SELECT productCode, productName, MSRP FROM products ORDER BY MSRP DESC;","l":"ORDER BY","checker":"result","ordered":true},{"id":"19.2","q":"Lấy customerName, country, city; sắp xếp country tăng dần rồi city tăng dần.","a":"SELECT customerName, country, city FROM customers ORDER BY country ASC, city ASC;","l":"ORDER BY","checker":"result","ordered":true},{"id":"19.3","q":"Lấy orderNumber, orderDate, status; sắp xếp orderDate mới nhất trước.","a":"SELECT orderNumber, orderDate, status FROM orders ORDER BY orderDate DESC;","l":"ORDER BY","checker":"result","ordered":true},{"id":"19.4","q":"Lấy customerNumber, paymentDate, amount; sắp xếp amount giảm dần.","a":"SELECT customerNumber, paymentDate, amount FROM payments ORDER BY amount DESC;","l":"ORDER BY","checker":"result","ordered":true},{"id":"19.5","q":"Lấy lastName, firstName, jobTitle; sắp xếp lastName rồi firstName.","a":"SELECT lastName, firstName, jobTitle FROM employees ORDER BY lastName ASC, firstName ASC;","l":"ORDER BY","checker":"result","ordered":true},{"id":"20.1","q":"Lấy 10 khách hàng có creditLimit cao nhất.","a":"SELECT customerNumber, customerName, creditLimit FROM customers ORDER BY creditLimit DESC LIMIT 10;","l":"LIMIT","checker":"result","ordered":true},{"id":"20.2","q":"Lấy 5 sản phẩm có MSRP cao nhất.","a":"SELECT productCode, productName, MSRP FROM products ORDER BY MSRP DESC LIMIT 5;","l":"LIMIT","checker":"result","ordered":true},{"id":"20.3","q":"Lấy 5 khoản thanh toán có amount lớn nhất.","a":"SELECT customerNumber, checkNumber, paymentDate, amount FROM payments ORDER BY amount DESC LIMIT 5;","l":"LIMIT","checker":"result","ordered":true},{"id":"20.4","q":"Lấy 3 đơn hàng mới nhất theo orderDate.","a":"SELECT orderNumber, orderDate, status FROM orders ORDER BY orderDate DESC LIMIT 3;","l":"LIMIT","checker":"result","ordered":true},{"id":"20.5","q":"Lấy 10 sản phẩm có quantityInStock thấp nhất.","a":"SELECT productCode, productName, quantityInStock FROM products ORDER BY quantityInStock ASC LIMIT 10;","l":"LIMIT","checker":"result","ordered":true},{"id":"21.1","q":"Lấy 10 sản phẩm đầu tiên sau khi sắp xếp theo productCode.","a":"SELECT productCode, productName, MSRP FROM products ORDER BY productCode ASC LIMIT 10;","l":"OFFSET","checker":"result","ordered":true},{"id":"21.2","q":"Bỏ qua 10 sản phẩm đầu tiên và lấy 10 sản phẩm tiếp theo theo productCode.","a":"SELECT productCode, productName, MSRP FROM products ORDER BY productCode ASC LIMIT 10 OFFSET 10;","l":"OFFSET","checker":"result","ordered":true},{"id":"21.3","q":"Lấy trang thứ 3 của danh sách khách hàng, mỗi trang 20 khách hàng, sắp xếp theo customerNumber.","a":"SELECT customerNumber, customerName FROM customers ORDER BY customerNumber ASC LIMIT 20 OFFSET 40;","l":"OFFSET","checker":"result","ordered":true},{"id":"21.4","q":"Bỏ qua 5 khoản thanh toán lớn nhất và lấy 5 khoản tiếp theo theo amount giảm dần.","a":"SELECT customerNumber, checkNumber, paymentDate, amount FROM payments ORDER BY amount DESC LIMIT 5 OFFSET 5;","l":"OFFSET","checker":"result","ordered":true},{"id":"21.5","q":"Bỏ qua 20 đơn hàng mới nhất và lấy 10 đơn hàng tiếp theo theo orderDate giảm dần.","a":"SELECT orderNumber, orderDate, status FROM orders ORDER BY orderDate DESC LIMIT 10 OFFSET 20;","l":"OFFSET","checker":"result","ordered":true},{"id":"22.1","q":"Lấy 5 sản phẩm thuộc Classic Cars, MSRP > 100, sắp xếp MSRP giảm dần.","a":"SELECT productCode, productName, productLine, MSRP FROM products WHERE productLine='Classic Cars' AND MSRP>100 ORDER BY MSRP DESC LIMIT 5;","l":"Tổng hợp","checker":"result","ordered":true},{"id":"22.2","q":"Lấy 10 khách hàng ở USA có creditLimit > 50000, sắp xếp creditLimit giảm dần.","a":"SELECT customerNumber, customerName, country, creditLimit FROM customers WHERE country='USA' AND creditLimit>50000 ORDER BY creditLimit DESC LIMIT 10;","l":"Tổng hợp","checker":"result","ordered":true},{"id":"22.3","q":"Lấy 5 đơn hàng trạng thái Shipped trong năm 2004, sắp xếp orderDate giảm dần.","a":"SELECT orderNumber, orderDate, status FROM orders WHERE status='Shipped' AND orderDate BETWEEN '2004-01-01' AND '2004-12-31' ORDER BY orderDate DESC LIMIT 5;","l":"Tổng hợp","checker":"result","ordered":true},{"id":"22.4","q":"Lấy 10 sản phẩm thuộc Motorcycles hoặc Planes, quantityInStock > 1000, sắp xếp productName tăng dần.","a":"SELECT productCode, productName, productLine, quantityInStock FROM products WHERE productLine IN ('Motorcycles','Planes') AND quantityInStock>1000 ORDER BY productName ASC LIMIT 10;","l":"Tổng hợp","checker":"result","ordered":true},{"id":"22.5","q":"Lấy 5 khoản thanh toán trong năm 2004 có amount > 30000, sắp xếp amount giảm dần.","a":"SELECT customerNumber, checkNumber, paymentDate, amount FROM payments WHERE paymentDate BETWEEN '2004-01-01' AND '2004-12-31' AND amount>30000 ORDER BY amount DESC LIMIT 5;","l":"Tổng hợp","checker":"result","ordered":true},{"id":"23.1","q":"Sửa câu sai SELECT customerName country FROM customers; để lấy hai cột customerName và country.","a":"SELECT customerName, country FROM customers;","l":"Sửa lỗi","checker":"result"},{"id":"23.2","q":"Sửa câu sai SELECT * FROM customers WHERE country = USA; để so sánh chuỗi đúng.","a":"SELECT * FROM customers WHERE country = 'USA';","l":"Sửa lỗi","checker":"result"},{"id":"23.3","q":"Sửa câu sai kiểm tra salesRepEmployeeNumber = NULL.","a":"SELECT customerName FROM customers WHERE salesRepEmployeeNumber IS NULL;","l":"Sửa lỗi","checker":"result"},{"id":"23.4","q":"Sửa thứ tự mệnh đề để lọc Classic Cars rồi ORDER BY MSRP DESC.","a":"SELECT productCode, productName FROM products WHERE productLine = 'Classic Cars' ORDER BY MSRP DESC;","l":"Sửa lỗi","checker":"result","ordered":true},{"id":"23.5","q":"Sửa lỗi thiếu dấu phẩy trong SELECT productCode productName MSRP FROM products.","a":"SELECT productCode, productName, MSRP FROM products;","l":"Sửa lỗi","checker":"result"}];
+const sectionTitles={2:"Giới thiệu CSDL classicmodels",3:"Chuẩn bị môi trường",4:"Cú pháp cơ bản SELECT",5:"Lấy toàn bộ dữ liệu",6:"Lấy một số cột",7:"Bí danh AS",8:"Cột tính toán",9:"WHERE",10:"Toán tử so sánh",11:"AND",12:"OR",13:"NOT",14:"IN",15:"BETWEEN",16:"LIKE",17:"IS NULL",18:"DISTINCT",19:"ORDER BY",20:"LIMIT",21:"LIMIT / OFFSET",22:"Kết hợp các mệnh đề",23:"Sửa lỗi thường gặp"};
+function esc(x){return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function highlightSQL(sql){
+  const token=/--[^\n]*|'(?:''|[^'])*'|\b(?:COUNT|SUM|AVG|MIN|MAX|ROUND|UPPER|LOWER)\b(?=\s*\()|\b(?:SELECT|FROM|WHERE|AS|DISTINCT|AND|OR|NOT|IN|BETWEEN|LIKE|IS|NULL|ORDER|BY|ASC|DESC|LIMIT|OFFSET|USE|SHOW|TABLES|DESCRIBE|JOIN|INNER|LEFT|RIGHT|ON|GROUP|HAVING)\b|\b\d+(?:\.\d+)?\b|<>|<=|>=|!=|=|<|>/gi;
+  let out='',last=0,m;
+  while((m=token.exec(sql))!==null){
+    out+=esc(sql.slice(last,m.index));
+    const v=m[0]; let cls='';
+    if(v.startsWith('--')) cls='sql-comment';
+    else if(v.startsWith("'")) cls='sql-str';
+    else if(/^\d/.test(v)) cls='sql-num';
+    else if(/^(COUNT|SUM|AVG|MIN|MAX|ROUND|UPPER|LOWER)$/i.test(v)) cls='sql-fn';
+    else if(/^(<>|<=|>=|!=|=|<|>)$/.test(v)) cls='sql-op';
+    else cls='sql-kw';
+    out+='<span class="'+cls+'">'+esc(v)+'</span>';
+    last=token.lastIndex;
+  }
+  return out+esc(sql.slice(last));
+}
+function seed(){if(db)db.close();db=new SQL.Database();db.run(`
+CREATE TABLE productlines(
+  productLine TEXT PRIMARY KEY,
+  textDescription TEXT
+);
+CREATE TABLE products(
+  productCode TEXT PRIMARY KEY,
+  productName TEXT NOT NULL,
+  productLine TEXT NOT NULL,
+  productScale TEXT NOT NULL,
+  productVendor TEXT NOT NULL,
+  productDescription TEXT,
+  quantityInStock INTEGER NOT NULL,
+  buyPrice REAL NOT NULL,
+  MSRP REAL NOT NULL
+);
+CREATE TABLE offices(
+  officeCode TEXT PRIMARY KEY,
+  city TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  addressLine1 TEXT NOT NULL,
+  addressLine2 TEXT,
+  state TEXT,
+  country TEXT NOT NULL,
+  postalCode TEXT NOT NULL,
+  territory TEXT NOT NULL
+);
+CREATE TABLE employees(
+  employeeNumber INTEGER PRIMARY KEY,
+  lastName TEXT NOT NULL,
+  firstName TEXT NOT NULL,
+  extension TEXT NOT NULL,
+  email TEXT NOT NULL,
+  officeCode TEXT NOT NULL,
+  reportsTo INTEGER,
+  jobTitle TEXT NOT NULL
+);
+CREATE TABLE customers(
+  customerNumber INTEGER PRIMARY KEY,
+  customerName TEXT NOT NULL,
+  contactLastName TEXT NOT NULL,
+  contactFirstName TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  addressLine1 TEXT NOT NULL,
+  addressLine2 TEXT,
+  city TEXT NOT NULL,
+  state TEXT,
+  postalCode TEXT,
+  country TEXT NOT NULL,
+  salesRepEmployeeNumber INTEGER,
+  creditLimit REAL
+);
+CREATE TABLE orders(
+  orderNumber INTEGER PRIMARY KEY,
+  orderDate TEXT NOT NULL,
+  requiredDate TEXT NOT NULL,
+  shippedDate TEXT,
+  status TEXT NOT NULL,
+  comments TEXT,
+  customerNumber INTEGER NOT NULL
+);
+CREATE TABLE payments(
+  customerNumber INTEGER NOT NULL,
+  checkNumber TEXT NOT NULL,
+  paymentDate TEXT NOT NULL,
+  amount REAL NOT NULL,
+  PRIMARY KEY(customerNumber, checkNumber)
+);
+CREATE TABLE orderdetails(
+  orderNumber INTEGER NOT NULL,
+  productCode TEXT NOT NULL,
+  quantityOrdered INTEGER NOT NULL,
+  priceEach REAL NOT NULL,
+  orderLineNumber INTEGER NOT NULL,
+  PRIMARY KEY(orderNumber, productCode)
+);
+INSERT INTO productlines VALUES ('Classic Cars','Classic automobiles');
+INSERT INTO productlines VALUES ('Motorcycles','Motorcycle models');
+INSERT INTO productlines VALUES ('Planes','Aircraft models');
+INSERT INTO productlines VALUES ('Ships','Ship models');
+INSERT INTO productlines VALUES ('Trains','Train models');
+INSERT INTO productlines VALUES ('Vintage Cars','Vintage automobiles');
+INSERT INTO productlines VALUES ('Trucks and Buses','Truck and bus models');
+INSERT INTO products VALUES ('S10_0001','1969 Harley Davidson Ultimate Chopper','Motorcycles','1:10','Min Lin Diecast','Harley model',7933,48.81,95.7);
+INSERT INTO products VALUES ('S10_0002','1952 Alpine Renault 1300','Classic Cars','1:10','Classic Metal Creations','Classic car',7305,98.58,214.3);
+INSERT INTO products VALUES ('S10_0003','1996 Moto Guzzi 1100i','Motorcycles','1:10','Highway 66 Mini Classics','Motorcycle',6625,68.99,118.94);
+INSERT INTO products VALUES ('S10_0004','2003 Harley-Davidson Eagle Drag Bike','Motorcycles','1:10','Red Start Diecast','Harley drag bike',5582,91.02,193.66);
+INSERT INTO products VALUES ('S10_0005','1972 Alfa Romeo GTA','Classic Cars','1:10','Motor City Art Classics','Classic car',3252,85.68,136.0);
+INSERT INTO products VALUES ('S10_0006','1962 Lancia Delta 16V','Classic Cars','1:10','Second Gear Diecast','Classic car',6791,103.42,147.74);
+INSERT INTO products VALUES ('S10_0007','1980s Black Hawk Helicopter','Planes','1:18','Classic Metal Creations','Aircraft',5330,77.27,157.69);
+INSERT INTO products VALUES ('S10_0008','1998 Chrysler Plymouth Prowler','Classic Cars','1:18','Gearbox Collectibles','Classic car',4724,101.51,163.73);
+INSERT INTO products VALUES ('S10_0009','1968 Ford Mustang GT','Classic Cars','1:18','Autoart Studio Design','Ford classic',850,49.5,120.0);
+INSERT INTO products VALUES ('S10_0010','1932 Ford V8 Coupe','Vintage Cars','1:18','Gearbox Collectibles','Ford coupe',950,55.0,88.0);
+INSERT INTO products VALUES ('S10_0011','P-51-D Mustang','Planes','1:72','Gearbox Collectibles','Aircraft',992,49.0,84.48);
+INSERT INTO products VALUES ('S10_0012','HMS Bounty','Ships','1:700','Mini Classics','Ship model',3501,39.83,90.52);
+INSERT INTO products VALUES ('S10_0013','Model 13 Classic Cars','Classic Cars','1:18','Example Vendor','Demo Classic Cars',4430,122.9,211.5);
+INSERT INTO products VALUES ('S10_0014','Model 14 Motorcycles','Motorcycles','1:18','Example Vendor','Demo Motorcycles',4740,35.2,82.56);
+INSERT INTO products VALUES ('S10_0015','Model 15 Planes','Planes','1:18','Example Vendor','Demo Planes',700,42.5,65.88);
+INSERT INTO products VALUES ('S10_0016','Model 16 Ships','Ships','1:18','Example Vendor','Demo Ships',5360,49.8,84.19);
+INSERT INTO products VALUES ('S10_0017','Model 17 Vintage Cars','Vintage Cars','1:18','Example Vendor','Demo Vintage Cars',5670,57.1,102.51);
+INSERT INTO products VALUES ('S10_0018','Ford F-150 Custom Truck','Trucks and Buses','1:18','Example Vendor','Demo Trucks and Buses',5980,64.4,120.82);
+INSERT INTO products VALUES ('S10_0019','Model 19 Trains','Trains','1:18','Example Vendor','Demo Trains',6290,71.7,139.13);
+INSERT INTO products VALUES ('S10_0020','Model 20 Classic Cars','Classic Cars','1:18','Example Vendor','Demo Classic Cars',6600,79.0,122.45);
+INSERT INTO products VALUES ('S10_0021','Model 21 Motorcycles','Motorcycles','1:18','Example Vendor','Demo Motorcycles',6910,86.3,140.76);
+INSERT INTO products VALUES ('S10_0022','Model 22 Planes','Planes','1:18','Example Vendor','Demo Planes',7220,93.6,159.08);
+INSERT INTO products VALUES ('S10_0023','Model 23 Ships','Ships','1:18','Example Vendor','Demo Ships',7530,100.9,177.4);
+INSERT INTO products VALUES ('S10_0024','Harley Touring Special','Vintage Cars','1:18','Example Vendor','Demo Vintage Cars',7840,108.2,195.71);
+INSERT INTO products VALUES ('S10_0025','Model 25 Trucks and Buses','Trucks and Buses','1:18','Example Vendor','Demo Trucks and Buses',8150,115.5,179.03);
+INSERT INTO products VALUES ('S10_0026','Model 26 Trains','Trains','1:18','Example Vendor','Demo Trains',8460,122.8,197.34);
+INSERT INTO products VALUES ('S10_0027','Model 27 Classic Cars','Classic Cars','1:18','Example Vendor','Demo Classic Cars',700,35.1,68.41);
+INSERT INTO products VALUES ('S10_0028','Model 28 Motorcycles','Motorcycles','1:18','Example Vendor','Demo Motorcycles',9080,42.4,86.72);
+INSERT INTO products VALUES ('S10_0029','Model 29 Planes','Planes','1:18','Example Vendor','Demo Planes',9390,49.7,105.04);
+INSERT INTO products VALUES ('S10_0030','Model 30 Ships','Ships','1:18','Example Vendor','Demo Ships',9700,57.0,88.35);
+INSERT INTO products VALUES ('S10_0031','Model 31 Vintage Cars','Vintage Cars','1:18','Example Vendor','Demo Vintage Cars',10010,64.3,106.66);
+INSERT INTO products VALUES ('S10_0032','Model 32 Trucks and Buses','Trucks and Buses','1:18','Example Vendor','Demo Trucks and Buses',10320,71.6,124.98);
+INSERT INTO products VALUES ('S10_0033','Model 33 Trains','Trains','1:18','Example Vendor','Demo Trains',10630,78.9,143.3);
+INSERT INTO products VALUES ('S10_0034','Model 34 Classic Cars','Classic Cars','1:18','Example Vendor','Demo Classic Cars',10940,86.2,161.61);
+INSERT INTO products VALUES ('S10_0035','Model 35 Motorcycles','Motorcycles','1:18','Example Vendor','Demo Motorcycles',11250,93.5,144.93);
+INSERT INTO offices VALUES ('1','San Francisco','+1 650 219 4782','100 Market Street','Suite 300','CA','USA','94080','NA');
+INSERT INTO offices VALUES ('2','Boston','+1 215 837 0825','1550 Court Place','Suite 500','MA','USA','02107','NA');
+INSERT INTO offices VALUES ('3','NYC','+1 212 555 3000','523 East 53rd Street',NULL,'NY','USA','10022','NA');
+INSERT INTO offices VALUES ('4','Paris','+33 14 723 4404','43 Rue Jouffroy',NULL,NULL,'France','75017','EMEA');
+INSERT INTO offices VALUES ('5','Tokyo','+81 33 224 5000','4-1 Kioicho','Chiyoda-ku',NULL,'Japan','102-8578','Japan');
+INSERT INTO offices VALUES ('6','Sydney','+61 2 9264 2451','5-11 Wentworth Avenue',NULL,'NSW','Australia','NSW 2010','APAC');
+INSERT INTO offices VALUES ('7','London','+44 20 7877 2041','25 Old Broad Street','Level 7',NULL,'UK','EC2N 1HN','EMEA');
+INSERT INTO employees VALUES (1002,'Murphy','Diane','x5800','dmurphy@classicmodelcars.com','1',NULL,'President');
+INSERT INTO employees VALUES (1056,'Patterson','Mary','x4611','mpatterson@classicmodelcars.com','1',1002,'VP Sales');
+INSERT INTO employees VALUES (1076,'Firrelli','Jeff','x9273','jfirrelli@classicmodelcars.com','1',1002,'VP Marketing');
+INSERT INTO employees VALUES (1088,'Patterson','William','x4871','wpatterson@classicmodelcars.com','3',1056,'Sales Manager (NA)');
+INSERT INTO employees VALUES (1102,'Bondur','Gerard','x5408','gbondur@classicmodelcars.com','4',1056,'Sales Manager (EMEA)');
+INSERT INTO employees VALUES (1143,'Bow','Anthony','x5428','abow@classicmodelcars.com','6',1056,'Sales Manager (APAC)');
+INSERT INTO employees VALUES (1165,'Jennings','Leslie','x3291','ljennings@classicmodelcars.com','1',1088,'Sales Rep');
+INSERT INTO employees VALUES (1166,'Thompson','Leslie','x4065','lthompson@classicmodelcars.com','1',1088,'Sales Rep');
+INSERT INTO employees VALUES (1188,'Firrelli','Julie','x2173','jfirrelli2@classicmodelcars.com','2',1088,'Sales Rep');
+INSERT INTO employees VALUES (1216,'Patterson','Steve','x4334','spatterson@classicmodelcars.com','2',1088,'Sales Rep');
+INSERT INTO employees VALUES (1286,'Tseng','Foon Yue','x2248','ftseng@classicmodelcars.com','5',1143,'Sales Rep');
+INSERT INTO employees VALUES (1323,'Vanauf','George','x4102','gvanauf@classicmodelcars.com','4',1102,'Sales Rep');
+INSERT INTO customers VALUES (100,'Mini Customer 01 Co.','Last1','First1','+1-555-1000','1 Example St',NULL,'New York','CA','10000','USA',NULL,30000.0);
+INSERT INTO customers VALUES (101,'Customer 02 Co.','Last2','First2','+1-555-1001','2 Example St','Suite 2','Nantes','Region-2','10001','France',1166,42500.0);
+INSERT INTO customers VALUES (102,'Customer 03 Co.','Last3','First3','+1-555-1002','3 Example St','Suite 3','Munich','Region-3','10002','Germany',1188,55000.0);
+INSERT INTO customers VALUES (103,'Customer 04 Co.','Last4','First4','+1-555-1003','4 Example St',NULL,'Osaka','Region-1','10003','Japan',1216,67500.0);
+INSERT INTO customers VALUES (104,'Customer 05 Co.','Last5','First5','+1-555-1004','5 Example St','Suite 5','London',NULL,'10004','UK',1286,80000.0);
+INSERT INTO customers VALUES (105,'Customer 06 Co.','Last6','First6','+1-555-1005','6 Example St','Suite 6','Melbourne','VIC','10005','Australia',1323,92500.0);
+INSERT INTO customers VALUES (106,'Customer 07 Co.','Last7','First7','+1-555-1006','7 Example St',NULL,'Oslo','Region-1','10006','Norway',1165,105000.0);
+INSERT INTO customers VALUES (107,'Customer 08 Co.','Last8','First8','+1-555-1007','8 Example St','Suite 8','San Francisco','MA','10007','USA',1166,117500.0);
+INSERT INTO customers VALUES (108,'Customer 09 Co.','Last9','First9','+1-555-1008','9 Example St','Suite 9','Lyon',NULL,'10008','France',1188,130000.0);
+INSERT INTO customers VALUES (109,'Customer 10 Co.','Last10','First10','+1-555-1009','10 Example St',NULL,'Berlin','Region-1','10009','Germany',1216,142500.0);
+INSERT INTO customers VALUES (110,'Mini Customer 11 Co.','Last11','First11','+1-555-1010','11 Example St','Suite 11','Tokyo','Region-2','10010','Japan',1286,155000.0);
+INSERT INTO customers VALUES (111,'Customer 12 Co.','Last12','First12','+1-555-1011','12 Example St','Suite 12','Manchester','Region-3','10011','UK',NULL,167500.0);
+INSERT INTO customers VALUES (112,'Customer 13 Co.','Last13','First13','+1-555-1012','13 Example St',NULL,'Sydney','NSW','10012','Australia',1165,180000.0);
+INSERT INTO customers VALUES (113,'Customer 14 Co.','Last14','First14','+1-555-1013','14 Example St','Suite 14','Stavern','Region-2','10013','Norway',1166,192500.0);
+INSERT INTO customers VALUES (114,'Customer 15 Co.','Last15','First15','+1-555-1014','15 Example St','Suite 15','Seattle','WA','10014','USA',1188,205000.0);
+INSERT INTO customers VALUES (115,'Customer 16 Co.','Last16','First16','+1-555-1015','16 Example St',NULL,'Paris','Region-1','10015','France',1216,217500.0);
+INSERT INTO customers VALUES (116,'Customer 17 Co.','Last17','First17','+1-555-1016','17 Example St','Suite 17','Frankfurt',NULL,'10016','Germany',1286,40000.0);
+INSERT INTO customers VALUES (117,'Customer 18 Co.','Last18','First18','+1-555-1017','18 Example St','Suite 18','Osaka','Region-3','10017','Japan',1323,52500.0);
+INSERT INTO customers VALUES (118,'Customer 19 Co.','Last19','First19','+1-555-1018','19 Example St',NULL,'London','Region-1','10018','UK',1165,65000.0);
+INSERT INTO customers VALUES (119,'Customer 20 Co.','Last20','First20','+1-555-1019','20 Example St','Suite 20','Melbourne','VIC','10019','Australia',1166,77500.0);
+INSERT INTO customers VALUES (120,'Mini Customer 21 Co.','Last21','First21','+1-555-1020','21 Example St','Suite 21','Oslo',NULL,'10020','Norway',1188,90000.0);
+INSERT INTO customers VALUES (121,'Customer 22 Co.','Last22','First22','+1-555-1021','22 Example St',NULL,'Boston','NY','10021','USA',1216,102500.0);
+INSERT INTO customers VALUES (122,'Customer 23 Co.','Last23','First23','+1-555-1022','23 Example St','Suite 23','Nantes','Region-2','10022','France',NULL,115000.0);
+INSERT INTO customers VALUES (123,'Customer 24 Co.','Last24','First24','+1-555-1023','24 Example St','Suite 24','Munich','Region-3','10023','Germany',1323,127500.0);
+INSERT INTO customers VALUES (124,'Customer 25 Co.','Last25','First25','+1-555-1024','25 Example St',NULL,'Tokyo',NULL,'10024','Japan',1165,140000.0);
+INSERT INTO customers VALUES (125,'Customer 26 Co.','Last26','First26','+1-555-1025','26 Example St','Suite 26','Manchester','Region-2','10025','UK',1166,152500.0);
+INSERT INTO customers VALUES (126,'Customer 27 Co.','Last27','First27','+1-555-1026','27 Example St','Suite 27','Sydney','NSW','10026','Australia',1188,165000.0);
+INSERT INTO customers VALUES (127,'Customer 28 Co.','Last28','First28','+1-555-1027','28 Example St',NULL,'Stavern','Region-1','10027','Norway',1216,177500.0);
+INSERT INTO customers VALUES (128,'Customer 29 Co.','Last29','First29','+1-555-1028','29 Example St','Suite 29','Chicago','IL','10028','USA',1286,190000.0);
+INSERT INTO customers VALUES (129,'Customer 30 Co.','Last30','First30','+1-555-1029','30 Example St','Suite 30','Lyon','Region-3','10029','France',1323,202500.0);
+INSERT INTO customers VALUES (130,'Mini Customer 31 Co.','Last31','First31','+1-555-1030','31 Example St',NULL,'Berlin','Region-1','10030','Germany',1165,215000.0);
+INSERT INTO customers VALUES (131,'Customer 32 Co.','Last32','First32','+1-555-1031','32 Example St','Suite 32','Osaka','Region-2','10031','Japan',1166,37500.0);
+INSERT INTO customers VALUES (132,'Customer 33 Co.','Last33','First33','+1-555-1032','33 Example St','Suite 33','London',NULL,'10032','UK',1188,50000.0);
+INSERT INTO customers VALUES (133,'Customer 34 Co.','Last34','First34','+1-555-1033','34 Example St',NULL,'Melbourne','VIC','10033','Australia',NULL,62500.0);
+INSERT INTO customers VALUES (134,'Customer 35 Co.','Last35','First35','+1-555-1034','35 Example St','Suite 35','Oslo','Region-2','10034','Norway',1286,75000.0);
+INSERT INTO customers VALUES (135,'Customer 36 Co.','Last36','First36','+1-555-1035','36 Example St','Suite 36','New York','CA','10035','USA',1323,87500.0);
+INSERT INTO customers VALUES (136,'Customer 37 Co.','Last37','First37','+1-555-1036','37 Example St',NULL,'Paris',NULL,'10036','France',1165,100000.0);
+INSERT INTO customers VALUES (137,'Customer 38 Co.','Last38','First38','+1-555-1037','38 Example St','Suite 38','Frankfurt','Region-2','10037','Germany',1166,112500.0);
+INSERT INTO customers VALUES (138,'Customer 39 Co.','Last39','First39','+1-555-1038','39 Example St','Suite 39','Tokyo','Region-3','10038','Japan',1188,125000.0);
+INSERT INTO customers VALUES (139,'Customer 40 Co.','Last40','First40','+1-555-1039','40 Example St',NULL,'Manchester','Region-1','10039','UK',1216,137500.0);
+INSERT INTO customers VALUES (140,'Mini Customer 41 Co.','Last41','First41','+1-555-1040','41 Example St','Suite 41','Sydney','NSW','10040','Australia',1286,150000.0);
+INSERT INTO customers VALUES (141,'Customer 42 Co.','Last42','First42','+1-555-1041','42 Example St','Suite 42','Stavern','Region-3','10041','Norway',1323,162500.0);
+INSERT INTO customers VALUES (142,'Customer 43 Co.','Last43','First43','+1-555-1042','43 Example St',NULL,'San Francisco','MA','10042','USA',1165,175000.0);
+INSERT INTO customers VALUES (143,'Customer 44 Co.','Last44','First44','+1-555-1043','44 Example St','Suite 44','Nantes','Region-2','10043','France',1166,187500.0);
+INSERT INTO customers VALUES (144,'Customer 45 Co.','Last45','First45','+1-555-1044','45 Example St','Suite 45','Munich',NULL,'10044','Germany',NULL,200000.0);
+INSERT INTO customers VALUES (145,'Customer 46 Co.','Last46','First46','+1-555-1045','46 Example St',NULL,'Osaka','Region-1','10045','Japan',1216,212500.0);
+INSERT INTO customers VALUES (146,'Customer 47 Co.','Last47','First47','+1-555-1046','47 Example St','Suite 47','London','Region-2','10046','UK',1286,35000.0);
+INSERT INTO customers VALUES (147,'Customer 48 Co.','Last48','First48','+1-555-1047','48 Example St','Suite 48','Melbourne','VIC','10047','Australia',1323,47500.0);
+INSERT INTO customers VALUES (148,'Customer 49 Co.','Last49','First49','+1-555-1048','49 Example St',NULL,'Oslo',NULL,'10048','Norway',1165,60000.0);
+INSERT INTO customers VALUES (149,'Customer 50 Co.','Last50','First50','+1-555-1049','50 Example St','Suite 50','Seattle','WA','10049','USA',1166,72500.0);
+INSERT INTO customers VALUES (150,'Mini Customer 51 Co.','Last51','First51','+1-555-1050','51 Example St','Suite 51','Lyon','Region-3','10050','France',1188,85000.0);
+INSERT INTO customers VALUES (151,'Customer 52 Co.','Last52','First52','+1-555-1051','52 Example St',NULL,'Berlin','Region-1','10051','Germany',1216,97500.0);
+INSERT INTO customers VALUES (152,'Customer 53 Co.','Last53','First53','+1-555-1052','53 Example St','Suite 53','Tokyo',NULL,'10052','Japan',1286,110000.0);
+INSERT INTO customers VALUES (153,'Customer 54 Co.','Last54','First54','+1-555-1053','54 Example St','Suite 54','Manchester','Region-3','10053','UK',1323,122500.0);
+INSERT INTO customers VALUES (154,'Customer 55 Co.','Last55','First55','+1-555-1054','55 Example St',NULL,'Sydney','NSW','10054','Australia',1165,135000.0);
+INSERT INTO customers VALUES (155,'Customer 56 Co.','Last56','First56','+1-555-1055','56 Example St','Suite 56','Stavern','Region-2','10055','Norway',NULL,147500.0);
+INSERT INTO customers VALUES (156,'Customer 57 Co.','Last57','First57','+1-555-1056','57 Example St','Suite 57','Boston','NY','10056','USA',1188,160000.0);
+INSERT INTO customers VALUES (157,'Customer 58 Co.','Last58','First58','+1-555-1057','58 Example St',NULL,'Paris','Region-1','10057','France',1216,172500.0);
+INSERT INTO customers VALUES (158,'Customer 59 Co.','Last59','First59','+1-555-1058','59 Example St','Suite 59','Frankfurt','Region-2','10058','Germany',1286,185000.0);
+INSERT INTO customers VALUES (159,'Customer 60 Co.','Last60','First60','+1-555-1059','60 Example St','Suite 60','Osaka','Region-3','10059','Japan',1323,197500.0);
+INSERT INTO customers VALUES (160,'Mini Customer 61 Co.','Last61','First61','+1-555-1060','61 Example St',NULL,'London',NULL,'10060','UK',1165,210000.0);
+INSERT INTO customers VALUES (161,'Customer 62 Co.','Last62','First62','+1-555-1061','62 Example St','Suite 62','Melbourne','VIC','10061','Australia',1166,32500.0);
+INSERT INTO customers VALUES (162,'Customer 63 Co.','Last63','First63','+1-555-1062','63 Example St','Suite 63','Oslo','Region-3','10062','Norway',1188,45000.0);
+INSERT INTO customers VALUES (163,'Customer 64 Co.','Last64','First64','+1-555-1063','64 Example St',NULL,'Chicago','IL','10063','USA',1216,57500.0);
+INSERT INTO customers VALUES (164,'Customer 65 Co.','Last65','First65','+1-555-1064','65 Example St','Suite 65','Nantes',NULL,'10064','France',1286,70000.0);
+INSERT INTO orders VALUES (10100,'2004-01-01','2004-01-11','2004-01-04','Shipped','Comment 1',100);
+INSERT INTO orders VALUES (10101,'2004-02-03','2004-02-13','2004-02-06','Shipped',NULL,101);
+INSERT INTO orders VALUES (10102,'2004-03-05','2004-03-15',NULL,'Cancelled',NULL,102);
+INSERT INTO orders VALUES (10103,'2004-04-07','2004-04-17','2004-04-12','Disputed','Comment 4',103);
+INSERT INTO orders VALUES (10104,'2004-05-09','2004-05-19',NULL,'On Hold',NULL,104);
+INSERT INTO orders VALUES (10105,'2004-06-11','2004-06-21','2004-06-16','In Process',NULL,105);
+INSERT INTO orders VALUES (10106,'2004-07-13','2004-07-23',NULL,'Resolved','Comment 7',106);
+INSERT INTO orders VALUES (10107,'2004-08-15','2004-08-25','2004-08-18','Shipped',NULL,107);
+INSERT INTO orders VALUES (10108,'2004-09-17','2004-09-27','2004-09-20','Shipped',NULL,108);
+INSERT INTO orders VALUES (10109,'2004-10-19','2004-10-29','2004-10-24','Cancelled','Comment 10',109);
+INSERT INTO orders VALUES (10110,'2004-11-21','2004-12-01',NULL,'Disputed',NULL,110);
+INSERT INTO orders VALUES (10111,'2004-12-23','2005-01-02','2004-12-28','On Hold',NULL,111);
+INSERT INTO orders VALUES (10112,'2004-01-01','2004-01-11',NULL,'In Process','Comment 13',112);
+INSERT INTO orders VALUES (10113,'2004-02-03','2004-02-13','2004-02-08','Resolved',NULL,113);
+INSERT INTO orders VALUES (10114,'2004-03-05','2004-03-15','2004-03-08','Shipped',NULL,114);
+INSERT INTO orders VALUES (10115,'2004-04-07','2004-04-17','2004-04-10','Shipped','Comment 16',115);
+INSERT INTO orders VALUES (10116,'2004-05-09','2004-05-19',NULL,'Cancelled',NULL,116);
+INSERT INTO orders VALUES (10117,'2004-06-11','2004-06-21','2004-06-16','Disputed',NULL,117);
+INSERT INTO orders VALUES (10118,'2004-07-13','2004-07-23',NULL,'On Hold','Comment 19',118);
+INSERT INTO orders VALUES (10119,'2004-08-15','2004-08-25','2004-08-20','In Process',NULL,119);
+INSERT INTO orders VALUES (10120,'2004-09-17','2004-09-27',NULL,'Resolved',NULL,120);
+INSERT INTO orders VALUES (10121,'2004-10-19','2004-10-29','2004-10-22','Shipped','Comment 22',121);
+INSERT INTO orders VALUES (10122,'2004-11-21','2004-12-01','2004-11-24','Shipped',NULL,122);
+INSERT INTO orders VALUES (10123,'2004-12-23','2005-01-02','2004-12-28','Cancelled',NULL,123);
+INSERT INTO orders VALUES (10124,'2005-01-01','2005-01-11',NULL,'Disputed','Comment 25',124);
+INSERT INTO orders VALUES (10125,'2005-02-03','2005-02-13','2005-02-08','On Hold',NULL,125);
+INSERT INTO orders VALUES (10126,'2005-03-05','2005-03-15',NULL,'In Process',NULL,126);
+INSERT INTO orders VALUES (10127,'2005-04-07','2005-04-17','2005-04-12','Resolved','Comment 28',127);
+INSERT INTO orders VALUES (10128,'2005-05-09','2005-05-19','2005-05-12','Shipped',NULL,128);
+INSERT INTO orders VALUES (10129,'2005-06-11','2005-06-21','2005-06-14','Shipped',NULL,129);
+INSERT INTO orders VALUES (10130,'2005-07-13','2005-07-23',NULL,'Cancelled','Comment 31',130);
+INSERT INTO orders VALUES (10131,'2005-08-15','2005-08-25','2005-08-20','Disputed',NULL,131);
+INSERT INTO orders VALUES (10132,'2005-09-17','2005-09-27',NULL,'On Hold',NULL,132);
+INSERT INTO orders VALUES (10133,'2005-10-19','2005-10-29','2005-10-24','In Process','Comment 34',133);
+INSERT INTO orders VALUES (10134,'2005-11-21','2005-12-01',NULL,'Resolved',NULL,134);
+INSERT INTO orders VALUES (10135,'2005-12-23','2006-01-02','2005-12-26','Shipped',NULL,135);
+INSERT INTO orders VALUES (10136,'2005-01-01','2005-01-11','2005-01-04','Shipped','Comment 37',136);
+INSERT INTO orders VALUES (10137,'2005-02-03','2005-02-13','2005-02-08','Cancelled',NULL,137);
+INSERT INTO orders VALUES (10138,'2005-03-05','2005-03-15',NULL,'Disputed',NULL,138);
+INSERT INTO orders VALUES (10139,'2005-04-07','2005-04-17','2005-04-12','On Hold','Comment 40',139);
+INSERT INTO orders VALUES (10140,'2005-05-09','2005-05-19',NULL,'In Process',NULL,140);
+INSERT INTO orders VALUES (10141,'2005-06-11','2005-06-21','2005-06-16','Resolved',NULL,141);
+INSERT INTO orders VALUES (10142,'2005-07-13','2005-07-23','2005-07-16','Shipped','Comment 43',142);
+INSERT INTO orders VALUES (10143,'2005-08-15','2005-08-25','2005-08-18','Shipped',NULL,143);
+INSERT INTO orders VALUES (10144,'2005-09-17','2005-09-27',NULL,'Cancelled',NULL,144);
+INSERT INTO payments VALUES (100,'CHK0001','2004-01-01',12000.0);
+INSERT INTO payments VALUES (103,'CHK0002','2004-02-04',20700.0);
+INSERT INTO payments VALUES (106,'CHK0003','2004-03-07',29400.0);
+INSERT INTO payments VALUES (109,'CHK0004','2004-04-10',38100.0);
+INSERT INTO payments VALUES (112,'CHK0005','2004-05-13',38000.0);
+INSERT INTO payments VALUES (115,'CHK0006','2004-06-16',46700.0);
+INSERT INTO payments VALUES (118,'CHK0007','2004-07-19',55400.0);
+INSERT INTO payments VALUES (121,'CHK0008','2004-08-22',64100.0);
+INSERT INTO payments VALUES (124,'CHK0009','2004-09-25',64000.0);
+INSERT INTO payments VALUES (127,'CHK0010','2004-10-03',72700.0);
+INSERT INTO payments VALUES (130,'CHK0011','2004-11-06',81400.0);
+INSERT INTO payments VALUES (133,'CHK0012','2004-12-09',90100.0);
+INSERT INTO payments VALUES (136,'CHK0013','2005-01-12',90000.0);
+INSERT INTO payments VALUES (139,'CHK0014','2005-02-15',98700.0);
+INSERT INTO payments VALUES (142,'CHK0015','2005-03-18',107400.0);
+INSERT INTO payments VALUES (145,'CHK0016','2005-04-21',116100.0);
+INSERT INTO payments VALUES (148,'CHK0017','2005-05-24',116000.0);
+INSERT INTO payments VALUES (151,'CHK0018','2005-06-02',124700.0);
+INSERT INTO payments VALUES (154,'CHK0019','2005-07-05',133400.0);
+INSERT INTO payments VALUES (157,'CHK0020','2005-08-08',142100.0);
+INSERT INTO orderdetails VALUES (10100,'S10_0001',15,40.0,1);
+INSERT INTO orderdetails VALUES (10101,'S10_0002',22,45.75,2);
+INSERT INTO orderdetails VALUES (10102,'S10_0003',29,51.5,3);
+INSERT INTO orderdetails VALUES (10103,'S10_0004',36,57.25,4);
+INSERT INTO orderdetails VALUES (10104,'S10_0005',43,63.0,5);
+INSERT INTO orderdetails VALUES (10105,'S10_0006',50,68.75,1);
+INSERT INTO orderdetails VALUES (10106,'S10_0007',57,74.5,2);
+INSERT INTO orderdetails VALUES (10107,'S10_0008',64,80.25,3);
+INSERT INTO orderdetails VALUES (10108,'S10_0009',21,86.0,4);
+INSERT INTO orderdetails VALUES (10109,'S10_0010',28,91.75,5);
+INSERT INTO orderdetails VALUES (10110,'S10_0011',35,97.5,1);
+INSERT INTO orderdetails VALUES (10111,'S10_0012',42,103.25,2);
+INSERT INTO orderdetails VALUES (10112,'S10_0013',49,109.0,3);
+INSERT INTO orderdetails VALUES (10113,'S10_0014',56,114.75,4);
+INSERT INTO orderdetails VALUES (10114,'S10_0015',63,120.5,5);
+INSERT INTO orderdetails VALUES (10115,'S10_0016',20,126.25,1);
+INSERT INTO orderdetails VALUES (10116,'S10_0017',27,132.0,2);
+INSERT INTO orderdetails VALUES (10117,'S10_0018',34,137.75,3);
+INSERT INTO orderdetails VALUES (10118,'S10_0019',41,143.5,4);
+INSERT INTO orderdetails VALUES (10119,'S10_0020',48,149.25,5);
+INSERT INTO orderdetails VALUES (10120,'S10_0021',55,155.0,1);
+INSERT INTO orderdetails VALUES (10121,'S10_0022',62,160.75,2);
+INSERT INTO orderdetails VALUES (10122,'S10_0023',19,166.5,3);
+INSERT INTO orderdetails VALUES (10123,'S10_0024',26,172.25,4);
+INSERT INTO orderdetails VALUES (10124,'S10_0025',33,178.0,5);
+INSERT INTO orderdetails VALUES (10125,'S10_0026',40,183.75,1);
+INSERT INTO orderdetails VALUES (10126,'S10_0027',47,189.5,2);
+INSERT INTO orderdetails VALUES (10127,'S10_0028',54,195.25,3);
+INSERT INTO orderdetails VALUES (10128,'S10_0029',61,201.0,4);
+INSERT INTO orderdetails VALUES (10129,'S10_0030',18,206.75,5);
+INSERT INTO orderdetails VALUES (10130,'S10_0031',25,42.5,1);
+INSERT INTO orderdetails VALUES (10131,'S10_0032',32,48.25,2);
+INSERT INTO orderdetails VALUES (10132,'S10_0033',39,54.0,3);
+INSERT INTO orderdetails VALUES (10133,'S10_0034',46,59.75,4);
+INSERT INTO orderdetails VALUES (10134,'S10_0035',53,65.5,5);
+INSERT INTO orderdetails VALUES (10135,'S10_0001',60,71.25,1);
+INSERT INTO orderdetails VALUES (10136,'S10_0002',17,77.0,2);
+INSERT INTO orderdetails VALUES (10137,'S10_0003',24,82.75,3);
+INSERT INTO orderdetails VALUES (10138,'S10_0004',31,88.5,4);
+INSERT INTO orderdetails VALUES (10139,'S10_0005',38,94.25,5);
+`)}
+function table(cols,rows,target=result){if(!cols.length){target.innerHTML='<div style="padding:14px" class="muted">Lệnh chạy thành công nhưng không trả về bảng.</div>';return}
+target.innerHTML='<table><thead><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(v=>'<td>'+(v===null?'<span class="muted">NULL</span>':esc(v))+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
+function compat(sql){
+  // The practice editor automatically inserts comments such as "-- Bài 2.2".
+  // Remove comments before detecting MySQL-only utility commands.
+  const cleaned=stripComments(sql).trim();
+  const t=cleaned.replace(/;+\s*$/,"").trim();
+
+  if(/^USE\s+classicmodels$/i.test(t))
+    return{type:"msg"};
+
+  if(/^SHOW\s+TABLES(?:\s+FROM\s+classicmodels)?$/i.test(t))
+    return{
+      type:"sql",
+      sql:"SELECT name AS Tables_in_classicmodels FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;"
+    };
+
+  let m=t.match(/^(?:DESC|DESCRIBE)\s+`?([A-Za-z_][A-Za-z0-9_]*)`?$/i);
+  if(m)return{type:"desc",name:m[1]};
+
+  m=t.match(/^SHOW\s+(?:COLUMNS|FIELDS)\s+FROM\s+`?([A-Za-z_][A-Za-z0-9_]*)`?(?:\s+FROM\s+classicmodels)?$/i);
+  if(m)return{type:"desc",name:m[1]};
+
+  // For ordinary SELECT statements, execute the comment-free SQL.
+  return{type:"sql",sql:cleaned}
+}
+function run(sql,quiet=false,targetResult=result,targetMeta=meta){
+  if(!db)throw Error("SQL engine chưa sẵn sàng.");
+  const c=compat(sql);
+  if(c.type==="msg"){
+    const out={columns:["Thông báo"],values:[["Đã chọn classicmodels (mô phỏng)."]]};
+    if(!quiet){table(out.columns,out.values,targetResult);targetMeta.textContent="Lệnh MySQL được mô phỏng."}
+    return out
+  }
+  if(c.type==="desc"){
+    const r=db.exec("PRAGMA table_info('"+c.name.replace(/'/g,"''")+"');")[0];
+    const out={columns:["Field","Type","Null","Key","Default","Extra"],values:(r?.values||[]).map(x=>[x[1],x[2],x[3]===0?"YES":"NO",x[5]>0?"PRI":"",x[4]??null,""])};
+    if(!quiet){table(out.columns,out.values,targetResult);targetMeta.textContent=out.values.length+" cột"}
+    return out
+  }
+  const r=db.exec(c.sql),last=r[r.length-1]||{columns:[],values:[]};
+  if(!quiet){table(last.columns,last.values,targetResult);targetMeta.textContent=last.values.length+" dòng • "+last.columns.length+" cột"}
+  return last
+}
+function executeIn(ed,st,res,met){
+  try{
+    const q=ed.value.trim();
+    if(!q){st.className="status err";st.textContent="Hãy nhập SQL.";return null}
+    const t=performance.now();
+    const out=run(q,false,res,met);
+    st.className="status ok";
+    st.textContent="✓ Thành công • "+(performance.now()-t).toFixed(1)+" ms";
+    return out
+  }catch(e){
+    st.className="status err";
+    st.textContent="✗ "+e.message;
+    res.innerHTML='<div style="padding:14px;color:var(--bad)">Không thể tạo kết quả.</div>';
+    met.textContent="Truy vấn có lỗi.";
+    return null
+  }
+}
+function execute(){return executeIn(editor,status,result,meta)}
+function executePractice(){return executeIn(practiceEditor,practiceStatus,practiceResult,practiceMeta)}
+
+function normValue(v){
+  if(typeof v==="number")return Number(v.toFixed(8));
+  return v===null?"__NULL__":String(v)
+}
+function sig(r,ordered,includeColumns=true){
+  const rows=r.values.map(x=>JSON.stringify(x.map(normValue)));
+  if(!ordered)rows.sort();
+  return JSON.stringify({
+    c:includeColumns?r.columns.map(x=>String(x).toLowerCase()):[],
+    r:rows
+  })
+}
+function stripComments(s){
+  return String(s)
+    .replace(/\/\*[\s\S]*?\*\//g," ")
+    .replace(/--[^\n\r]*/g," ")
+    .replace(/#[^\n\r]*/g," ")
+}
+function normCommand(s){
+  let t=stripComments(s)
+    .trim().replace(/;+\s*$/,"").replace(/`/g,"")
+    .replace(/\s+/g," ").toLowerCase();
+
+  t=t.replace(/^describe\s+/,"desc ");
+  t=t.replace(/^show\s+(?:columns|fields)\s+from\s+/,"desc ");
+  t=t.replace(/\s+from\s+classicmodels$/,"");
+  return t
+}
+function updateProgress(){
+  $("#score").textContent=solved.size+" / "+exercises.length+" bài đúng";
+  $("#bar").style.width=(solved.size/exercises.length*100)+"%";
+  document.querySelectorAll(".exercise-group").forEach(g=>{
+    const sec=Number(g.dataset.sec);
+    const idx=exercises.map((e,i)=>({e,i})).filter(x=>Number(x.e.id.split(".")[0])===sec);
+    const done=idx.filter(x=>solved.has(x.i)).length;
+    const el=g.querySelector(".group-score");
+    if(el)el.textContent=done+" / "+idx.length+" đúng";
+  })
+}
+
+function renderCompactSchema(name){
+  if(!db){
+    schemaCompact.innerHTML='<div style="padding:14px" class="muted">SQL engine chưa sẵn sàng.</div>';
+    return;
+  }
+  try{
+    const r=db.exec("PRAGMA table_info('"+name.replace(/'/g,"''")+"');")[0];
+    const rows=(r?.values||[]).map(x=>[
+      x[1],
+      x[2]||"",
+      x[3]===0?"YES":"NO",
+      x[5]>0?"PRIMARY KEY":"",
+      x[4]??null
+    ]);
+    const cols=["Column","Type","Null","Key","Default"];
+    schemaCompact.innerHTML=
+      '<table><thead><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead>'+
+      '<tbody>'+rows.map(row=>'<tr>'+row.map(v=>'<td>'+(v===null?'<span class="muted">NULL</span>':esc(v))+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+  }catch(e){
+    schemaCompact.innerHTML='<div style="padding:14px;color:var(--bad)">'+esc(e.message)+'</div>';
+  }
+}
+
+function selectExercise(i,clearEditor=true){
+  currentExercise=i;
+  const ex=exercises[i];
+  practiceSelect.value=String(i);
+  practiceCurrent.innerHTML="<b>Bài "+esc(ex.id)+".</b> "+esc(ex.q);
+  if(clearEditor)practiceEditor.value="-- Bài "+ex.id+"\n";
+  practiceEditor.focus();
+}
+
+function check(i=currentExercise){
+  if(i===null || i===undefined || i===""){
+    practiceStatus.className="status err";
+    practiceStatus.textContent="Hãy chọn một bài tập trước khi Check.";
+    return
+  }
+  i=Number(i);
+  const ex=exercises[i];
+  currentExercise=i;
+  practiceSelect.value=String(i);
+  const q=practiceEditor.value.trim();
+  if(!q){
+    practiceStatus.className="status err";
+    practiceStatus.textContent="Hãy viết câu SQL trước khi Check.";
+    return
+  }
+  try{
+    let ok=false, hint="";
+    if(ex.checker==="command"){
+      ok=normCommand(q)===normCommand(ex.a);
+      if(ok)run(q,false,practiceResult,practiceMeta);
+      else hint="Lệnh chưa đúng với yêu cầu.";
+    }else if(ex.checker==="alternatives"){
+      ok=(ex.alternatives||[]).some(a=>normCommand(q)===normCommand(a));
+      if(ok)run(q,false,practiceResult,practiceMeta);
+      else hint="Có nhiều đáp án hợp lệ, nhưng lệnh hiện tại chưa phải một trong các lệnh tra cứu đúng.";
+    }else if(ex.checker==="alias_any"){
+      const u=run(q,false,practiceResult,practiceMeta);
+      const base=run(ex.base,true);
+      const sameValues=sig(u,false,false)===sig(base,false,false);
+      const changed=u.columns.reduce((n,c,j)=>n+(String(c).toLowerCase()!==String(base.columns[j]??"").toLowerCase()?1:0),0);
+      ok=sameValues && changed>=(ex.minAliases||1);
+      if(!ok)hint="Kết quả phải đúng và các cột phải được đặt bí danh.";
+    }else{
+      const u=run(q,false,practiceResult,practiceMeta);
+      const expected=run(ex.a,true);
+      ok=sig(u,!!ex.ordered,true)===sig(expected,!!ex.ordered,true);
+      if(!ok)hint="Kiểm tra cột trả về, điều kiện lọc, bí danh và thứ tự kết quả.";
+    }
+
+    if(ok){
+      solved.add(i);
+      practiceStatus.className="status ok";
+      practiceStatus.textContent="✓ Chính xác — Bài "+ex.id;
+      const badge=document.querySelector('[data-i="'+i+'"] .badge');
+      if(badge)badge.textContent="Đã đúng";
+    }else{
+      practiceStatus.className="status err";
+      practiceStatus.textContent="Chưa đúng — Bài "+ex.id+". "+hint;
+    }
+    updateProgress();
+  }catch(e){
+    practiceStatus.className="status err";
+    practiceStatus.textContent="✗ "+e.message
+  }
+}
+document.querySelectorAll("section#intro pre code").forEach(el=>{el.innerHTML=highlightSQL(el.textContent)});
+examples.forEach((e,i)=>{const d=document.createElement("div");d.className="ex";d.innerHTML="<h3>"+esc((i+1)+". "+e[0])+"</h3><p>"+esc(e[1])+"</p><pre><code>"+highlightSQL(e[2])+"</code></pre><button class='secondary'>Run</button>";d.querySelector("button").onclick=()=>{editor.value=e[2];location.hash="play";editor.focus()};$("#examplesGrid").appendChild(d);const o=document.createElement("option");o.value=i;o.textContent=(i+1)+". "+e[0];$("#preset").appendChild(o)});
+
+const groups={};
+exercises.forEach((e,i)=>{
+  const sec=Number(e.id.split(".")[0]);
+
+  const o=document.createElement("option");
+  o.value=String(i);
+  o.textContent="Bài "+e.id+" — "+e.l;
+  practiceSelect.appendChild(o);
+
+  if(!groups[sec]){
+    const g=document.createElement("details");
+    g.className="exercise-group";
+    g.dataset.sec=String(sec);
+    if(sec===2)g.open=true;
+    g.innerHTML="<summary><span>Phần "+sec+" — "+esc(sectionTitles[sec]||"Bài tập")+"</span><span class='group-score'>0 / 5 đúng</span></summary><div class='exercise-group-body'></div>";
+    $("#exercises").appendChild(g);
+    groups[sec]=g.querySelector(".exercise-group-body");
+  }
+
+  const d=document.createElement("div");
+  d.className="exercise";
+  d.dataset.i=i;
+  d.innerHTML="<div class='head'><div><b>Bài "+esc(e.id)+".</b> "+esc(e.q)+"</div><span class='badge'>"+esc(e.l)+"</span></div>"+
+    "<div class='actions'><button class='primary try'>Làm bài</button><button class='success chk'>Check</button></div>"+
+    "<details><summary>Xem đáp án mẫu</summary><pre><code>"+highlightSQL(e.a)+"</code></pre></details>";
+  d.querySelector(".try").onclick=()=>{
+    selectExercise(i,true);
+    const group=d.closest(".exercise-group"); if(group)group.open=true;
+    location.hash="practice"
+  };
+  d.querySelector(".chk").onclick=()=>{
+    selectExercise(i,false);
+    const group=d.closest(".exercise-group"); if(group)group.open=true;
+    location.hash="practice";
+    check(i)
+  };
+  groups[sec].appendChild(d)
+});
+$("#run").onclick=execute;
+$("#clear").onclick=()=>{editor.value="";editor.focus()};
+$("#reset").onclick=()=>{
+  seed();solved.clear();
+  $("#score").textContent="0 / "+exercises.length+" bài đúng";
+  $("#bar").style.width="0";
+  updateProgress();
+  document.querySelectorAll("#exercises .badge").forEach((b,i)=>b.textContent=exercises[i].l);
+  status.className="status ok";status.textContent="✓ Dữ liệu đã được khôi phục.";
+  practiceStatus.className="status ok";practiceStatus.textContent="✓ Dữ liệu đã được khôi phục.";renderCompactSchema(schemaSelect.value)
+};
+$("#preset").onchange=e=>{if(e.target.value!==""){editor.value=examples[+e.target.value][2];editor.focus()}};
+editor.onkeydown=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();execute()}};
+
+$("#practiceRun").onclick=executePractice;
+$("#practiceCheck").onclick=()=>check();
+$("#practiceClear").onclick=()=>{practiceEditor.value="";practiceEditor.focus()};
+practiceSelect.onchange=e=>{
+  if(e.target.value!==""){
+    const i=Number(e.target.value);
+    selectExercise(i,true);
+    const sec=exercises[i].id.split(".")[0];
+    const g=document.querySelector('.exercise-group[data-sec="'+sec+'"]');
+    if(g)g.open=true;
+  }
+};
+practiceEditor.onkeydown=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();executePractice()}};
+schemaSelect.onchange=e=>renderCompactSchema(e.target.value);
+
+$("#run").disabled=$("#reset").disabled=$("#practiceRun").disabled=$("#practiceCheck").disabled=true;
+if(typeof initSqlJs!=="function"){status.className="status err";status.textContent="Không tải được SQL engine. Hãy kiểm tra Internet/CDN."}
+else initSqlJs({locateFile:f=>"https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/"+f}).then(x=>{
+  SQL=x;seed();
+  $("#run").disabled=$("#reset").disabled=$("#practiceRun").disabled=$("#practiceCheck").disabled=false;
+  status.className="status ok";status.textContent="✓ SQL engine sẵn sàng. Nhấn Chạy SQL hoặc Ctrl+Enter.";
+  practiceStatus.className="status ok";practiceStatus.textContent="✓ Khung thực hành sẵn sàng. Chọn bài rồi Run hoặc Check.";
+  renderCompactSchema(schemaSelect.value)
+}).catch(e=>{
+  status.className="status err";status.textContent="Lỗi khởi tạo SQL engine: "+e.message;
+  practiceStatus.className="status err";practiceStatus.textContent="Lỗi khởi tạo SQL engine: "+e.message
+});
+})();
+</script>
+</body></html>
