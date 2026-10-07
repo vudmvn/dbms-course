@@ -1,0 +1,691 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.86]
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{sqlblue}{RGB}{28,74,135}
+\definecolor{sqlgreen}{RGB}{24,117,74}
+\definecolor{sqlgray}{RGB}{245,247,250}
+\definecolor{sqlred}{RGB}{166,45,45}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{sqlblue}\bfseries,
+  commentstyle=\color{sqlgreen},
+  stringstyle=\color{sqlred},
+  showstringspaces=false,
+  breaklines=true,
+  columns=fullflexible,
+  backgroundcolor=\color{sqlgray},
+  frame=single,
+  rulecolor=\color{gray!35},
+  xleftmargin=1mm,
+  xrightmargin=1mm,
+  aboveskip=4pt,
+  belowskip=4pt
+}
+\lstset{style=sqlstyle}
+
+\title[SQL SELECT]{Introduction to SQL \texttt{SELECT} Statement}
+\subtitle{Single-Table Querying with the \texttt{classicmodels} Sample Database}
+\author{DBMS Course}
+\institute{Smart Logistics and Supply Chain Management Lab}
+\date{\today}
+
+\newcommand{\kw}[1]{\textcolor{sqlblue}{\texttt{#1}}}
+\newcommand{\minihead}[1]{\vspace{2pt}\textbf{#1}\vspace{2pt}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Learning Objectives}
+After this lecture, students will be able to:
+\begin{enumerate}
+  \item Understand the purpose and role of the \kw{SELECT} statement in SQL.
+  \item Retrieve all columns or specific columns from a table.
+  \item Use column aliases and define computed columns in query results.
+  \item Filter data using \kw{WHERE} and comparison operators.
+  \item Sort results, limit returned rows, and eliminate duplicate values.
+  \item Write practical single-table queries on the \texttt{classicmodels} database.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{What is SELECT Used For?}
+\begin{block}{Core Concept}
+\kw{SELECT} is used to retrieve data from one or more tables and present the result in a tabular format of rows and columns.
+\end{block}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Business Questions}
+\begin{itemize}
+  \item Which customers are located in the USA?
+  \item Which products have an MSRP above 150?
+  \item Which orders have been cancelled?
+\end{itemize}
+\column{0.48\textwidth}
+\minihead{Answered in SQL}
+\begin{lstlisting}
+SELECT customerName, country
+FROM customers
+WHERE country = 'USA';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sample Database: classicmodels}
+\begin{itemize}
+  \item \texttt{classicmodels} models the business operations of a retailer selling scale model cars, motorcycles, planes, and ships.
+  \item In this lecture, we focus exclusively on single-table queries.
+\end{itemize}
+\vspace{4pt}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Table} & \textbf{Description} \\
+\midrule
+\texttt{products} & Product catalog and inventory data \\
+\texttt{customers} & Customer profiles and contact details \\
+\texttt{orders} & Order headers \\
+\texttt{orderdetails} & Order line items \\
+\texttt{payments} & Customer payment transactions \\
+\texttt{employees} & Employee directory \\
+\texttt{offices} & Regional sales office locations \\
+\texttt{productlines} & Product lines and categories \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Setting Up the Practice Environment}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Select the Database}
+\begin{lstlisting}
+USE classicmodels;
+\end{lstlisting}
+\minihead{List All Tables}
+\begin{lstlisting}
+SHOW TABLES;
+\end{lstlisting}
+\column{0.50\textwidth}
+\minihead{Inspect Table Schema}
+\begin{lstlisting}
+DESC products;
+DESC customers;
+DESC orders;
+\end{lstlisting}
+\begin{alertblock}{Best Practice}
+Before writing queries, always check the available columns and their data types.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Basic Syntax of SELECT}
+\begin{block}{General Template}
+\begin{lstlisting}
+SELECT column1, column2, ...
+FROM table_name;
+\end{lstlisting}
+\end{block}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Clause} & \textbf{Meaning} \\
+\midrule
+\kw{SELECT} & Specifies the columns to return in the result \\
+\texttt{column1, column2, ...} & Comma-separated list of projected columns \\
+\kw{FROM} & Specifies the table containing the data \\
+\texttt{table\_name} & Target table name to query \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{First Query Examples}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\minihead{Retrieve Customer Names}
+\begin{lstlisting}
+SELECT customerName
+FROM customers;
+\end{lstlisting}
+\minihead{Retrieve Order Numbers}
+\begin{lstlisting}
+SELECT orderNumber
+FROM orders;
+\end{lstlisting}
+\column{0.44\textwidth}
+\begin{block}{Reading a Query}
+\begin{itemize}
+  \item \kw{SELECT}: which columns?
+  \item \kw{FROM}: from which table?
+  \item Semicolon (\texttt{;}) terminates the statement.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Retrieving All Columns with SELECT *}
+\begin{lstlisting}
+SELECT *
+FROM productlines;
+\end{lstlisting}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{When is it Useful?}
+\begin{itemize}
+  \item Quickly inspecting table data.
+  \item Exploring table schemas while learning SQL.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{alertblock}{Avoid in Production}
+On large tables, \kw{SELECT *} can retrieve unnecessary columns, slowing down network transfer and wasting memory. In real applications, specify only required columns.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Selecting Specific Columns}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Products}
+\begin{lstlisting}
+SELECT productCode, productName, productLine, MSRP
+FROM products;
+\end{lstlisting}
+\minihead{Customers}
+\begin{lstlisting}
+SELECT customerNumber, customerName, city, country
+FROM customers;
+\end{lstlisting}
+\column{0.48\textwidth}
+\begin{block}{Rule of Thumb}
+Project only columns necessary for the analysis or user interface.
+\end{block}
+\begin{exampleblock}{Question}
+To build a customer directory grouped by country, which columns do we need?
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Aliasing Columns with AS}
+\begin{lstlisting}
+SELECT
+    productCode AS product_code,
+    productName AS product_name,
+    productLine AS product_line,
+    MSRP AS suggested_retail_price
+FROM products;
+\end{lstlisting}
+\begin{itemize}
+  \item Aliases provide clearer, user-friendly column headers in query output.
+  \item The \kw{AS} keyword is optional, but using it explicitly improves readability.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Computed Columns in SELECT}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{lstlisting}
+SELECT
+    productCode,
+    productName,
+    buyPrice,
+    MSRP,
+    MSRP - buyPrice AS profitEstimate
+FROM products;
+\end{lstlisting}
+\column{0.40\textwidth}
+\begin{block}{Key Points}
+\begin{itemize}
+  \item Calculations can be written directly in the \kw{SELECT} clause.
+  \item Computed columns only exist in the query result set.
+  \item The underlying table schema is not altered.
+\end{itemize}
+\end{block}
+\end{columns}
+\vspace{4pt}
+\begin{lstlisting}
+SELECT quantityOrdered * priceEach AS lineTotal
+FROM orderdetails;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Filtering Data with WHERE}
+\begin{block}{General Template}
+\begin{lstlisting}
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+\end{lstlisting}
+\end{block}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Motorcycles Category}
+\begin{lstlisting}
+SELECT productCode, productName, productLine
+FROM products
+WHERE productLine = 'Motorcycles';
+\end{lstlisting}
+\column{0.48\textwidth}
+\minihead{Customers in USA}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country = 'USA';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Common Comparison Operators}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Operator} & \textbf{Meaning} & \textbf{Example} \\
+\midrule
+\texttt{=} & Equal to & \texttt{country = 'USA'} \\
+\texttt{<>} & Not equal to & \texttt{status <> 'Shipped'} \\
+\texttt{>} & Greater than & \texttt{MSRP > 150} \\
+\texttt{<} & Less than & \texttt{quantityInStock < 1000} \\
+\texttt{>=} & Greater than or equal to & \texttt{creditLimit >= 100000} \\
+\texttt{<=} & Less than or equal to & \texttt{buyPrice <= 50} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{exampleblock}{Remember}
+The condition in \kw{WHERE} evaluates to TRUE or FALSE for each row.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Numeric Filtering Examples}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{MSRP Greater Than 150}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+WHERE MSRP > 150;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Stock Quantity Below 1000}
+\begin{lstlisting}
+SELECT productCode, productName, quantityInStock
+FROM products
+WHERE quantityInStock < 1000;
+\end{lstlisting}
+\end{columns}
+\vspace{5pt}
+\begin{lstlisting}
+SELECT customerNumber, customerName, creditLimit
+FROM customers
+WHERE creditLimit >= 100000;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Combining Conditions with AND}
+\begin{block}{Logic}
+\kw{AND} requires all conditions to evaluate to TRUE.
+\end{block}
+\begin{lstlisting}
+SELECT productCode, productName, productLine, MSRP
+FROM products
+WHERE productLine = 'Classic Cars'
+  AND MSRP > 100;
+\end{lstlisting}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country, creditLimit
+FROM customers
+WHERE country = 'USA'
+  AND creditLimit > 100000;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Combining Conditions with OR}
+\begin{block}{Logic}
+\kw{OR} requires at least one condition to evaluate to TRUE.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Customers in USA or France}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country = 'USA'
+   OR country = 'France';
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Motorcycles or Planes}
+\begin{lstlisting}
+SELECT productCode, productName, productLine
+FROM products
+WHERE productLine = 'Motorcycles'
+   OR productLine = 'Planes';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Negating Conditions with NOT}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Using NOT}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE NOT country = 'USA';
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Equivalent Form}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country <> 'USA';
+\end{lstlisting}
+\end{columns}
+\vspace{5pt}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+WHERE status <> 'Shipped';
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Pattern Matching with LIKE}
+\begin{block}{Concept}
+\kw{LIKE} performs pattern matching on string values using wildcards.
+\end{block}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Wildcard} & \textbf{Meaning} \\
+\midrule
+\texttt{\%} & Matches zero or more characters \\
+\texttt{\_} & Matches exactly one character \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{lstlisting}
+SELECT customerName, city, country
+FROM customers
+WHERE customerName LIKE '%Mini%';
+\end{lstlisting}
+\begin{lstlisting}
+SELECT productCode, productName
+FROM products
+WHERE productName LIKE '196%';
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Filtering by a Set of Values with IN}
+\begin{block}{Concept}
+\kw{IN} provides a clean, concise shorthand for multiple \kw{OR} equality tests on the same column.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Using Multiple OR}
+\begin{lstlisting}
+WHERE country = 'USA'
+   OR country = 'France'
+   OR country = 'Germany'
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Using IN}
+\begin{lstlisting}
+WHERE country IN ('USA', 'France', 'Germany')
+\end{lstlisting}
+\end{columns}
+\vspace{4pt}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country IN ('USA', 'France', 'Germany');
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Range Filtering with BETWEEN}
+\begin{block}{Concept}
+\kw{BETWEEN a AND b} tests whether a value falls within the range from \texttt{a} to \texttt{b}.
+\end{block}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+WHERE MSRP BETWEEN 100 AND 150;
+\end{lstlisting}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+WHERE orderDate BETWEEN '2005-01-01' AND '2005-12-31';
+\end{lstlisting}
+\begin{alertblock}{Note}
+In SQL, \kw{BETWEEN} is inclusive of both boundary endpoints.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Checking for NULL Values}
+\begin{block}{What is NULL?}
+\kw{NULL} represents unknown, missing, or inapplicable data. Never test for \kw{NULL} using \texttt{=}.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Find Rows with NULL}
+\begin{lstlisting}
+SELECT customerNumber, customerName, salesRepEmployeeNumber
+FROM customers
+WHERE salesRepEmployeeNumber IS NULL;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Find Rows Without NULL}
+\begin{lstlisting}
+SELECT customerNumber, customerName, salesRepEmployeeNumber
+FROM customers
+WHERE salesRepEmployeeNumber IS NOT NULL;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Eliminating Duplicates with DISTINCT}
+\begin{block}{Concept}
+\kw{DISTINCT} removes duplicates and returns only unique values in the query result.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{May Contain Duplicates}
+\begin{lstlisting}
+SELECT country
+FROM customers;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Unique Values Only}
+\begin{lstlisting}
+SELECT DISTINCT country
+FROM customers;
+\end{lstlisting}
+\end{columns}
+\begin{exampleblock}{Business Question}
+In which distinct countries does our company currently have customers?
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Sorting Results with ORDER BY}
+\begin{block}{General Template}
+\begin{lstlisting}
+SELECT column1, column2
+FROM table_name
+ORDER BY column1 ASC, column2 DESC;
+\end{lstlisting}
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Ascending (ASC)}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP ASC;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Descending (DESC)}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP DESC;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Restricting Row Count with LIMIT}
+\begin{block}{Concept}
+\kw{LIMIT} restricts the number of rows returned. In MySQL, it is widely used for top-$N$ queries and pagination.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{First 5 Products}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+LIMIT 5;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Top 5 Most Expensive Products}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP DESC
+LIMIT 5;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Lexical Order vs. Logical Execution Order}
+\begin{columns}[T]
+\column{0.47\textwidth}
+\begin{block}{Written (Lexical) Order}
+\begin{enumerate}
+  \item \kw{SELECT}
+  \item \kw{FROM}
+  \item \kw{WHERE}
+  \item \kw{ORDER BY}
+  \item \kw{LIMIT}
+\end{enumerate}
+\end{block}
+\column{0.49\textwidth}
+\begin{block}{Logical Execution Order}
+\begin{enumerate}
+  \item Locate the table (\kw{FROM})
+  \item Filter rows (\kw{WHERE})
+  \item Project columns (\kw{SELECT})
+  \item Sort result rows (\kw{ORDER BY})
+  \item Restrict count (\kw{LIMIT})
+\end{enumerate}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{A Complete Example Query}
+\begin{lstlisting}
+SELECT
+    productCode AS product_code,
+    productName AS product_name,
+    productLine AS product_line,
+    MSRP AS suggested_price
+FROM products
+WHERE productLine IN ('Classic Cars', 'Motorcycles')
+  AND MSRP BETWEEN 100 AND 200
+ORDER BY MSRP DESC
+LIMIT 10;
+\end{lstlisting}
+\begin{block}{Query Objective}
+Retrieve the top 10 most expensive products in \texttt{Classic Cars} and \texttt{Motorcycles} whose suggested retail price is between 100 and 200.
+\end{block}
+\end{frame}
+
+\begin{frame}{Common Pitfalls for Beginners}
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.40\textwidth}>{\raggedright\arraybackslash}p{0.48\textwidth}}
+\toprule
+\textbf{Mistake} & \textbf{Fix} \\
+\midrule
+Missing commas between columns & Write \texttt{SELECT col1, col2, col3} \\
+Missing \kw{FROM} clause & Always define the data source table \\
+Unquoted string literals & Use single quotes: \texttt{country = 'USA'} \\
+Comparing \kw{NULL} with \texttt{=} & Use \kw{IS NULL} or \kw{IS NOT NULL} \\
+Overusing \kw{SELECT *} & Select only necessary columns \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Quick Exercise 1}
+Write SQL queries for each requirement:
+\begin{enumerate}
+  \item Retrieve \texttt{customerNumber}, \texttt{customerName}, \texttt{city}, and \texttt{country} from \texttt{customers}.
+  \item Retrieve customers located in \texttt{France} or \texttt{Germany}.
+  \item Retrieve products with an \texttt{MSRP} greater than 150.
+  \item Retrieve the 5 most recent orders based on \texttt{orderDate}.
+\end{enumerate}
+\pause
+\begin{block}{Hint for Question 4}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+ORDER BY orderDate DESC
+LIMIT 5;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Quick Exercise 2}
+Write SQL queries for each requirement:
+\begin{enumerate}
+  \item Retrieve the distinct list of countries from \texttt{customers}.
+  \item Retrieve products whose name contains the substring \texttt{'Ford'}.
+  \item Retrieve customers who do not have an assigned sales representative.
+  \item Compute \texttt{lineTotal = quantityOrdered * priceEach} from \texttt{orderdetails}.
+\end{enumerate}
+\pause
+\begin{block}{Hints / Solutions}
+\begin{lstlisting}
+SELECT DISTINCT country FROM customers;
+SELECT * FROM products WHERE productName LIKE '%Ford%';
+SELECT * FROM customers WHERE salesRepEmployeeNumber IS NULL;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}{Summary}
+\begin{itemize}
+  \item \kw{SELECT} is the fundamental statement for querying data in relational databases.
+  \item \kw{FROM} specifies the source table for the query.
+  \item \kw{WHERE} filters rows based on logical conditions.
+  \item \kw{AS} assigns aliases to columns; expressions in \kw{SELECT} produce computed columns.
+  \item \kw{DISTINCT}, \kw{ORDER BY}, and \kw{LIMIT} clean, sort, and paginate query results.
+  \item When drafting queries, think in business questions: \textit{which columns, from which table, under which conditions?}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{References}
+\small
+\begin{itemize}
+  \item DBMS Tutorial: \textit{Basic SELECT Statement with classicmodels}.\\
+  {\tiny\url{https://vudmvn.github.io/dbms-course/lectures/MySQL/querying-data/select/select-statement-1/}}
+  \item GeeksforGeeks: \textit{SQL SELECT Query}.\\
+  {\tiny\url{https://www.geeksforgeeks.org/sql/sql-select-query/}}
+\end{itemize}
+\end{frame}
+
+\end{document}

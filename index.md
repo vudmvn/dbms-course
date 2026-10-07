@@ -204,7 +204,7 @@ Phần truy vấn trình bày `SELECT` cơ bản, JOIN, aggregate, subquery, CTE
 
 | Bài học | Bài giảng Markdown | Bản Web (HTML) | Slides PDF | Ghi chú |
 |---|---|---|---|---|
-| Câu lệnh SELECT cơ bản trong MySQL | [Markdown](lectures/MySQL/querying-data/select/select-statement-1.md) | <span class="missing">—</span> | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
+| Câu lệnh SELECT cơ bản trong MySQL | [Markdown](lectures/MySQL/querying-data/select/select-statement-1.md) | <span class="missing">—</span> | [PDF](lectures/MySQL/querying-data/select/sql-select-slide-vn-1.pdf) | Sử dụng CSDL mẫu `classicmodels` |
 | SELECT và JOIN trong MySQL | [Markdown](lectures/MySQL/querying-data/select/select-statement-2.md) | <span class="missing">—</span> | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | Hàm SQL trong MySQL | [Markdown](lectures/MySQL/querying-data/select/select-statement-3.md) | <span class="missing">—</span> | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
 | GROUP BY, HAVING và truy vấn tổng hợp trong MySQL | [Markdown](lectures/MySQL/querying-data/select/select-statement-4.md) | <span class="missing">—</span> | <span class="missing">—</span> | Sử dụng CSDL mẫu `classicmodels` |
@@ -389,7 +389,7 @@ Phần truy vấn trình bày `SELECT` cơ bản, JOIN, aggregate, subquery, CTE
 
 | Lesson | Markdown Lecture | Web (HTML) | Slides PDF | Notes |
 |---|---|---|---|---|
-| Basic MySQL SELECT Statement | [Markdown](lectures/MySQL/querying-data/select/select-statement-1.md) | <span class="missing">—</span> | <span class="missing">—</span> | Uses the `classicmodels` sample database |
+| Basic MySQL SELECT Statement | [Markdown](lectures/MySQL/querying-data/select/select-statement-1.md) | <span class="missing">—</span> | [PDF](lectures/MySQL/querying-data/select/sql-select-slide-en-1.pdf) | Uses the `classicmodels` sample database |
 | MySQL SELECT and JOIN | [Markdown](lectures/MySQL/querying-data/select/select-statement-2.md) | <span class="missing">—</span> | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL SQL Functions | [Markdown](lectures/MySQL/querying-data/select/select-statement-3.md) | <span class="missing">—</span> | <span class="missing">—</span> | Uses the `classicmodels` sample database |
 | MySQL GROUP BY, HAVING, and Aggregate Queries | [Markdown](lectures/MySQL/querying-data/select/select-statement-4.md) | <span class="missing">—</span> | <span class="missing">—</span> | Uses the `classicmodels` sample database |

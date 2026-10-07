@@ -1,0 +1,692 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Vietnamese-friendly Unicode compilation with XeLaTeX or LuaLaTeX
+\usepackage{fontspec}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.86]
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\definecolor{sqlblue}{RGB}{28,74,135}
+\definecolor{sqlgreen}{RGB}{24,117,74}
+\definecolor{sqlgray}{RGB}{245,247,250}
+\definecolor{sqlred}{RGB}{166,45,45}
+
+\lstdefinestyle{sqlstyle}{
+  language=SQL,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{sqlblue}\bfseries,
+  commentstyle=\color{sqlgreen},
+  stringstyle=\color{sqlred},
+  showstringspaces=false,
+  breaklines=true,
+  columns=fullflexible,
+  backgroundcolor=\color{sqlgray},
+  frame=single,
+  rulecolor=\color{gray!35},
+  xleftmargin=1mm,
+  xrightmargin=1mm,
+  aboveskip=4pt,
+  belowskip=4pt
+}
+\lstset{style=sqlstyle}
+
+\title[SQL SELECT]{Giới thiệu câu lệnh \texttt{SELECT} trong SQL}
+\subtitle{Truy vấn dữ liệu một bảng với cơ sở dữ liệu mẫu \texttt{classicmodels}}
+\author{DBMS Course}
+\institute{Smart Logistics and Supply Chain Management Lab}
+\date{\today}
+
+\newcommand{\kw}[1]{\textcolor{sqlblue}{\texttt{#1}}}
+\newcommand{\minihead}[1]{\vspace{2pt}\textbf{#1}\vspace{2pt}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Mục tiêu học tập}
+Sau bài này, sinh viên có thể:
+\begin{enumerate}
+  \item Hiểu vai trò của câu lệnh \kw{SELECT} trong SQL.
+  \item Lấy toàn bộ dữ liệu hoặc một số cột cụ thể từ một bảng.
+  \item Đặt bí danh cột, tạo cột tính toán trong kết quả truy vấn.
+  \item Lọc dữ liệu với \kw{WHERE} và các toán tử điều kiện.
+  \item Sắp xếp, giới hạn số dòng, và loại bỏ giá trị trùng lặp.
+  \item Viết truy vấn đơn giản trên cơ sở dữ liệu \texttt{classicmodels}.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{SELECT dùng để làm gì?}
+\begin{block}{Ý tưởng chính}
+\kw{SELECT} dùng để lấy dữ liệu từ một hoặc nhiều bảng và hiển thị kết quả dưới dạng bảng gồm các dòng và cột.
+\end{block}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Câu hỏi dữ liệu}
+\begin{itemize}
+  \item Khách hàng nào ở USA?
+  \item Sản phẩm nào có giá trên 150?
+  \item Đơn hàng nào đã bị hủy?
+\end{itemize}
+\column{0.48\textwidth}
+\minihead{Trả lời bằng SQL}
+\begin{lstlisting}
+SELECT customerName, country
+FROM customers
+WHERE country = 'USA';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Cơ sở dữ liệu mẫu: classicmodels}
+\begin{itemize}
+  \item \texttt{classicmodels} mô phỏng hoạt động của một công ty bán các mô hình xe, tàu, máy bay và sản phẩm sưu tầm.
+  \item Trong bài này, ta tập trung vào truy vấn một bảng.
+\end{itemize}
+\vspace{4pt}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Bảng} & \textbf{Ý nghĩa} \\
+\midrule
+\texttt{products} & Thông tin sản phẩm \\
+\texttt{customers} & Thông tin khách hàng \\
+\texttt{orders} & Đơn hàng \\
+\texttt{orderdetails} & Chi tiết đơn hàng \\
+\texttt{payments} & Thanh toán \\
+\texttt{employees} & Nhân viên \\
+\texttt{offices} & Văn phòng \\
+\texttt{productlines} & Dòng sản phẩm \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Chuẩn bị môi trường thực hành}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Chọn cơ sở dữ liệu}
+\begin{lstlisting}
+USE classicmodels;
+\end{lstlisting}
+\minihead{Xem danh sách bảng}
+\begin{lstlisting}
+SHOW TABLES;
+\end{lstlisting}
+\column{0.50\textwidth}
+\minihead{Xem cấu trúc bảng}
+\begin{lstlisting}
+DESC products;
+DESC customers;
+DESC orders;
+\end{lstlisting}
+\begin{alertblock}{Lưu ý}
+Trước khi viết truy vấn, nên biết bảng có những cột nào và kiểu dữ liệu của từng cột.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Cú pháp cơ bản của SELECT}
+\begin{block}{Mẫu tổng quát}
+\begin{lstlisting}
+SELECT column1, column2, ...
+FROM table_name;
+\end{lstlisting}
+\end{block}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Thành phần} & \textbf{Ý nghĩa} \\
+\midrule
+\kw{SELECT} & Chỉ định các cột muốn hiển thị \\
+\texttt{column1, column2, ...} & Danh sách cột cần lấy \\
+\kw{FROM} & Chỉ định bảng chứa dữ liệu \\
+\texttt{table\_name} & Tên bảng cần truy vấn \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ đầu tiên}
+\begin{columns}[T]
+\column{0.52\textwidth}
+\minihead{Lấy tên khách hàng}
+\begin{lstlisting}
+SELECT customerName
+FROM customers;
+\end{lstlisting}
+\minihead{Lấy mã đơn hàng}
+\begin{lstlisting}
+SELECT orderNumber
+FROM orders;
+\end{lstlisting}
+\column{0.44\textwidth}
+\begin{block}{Cách đọc truy vấn}
+\begin{itemize}
+  \item \kw{SELECT}: lấy cột nào?
+  \item \kw{FROM}: từ bảng nào?
+  \item Dấu \texttt{;} kết thúc câu lệnh.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Lấy toàn bộ cột với SELECT *}
+\begin{lstlisting}
+SELECT *
+FROM productlines;
+\end{lstlisting}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\begin{block}{Khi nào hữu ích?}
+\begin{itemize}
+  \item Xem nhanh dữ liệu trong bảng.
+  \item Khám phá bảng khi mới học SQL.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{alertblock}{Không nên lạm dụng}
+Với bảng lớn, \kw{SELECT *} có thể lấy quá nhiều cột, khó đọc và tốn tài nguyên. Trong thực tế, nên liệt kê cột cần dùng.
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Lấy một số cột cụ thể}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Sản phẩm}
+\begin{lstlisting}
+SELECT productCode, productName, productLine, MSRP
+FROM products;
+\end{lstlisting}
+\minihead{Khách hàng}
+\begin{lstlisting}
+SELECT customerNumber, customerName, city, country
+FROM customers;
+\end{lstlisting}
+\column{0.48\textwidth}
+\begin{block}{Nguyên tắc}
+Chỉ lấy các cột cần thiết cho câu hỏi phân tích.
+\end{block}
+\begin{exampleblock}{Câu hỏi}
+Muốn lập danh sách khách hàng theo quốc gia, ta cần cột nào?
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Đặt bí danh cột với AS}
+\begin{lstlisting}
+SELECT
+    productCode AS MaSanPham,
+    productName AS TenSanPham,
+    productLine AS DongSanPham,
+    MSRP AS GiaBanDeXuat
+FROM products;
+\end{lstlisting}
+\begin{itemize}
+  \item Bí danh giúp tên cột trong kết quả dễ đọc hơn.
+  \item Có thể bỏ từ khóa \kw{AS}, nhưng khi mới học nên dùng \kw{AS} để truy vấn rõ ràng.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Tạo cột tính toán trong SELECT}
+\begin{columns}[T]
+\column{0.56\textwidth}
+\begin{lstlisting}
+SELECT
+    productCode,
+    productName,
+    buyPrice,
+    MSRP,
+    MSRP - buyPrice AS profitEstimate
+FROM products;
+\end{lstlisting}
+\column{0.40\textwidth}
+\begin{block}{Ý nghĩa}
+\begin{itemize}
+  \item Tính toán ngay trong phần \kw{SELECT}.
+  \item Cột tính toán chỉ xuất hiện trong kết quả truy vấn.
+  \item Không tự động tạo thêm cột mới trong bảng gốc.
+\end{itemize}
+\end{block}
+\end{columns}
+\vspace{4pt}
+\begin{lstlisting}
+SELECT quantityOrdered * priceEach AS lineTotal
+FROM orderdetails;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Lọc dữ liệu với WHERE}
+\begin{block}{Mẫu tổng quát}
+\begin{lstlisting}
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+\end{lstlisting}
+\end{block}
+\begin{columns}[T]
+\column{0.48\textwidth}
+\minihead{Sản phẩm Motorcycles}
+\begin{lstlisting}
+SELECT productCode, productName, productLine
+FROM products
+WHERE productLine = 'Motorcycles';
+\end{lstlisting}
+\column{0.48\textwidth}
+\minihead{Khách hàng ở USA}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country = 'USA';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Các toán tử so sánh thường dùng}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Toán tử} & \textbf{Ý nghĩa} & \textbf{Ví dụ} \\
+\midrule
+\texttt{=} & Bằng & \texttt{country = 'USA'} \\
+\texttt{<>} & Khác & \texttt{status <> 'Shipped'} \\
+\texttt{>} & Lớn hơn & \texttt{MSRP > 150} \\
+\texttt{<} & Nhỏ hơn & \texttt{quantityInStock < 1000} \\
+\texttt{>=} & Lớn hơn hoặc bằng & \texttt{creditLimit >= 100000} \\
+\texttt{<=} & Nhỏ hơn hoặc bằng & \texttt{buyPrice <= 50} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{exampleblock}{Ghi nhớ}
+Điều kiện trong \kw{WHERE} trả về đúng hoặc sai cho từng dòng dữ liệu.
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Ví dụ: lọc theo số}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Giá bán đề xuất trên 150}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+WHERE MSRP > 150;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Tồn kho dưới 1000}
+\begin{lstlisting}
+SELECT productCode, productName, quantityInStock
+FROM products
+WHERE quantityInStock < 1000;
+\end{lstlisting}
+\end{columns}
+\vspace{5pt}
+\begin{lstlisting}
+SELECT customerNumber, customerName, creditLimit
+FROM customers
+WHERE creditLimit >= 100000;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Kết hợp điều kiện với AND}
+\begin{block}{Ý nghĩa}
+\kw{AND} yêu cầu tất cả điều kiện đều đúng.
+\end{block}
+\begin{lstlisting}
+SELECT productCode, productName, productLine, MSRP
+FROM products
+WHERE productLine = 'Classic Cars'
+  AND MSRP > 100;
+\end{lstlisting}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country, creditLimit
+FROM customers
+WHERE country = 'USA'
+  AND creditLimit > 100000;
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Kết hợp điều kiện với OR}
+\begin{block}{Ý nghĩa}
+\kw{OR} yêu cầu ít nhất một điều kiện đúng.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Khách hàng ở USA hoặc France}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country = 'USA'
+   OR country = 'France';
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Sản phẩm Motorcycles hoặc Planes}
+\begin{lstlisting}
+SELECT productCode, productName, productLine
+FROM products
+WHERE productLine = 'Motorcycles'
+   OR productLine = 'Planes';
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Phủ định điều kiện với NOT}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Dùng NOT}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE NOT country = 'USA';
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Viết tương đương}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country <> 'USA';
+\end{lstlisting}
+\end{columns}
+\vspace{5pt}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+WHERE status <> 'Shipped';
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Tìm kiếm mẫu chuỗi với LIKE}
+\begin{block}{Ý nghĩa}
+\kw{LIKE} dùng để so khớp chuỗi theo mẫu.
+\end{block}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Ký hiệu} & \textbf{Ý nghĩa} \\
+\midrule
+\texttt{\%} & Đại diện cho 0 hoặc nhiều ký tự \\
+\texttt{\_} & Đại diện cho đúng 1 ký tự \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{lstlisting}
+SELECT customerName, city, country
+FROM customers
+WHERE customerName LIKE '%Mini%';
+\end{lstlisting}
+\begin{lstlisting}
+SELECT productCode, productName
+FROM products
+WHERE productName LIKE '196%';
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Lọc theo tập giá trị với IN}
+\begin{block}{Ý nghĩa}
+\kw{IN} giúp viết gọn nhiều điều kiện \kw{OR} trên cùng một cột.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Dùng OR}
+\begin{lstlisting}
+WHERE country = 'USA'
+   OR country = 'France'
+   OR country = 'Germany'
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Dùng IN}
+\begin{lstlisting}
+WHERE country IN ('USA', 'France', 'Germany')
+\end{lstlisting}
+\end{columns}
+\vspace{4pt}
+\begin{lstlisting}
+SELECT customerNumber, customerName, country
+FROM customers
+WHERE country IN ('USA', 'France', 'Germany');
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Lọc theo khoảng với BETWEEN}
+\begin{block}{Ý nghĩa}
+\kw{BETWEEN a AND b} dùng để kiểm tra giá trị nằm trong khoảng từ \texttt{a} đến \texttt{b}.
+\end{block}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+WHERE MSRP BETWEEN 100 AND 150;
+\end{lstlisting}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+WHERE orderDate BETWEEN '2005-01-01' AND '2005-12-31';
+\end{lstlisting}
+\begin{alertblock}{Lưu ý}
+Trong SQL, \kw{BETWEEN} thường bao gồm cả hai đầu mút của khoảng.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Kiểm tra giá trị NULL}
+\begin{block}{NULL là gì?}
+\kw{NULL} biểu diễn giá trị chưa biết, thiếu hoặc không áp dụng được. Không so sánh \kw{NULL} bằng \texttt{=}.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Tìm dòng có NULL}
+\begin{lstlisting}
+SELECT customerNumber, customerName, salesRepEmployeeNumber
+FROM customers
+WHERE salesRepEmployeeNumber IS NULL;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Tìm dòng không NULL}
+\begin{lstlisting}
+SELECT customerNumber, customerName, salesRepEmployeeNumber
+FROM customers
+WHERE salesRepEmployeeNumber IS NOT NULL;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Loại bỏ trùng lặp với DISTINCT}
+\begin{block}{Ý nghĩa}
+\kw{DISTINCT} trả về các giá trị khác nhau trong kết quả truy vấn.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Có thể trùng}
+\begin{lstlisting}
+SELECT country
+FROM customers;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Không trùng}
+\begin{lstlisting}
+SELECT DISTINCT country
+FROM customers;
+\end{lstlisting}
+\end{columns}
+\begin{exampleblock}{Câu hỏi}
+Công ty có khách hàng ở những quốc gia nào?
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]{Sắp xếp kết quả với ORDER BY}
+\begin{block}{Mẫu tổng quát}
+\begin{lstlisting}
+SELECT column1, column2
+FROM table_name
+ORDER BY column1 ASC, column2 DESC;
+\end{lstlisting}
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Tăng dần}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP ASC;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Giảm dần}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP DESC;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Giới hạn số dòng với LIMIT}
+\begin{block}{Ý nghĩa}
+\kw{LIMIT} giới hạn số dòng trả về. Trong MySQL, thường dùng để lấy một số dòng đầu tiên hoặc phân trang.
+\end{block}
+\begin{columns}[T]
+\column{0.50\textwidth}
+\minihead{Lấy 5 sản phẩm đầu}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+LIMIT 5;
+\end{lstlisting}
+\column{0.46\textwidth}
+\minihead{Top 5 sản phẩm đắt nhất}
+\begin{lstlisting}
+SELECT productCode, productName, MSRP
+FROM products
+ORDER BY MSRP DESC
+LIMIT 5;
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Thứ tự viết và thứ tự xử lý logic}
+\begin{columns}[T]
+\column{0.47\textwidth}
+\begin{block}{Thứ tự viết phổ biến}
+\begin{enumerate}
+  \item \kw{SELECT}
+  \item \kw{FROM}
+  \item \kw{WHERE}
+  \item \kw{ORDER BY}
+  \item \kw{LIMIT}
+\end{enumerate}
+\end{block}
+\column{0.49\textwidth}
+\begin{block}{Cách hiểu đơn giản}
+\begin{enumerate}
+  \item Lấy bảng từ \kw{FROM}.
+  \item Giữ lại dòng thỏa \kw{WHERE}.
+  \item Chọn cột trong \kw{SELECT}.
+  \item Sắp xếp bằng \kw{ORDER BY}.
+  \item Lấy số dòng bằng \kw{LIMIT}.
+\end{enumerate}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Một truy vấn hoàn chỉnh}
+\begin{lstlisting}
+SELECT
+    productCode AS MaSanPham,
+    productName AS TenSanPham,
+    productLine AS DongSanPham,
+    MSRP AS GiaBanDeXuat
+FROM products
+WHERE productLine IN ('Classic Cars', 'Motorcycles')
+  AND MSRP BETWEEN 100 AND 200
+ORDER BY MSRP DESC
+LIMIT 10;
+\end{lstlisting}
+\begin{block}{Câu hỏi truy vấn đang trả lời}
+Lấy 10 sản phẩm đắt nhất trong hai dòng \texttt{Classic Cars} và \texttt{Motorcycles}, với giá bán đề xuất từ 100 đến 200.
+\end{block}
+\end{frame}
+
+\begin{frame}{Lỗi thường gặp khi mới học SELECT}
+\begin{center}
+\begin{tabular}{p{0.36\textwidth}p{0.52\textwidth}}
+\toprule
+\textbf{Lỗi} & \textbf{Cách sửa} \\
+\midrule
+Quên dấu phẩy giữa các cột & Viết \texttt{SELECT col1, col2, col3} \\
+Quên \kw{FROM} & Luôn xác định bảng dữ liệu nguồn \\
+So sánh chuỗi không có dấu nháy & Viết \texttt{country = 'USA'} \\
+So sánh \kw{NULL} bằng \texttt{=} & Dùng \kw{IS NULL} hoặc \kw{IS NOT NULL} \\
+Dùng \kw{SELECT *} quá nhiều & Chỉ chọn cột cần thiết \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Bài tập nhanh 1}
+Viết truy vấn cho các yêu cầu sau:
+\begin{enumerate}
+  \item Lấy \texttt{customerNumber}, \texttt{customerName}, \texttt{city}, \texttt{country} từ bảng \texttt{customers}.
+  \item Lấy các khách hàng ở \texttt{France} hoặc \texttt{Germany}.
+  \item Lấy các sản phẩm có \texttt{MSRP} lớn hơn 150.
+  \item Lấy 5 đơn hàng mới nhất theo \texttt{orderDate}.
+\end{enumerate}
+\pause
+\begin{block}{Gợi ý cho câu 4}
+\begin{lstlisting}
+SELECT orderNumber, orderDate, status
+FROM orders
+ORDER BY orderDate DESC
+LIMIT 5;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Bài tập nhanh 2}
+Viết truy vấn cho các yêu cầu sau:
+\begin{enumerate}
+  \item Lấy danh sách quốc gia khác nhau trong bảng \texttt{customers}.
+  \item Lấy các sản phẩm có tên chứa chuỗi \texttt{'Ford'}.
+  \item Lấy các khách hàng chưa có nhân viên phụ trách.
+  \item Tính \texttt{lineTotal = quantityOrdered * priceEach} trong bảng \texttt{orderdetails}.
+\end{enumerate}
+\pause
+\begin{block}{Gợi ý}
+\begin{lstlisting}
+SELECT DISTINCT country FROM customers;
+SELECT * FROM products WHERE productName LIKE '%Ford%';
+SELECT * FROM customers WHERE salesRepEmployeeNumber IS NULL;
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}{Tóm tắt}
+\begin{itemize}
+  \item \kw{SELECT} là câu lệnh trung tâm để truy vấn dữ liệu.
+  \item \kw{FROM} cho biết bảng dữ liệu nguồn.
+  \item \kw{WHERE} lọc dòng theo điều kiện.
+  \item \kw{AS} đặt bí danh cho cột; biểu thức trong \kw{SELECT} tạo cột tính toán.
+  \item \kw{DISTINCT}, \kw{ORDER BY}, \kw{LIMIT} giúp làm sạch, sắp xếp và giới hạn kết quả.
+  \item Khi mới học, hãy đọc truy vấn theo câu hỏi dữ liệu: \textit{lấy cột nào, từ bảng nào, lọc điều kiện gì?}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Tài liệu tham khảo}
+\small
+\begin{itemize}
+  \item Tutorial DBMS: \textit{Sử dụng câu lệnh SELECT cơ bản với classicmodels}.\\
+  {\tiny\url{https://vudmvn.github.io/dbms-course/lectures/MySQL/querying-data/select/select-statement-1/}}
+  \item GeeksforGeeks: \textit{SQL SELECT Query}.\\
+  {\tiny\url{https://www.geeksforgeeks.org/sql/sql-select-query/}}
+\end{itemize}
+\end{frame}
+
+\end{document}
