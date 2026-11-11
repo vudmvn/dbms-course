@@ -218,9 +218,9 @@ Phần này trình bày cách MySQL sử dụng index, cách tạo/xóa index, �
 
 | Bài học | Bài giảng Markdown | Bản Web (HTML) | Slides PDF | Ghi chú |
 |---|---|---|---|---|
-| Tạo và quản lý Index trong MySQL | [Markdown](lectures/MySQL/index-optimization/index/index-1.md) | <span class="missing">—</span> | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX và composite index |
-| MySQL Index Types và chiến lược chọn Index | [Markdown](lectures/MySQL/index-optimization/index/index-2.md) | <span class="missing">—</span> | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered và functional indexes |
-| MySQL Index Hints: USE INDEX và FORCE INDEX | [Markdown](lectures/MySQL/index-optimization/index/index-3.md) | <span class="missing">—</span> | <span class="missing">—</span> | EXPLAIN, optimizer và index hints |
+| Tạo và quản lý Index trong MySQL | [Markdown](lectures/MySQL/index-optimization/index/index-1.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_1_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_1_beamer.pdf) | CREATE INDEX, DROP INDEX, SHOW INDEX và composite index |
+| MySQL Index Types và chiến lược chọn Index | [Markdown](lectures/MySQL/index-optimization/index/index-2.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_2_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_2_beamer.pdf) | Unique, prefix, invisible, descending, clustered và functional indexes |
+| MySQL Index Hints: USE INDEX và FORCE INDEX | [Markdown](lectures/MySQL/index-optimization/index/index-3.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_3_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_3_beamer.pdf) | EXPLAIN, optimizer và index hints |
 
 ### Thao tác dữ liệu và giao dịch
 
@@ -397,9 +397,9 @@ Phần này trình bày cách MySQL sử dụng index, cách tạo/xóa index, �
 
 | Lesson | Markdown Lecture | Web (HTML) | Slides PDF | Notes |
 |---|---|---|---|---|
-| Creating and Managing Indexes in MySQL | [Markdown](lectures/MySQL/index-optimization/index/index-1.md) | <span class="missing">—</span> | <span class="missing">—</span> | CREATE INDEX, DROP INDEX, SHOW INDEX, and composite indexes |
-| MySQL Index Types and Index Selection Strategy | [Markdown](lectures/MySQL/index-optimization/index/index-2.md) | <span class="missing">—</span> | <span class="missing">—</span> | Unique, prefix, invisible, descending, clustered, and functional indexes |
-| MySQL Index Hints: USE INDEX and FORCE INDEX | [Markdown](lectures/MySQL/index-optimization/index/index-3.md) | <span class="missing">—</span> | <span class="missing">—</span> | EXPLAIN, optimizer, and index hints |
+| Creating and Managing Indexes in MySQL | [Markdown](lectures/MySQL/index-optimization/index/index-1.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_1_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_1_beamer.pdf) | CREATE INDEX, DROP INDEX, SHOW INDEX, and composite indexes |
+| MySQL Index Types and Index Selection Strategy | [Markdown](lectures/MySQL/index-optimization/index/index-2.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_2_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_2_beamer.pdf) | Unique, prefix, invisible, descending, clustered, and functional indexes |
+| MySQL Index Hints: USE INDEX and FORCE INDEX | [Markdown](lectures/MySQL/index-optimization/index/index-3.md) | [HTML](lectures/MySQL/index-optimization/index/dbms_index_3_interactive_lab.html) | [PDF](lectures/MySQL/index-optimization/index/dbms_index_3_beamer.pdf) | EXPLAIN, optimizer, and index hints |
 
 ### Data Modification and Transactions
 
